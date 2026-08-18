@@ -1,885 +1,173 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PeopleForPeople - Freiwilligenmanagement</title>
-  <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="stylesheet" media="(min-width: 768px) and (max-width: 1024px)" href="/css/voluntarios/tablet.css" />
-  <link rel="stylesheet" media="(max-width: 767px)" href="/css/voluntarios/mobile.css" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* Global settings */
-          body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Para voluntarios — People for People</title>
+<meta name="description" content="Ayuda cuando puedas, en lo que sepas hacer y cerca de donde estés. Regístrate, indica tus habilidades y recibe solo los avisos que encajan contigo." />
+<meta name="theme-color" content="#002557" />
 
-    /* Header y menú principal */
-    header.l-header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 10003;
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    main {
-      margin-top: 70px; /* Altura del header */
-    }
-
-    /* Keyframes para animaciones */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    @keyframes slideIn {
-      from { 
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes slideInFromLeft {
-      from { 
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    @keyframes slideInFromRight {
-      from { 
-        opacity: 0;
-        transform: translateX(50px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    @keyframes gentlePulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    
-    @keyframes checkmark {
-      0% { transform: scale(0); opacity: 0; }
-      50% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Clases de animación */
-    .animate-element {
-      opacity: 0;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .animate-element.animated {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-    
-    .fade-in {
-      animation-name: fadeIn;
-    }
-    
-    .slide-up {
-      animation-name: slideIn;
-    }
-    
-    .slide-left {
-      animation-name: slideInFromLeft;
-    }
-    
-    .slide-right {
-      animation-name: slideInFromRight;
-    }
-    
-    .pulse {
-      animation: gentlePulse 3s ease-in-out infinite;
-    }
-    
-    /* Efectos hover */
-    .hover-scale {
-      transition: transform 0.3s ease;
-    }
-    .hover-scale:hover {
-      transform: scale(1.03);
-    }
-    
-    .hover-rotate {
-      transition: transform 0.3s ease;
-    }
-    .hover-rotate:hover {
-      transform: rotate(2deg);
-    }
-
-    /* Estilos para el contenido principal */
-    .hero-content {
-      text-align: center;
-      max-width: 800px;
-      margin: 10px auto;
-      padding: 0 10px;
-    }
-    .hero-title {
-      color: #6cb2eb;
-      font-size: 3em;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .hero-subtitle {
-      font-weight: bold;
-      font-size: 1.3em;
-      margin-bottom: 10px;
-    }
-    .hero-description {
-      font-size: 1.1em;
-      margin-bottom: 15px;
-    }
-    .hero-section-title {
-      font-weight: bold;
-      font-size: 1.4em;
-      margin-bottom: 20px;
-    }
-
-    /* Contenedor de secciones de función */
-    .functions-container {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      margin: 10px 0 20px 0;
-    }
-    .function-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-    .section-text {
-      flex: 1;
-      text-align: left;
-    }
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5em;
-      margin-bottom: 5px;
-    }
-    .section-number {
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #333;
-    }
-    .section-text h3 {
-      font-weight: bold;
-      font-size: 1.4em;
-      margin: 0;
-    }
-    .section-text p {
-      font-size: 1em;
-      color: #555;
-      margin: 0;
-    }
-    .section-image {
-      flex-shrink: 0;
-    }
-    .section-image img {
-      width: 200px;
-      border-radius: 5px;
-    }
-
-    /* Apartado "Deine Vorteile als Freiwillige" */
-    .advantages-wrapper {
-      position: relative;
-      left: 50%;
-      margin-left: -50vw;
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0;
-      margin-top: 40px;
-    }
-    .advantages-text {
-      width: 50%;
-      margin: 0 50px;
-      padding: 0;
-      text-align: left;
-    }
-    .advantages-image {
-      width: 80%;
-      margin: 0 70px;
-      padding: 0;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-    .advantages-image img {
-      width: 800px;
-      border-radius: 10px;
-      display: block;
-    }
-  
-    /* Apartado de suscripción */
-    .subscribe-wrapper {
-      margin: 20px 0 100px 200px;
-      display: flex;
-      justify-content: flex-start;
-      padding: 10px;
-      width: 100%;
-    }
-    .card {
-      width: 240px;
-      min-height: 300px;
-      padding: 0 15px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .card > * {
-      margin: 0;
-    }
-    .card__title {
-      font-size: 23px;
-      font-weight: 900;
-      color: #333;
-    }
-    .card__content {
-      font-size: 13px;
-      line-height: 18px;
-      color: #333;
-    }
-    .card__form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-    }
-    .card__form input {
-      outline: 0;
-      background: #fff;
-      box-shadow: transparent 0px 0px 0px 1px inset;
-      padding: 0.6em;
-      border-radius: 14px;
-      border: 1px solid #333;
-      color: black;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .card__form button {
-      border: 0;
-      background: #111;
-      color: #fff;
-      padding: 0.68em;
-      border-radius: 14px;
-      font-weight: bold;
-      transition: background 0.3s, transform 0.2s;
-      width: 100%;
-      cursor: pointer;
-    }
-    .sign-up:hover {
-      opacity: 0.8;
-      background: #333;
-      cursor: pointer;
-    }
-    .sign-up:active {
-      transform: scale(0.98);
-    }
-    
-    /* Estilos para el estado de éxito */
-    .success-message {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-    
-    .success-message.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    
-    .checkmark {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: block;
-      stroke-width: 2;
-      stroke: #4bb71b;
-      stroke-miterlimit: 10;
-      margin: 10% auto;
-      box-shadow: inset 0px 0px 0px #4bb71b;
-      animation: checkmark 0.6s ease-in-out 0.4s both;
-    }
-    
-    .checkmark__circle {
-      stroke-dasharray: 166;
-      stroke-dashoffset: 166;
-      stroke-width: 2;
-      stroke-miterlimit: 10;
-      stroke: #4bb71b;
-      fill: none;
-      animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-    }
-    
-    .checkmark__check {
-      transform-origin: 50% 50%;
-      stroke-dasharray: 48;
-      stroke-dashoffset: 48;
-      animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-    }
-    
-    @keyframes stroke {
-      100% {
-        stroke-dashoffset: 0;
-      }
-    }
-
-    /* Estilos del menú */
-    .nav-list li a#nav-freiwillige,
-    .nav-list li a#nav-ngos,
-    .nav-list li a#nav-kommunen,
-    .nav-list li a#nav-unternehmen {
-      color: #2469ca;
-    }
-    
-    /* Overlay para cambio de idioma */
-    #lang-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      z-index: 10000;
-      transform: translateX(-110%);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 1s ease, opacity 1s ease;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2em;
-      }
-      
-      .function-section {
-        flex-direction: column;
-        text-align: center;
-      }
-      
-      .section-text {
-        text-align: center;
-      }
-      
-      .advantages-wrapper {
-        flex-direction: column;
-      }
-      
-      .advantages-text, 
-      .advantages-image {
-        width: 100%;
-        margin: 0;
-        padding: 20px;
-      }
-      
-      .advantages-image img {
-        width: 100%;
-      }
-      
-      .subscribe-wrapper {
-        margin: 20px auto;
-        justify-content: center;
-      }
-    }
-  </style>
+<link rel="icon" href="../imagenes/marca/isotipo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/app.css" />
 </head>
+
 <body>
-  <!-- Overlay y modal -->
-  <div id="lang-overlay"></div>
-  <div id="modal-overlay"></div>
+<a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
 
-<!-- Menú superior -->
-<header class="l-header">
-  <nav class="nav">
-    <div class="nav-logo">PeopleForPeople</div>
-    <div class="nav-menu" id="nav-menu">
-      <ul class="nav-list">
-        <li><a href="/" class="nav-link" id="nav-home">Startseite</a></li>
-        <li><a href="https://www.peopleforpeople.es/#app" class="nav-link" id="nav-app">App</a></li>
-        <li><a href="https://www.peopleforpeople.es/#info" class="nav-link" id="nav-info">Informationen</a></li>
-        <li><a href="https://www.peopleforpeople.es/#dana" class="nav-link" id="nav-dana">DANA</a></li>
-        <li><a href="https://www.peopleforpeople.es/#about" class="nav-link" id="nav-about">Über uns</a></li>
-        <li><a href="#" class="nav-link" id="nav-freiwillige">Für Freiwillige</a></li>
-        <li><a href="https://www.peopleforpeople.es/ongs/" class="nav-link" id="nav-ngos">Für NGO´s</a></li>
-        <li><a href="https://www.peopleforpeople.es/comunidades/" class="nav-link" id="nav-kommunen">Für Kommunen</a></li>
-        <li><a href="https://www.peopleforpeople.es/empresas/" class="nav-link" id="nav-unternehmen">Für Unternehmen</a></li>
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="../">
+      <img class="brand__mark" src="../imagenes/marca/isotipo-navy.svg" alt="" />
+      <span class="brand__name">People for People</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li>
+        <li><a class="nav__link" href="../#app" data-i18n="nav.app">La app</a></li>
+        <li><a class="nav__link" href="../voluntarios/" aria-current="page" data-i18n="who.volunteers">Voluntarios</a></li>
+        <li><a class="nav__link" href="../ongs/" data-i18n="who.ngos">ONG</a></li>
+        <li><a class="nav__link" href="../comunidades/" data-i18n="who.councils">Ayuntamientos</a></li>
+        <li><a class="nav__link" href="../empresas/" data-i18n="who.companies">Empresas</a></li>
+        <li><a class="nav__link" href="../#contacto" data-i18n="nav.contact">Contacto</a></li>
       </ul>
-    </div>
-    <div class="header-right">
-      <div id="lang-selector">
-        <button class="lang-btn active" data-lang="de">DE</button>
-        <button class="lang-btn" data-lang="es">ES</button>
+    </nav>
+
+    <div class="header__actions">
+      <div class="lang" role="group" aria-label="Idioma">
+        <button type="button" data-lang="es" aria-pressed="true">
+          <img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES
+        </button>
+        <button type="button" data-lang="de" aria-pressed="false">
+          <img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE
+        </button>
       </div>
-      <div class="nav-toggle" id="nav-toggle">
-        <i class="bx bx-menu"></i>
-      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">☰</span>
+        <span style="position:absolute;left:-9999px" data-i18n="nav.menu">Menú</span>
+      </button>
     </div>
-  </nav>
+  </div>
 </header>
-  
-  <!-- Contenido Principal -->
-  <main>
-    <div class="hero-content">
-      <!-- Textos principales -->
-      <h2 class="hero-title" id="hero-title">Werde Teil von PeopleForPeople und engagiere dich!</h2>
-      <p class="hero-subtitle" id="hero-subtitle">Du möchtest helfen, hast aber keine Zeit, ständig nach passenden Angeboten zu suchen?</p>
-      <p class="hero-description" id="hero-description">
-        PeopleForPeople macht es dir leicht! Registriere dich in wenigen Minuten, gib deine Fähigkeiten und Verfügbarkeit an – unser intelligentes System verbindet dich automatisch mit passenden Einsätzen, egal ob am Wochenende, nach Feierabend oder flexibel nach deinen Möglichkeiten.
+
+<main id="main">
+
+  <section class="section section--navy">
+    <div class="container">
+      <span class="eyebrow" data-i18n="vol.eyebrow">Para voluntarios</span>
+      <h1 data-i18n="vol.title">Ayudar no debería costar tiempo de buscar</h1>
+      <p class="lead" data-i18n="vol.lead">
+        Dinos qué sabes hacer y cuándo puedes. Nosotros te avisamos solo cuando hace falta algo
+        que encaja contigo y está cerca de donde estás.
       </p>
-      <p class="hero-section-title" id="hero-section-title">So funktioniert es:</p>
-    
-      <div class="functions-container">
-        <!-- Sección 1 -->
-        <div class="function-section animate-element slide-left" data-delay="0.1s">
-          <div class="section-text hover-scale">
-            <div class="section-header">
-              <span class="section-number">1.</span>
-              <h3 id="section1-title">Registrieren</h3>
-            </div>
-            <p id="section1-desc">Erstelle dein kostenloses Profil</p>
-          </div>
-          <div class="section-image">
-            <img class="hover-rotate pulse" src="https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/Registro.jpg?raw=true" alt="Registrieren">
-          </div>
-        </div>
-        <!-- Sección 2 -->
-        <div class="function-section animate-element slide-right" data-delay="0.2s">
-          <div class="section-text hover-scale">
-            <div class="section-header">
-              <span class="section-number">2.</span>
-              <h3 id="section2-title">Fähigkeiten &amp; Verfügbarkeit angeben</h3>
-            </div>
-            <p id="section2-desc">Teile mit, was du kannst und wann du Zeit hast</p>
-          </div>
-          <div class="section-image">
-            <img class="hover-rotate pulse" src="https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/Hilfe%20anfordern.JPG?raw=true" alt="Fähigkeiten &amp; Verfügbarkeit angeben">
-          </div>
-        </div>
-        <!-- Sección 3 -->
-        <div class="function-section animate-element slide-left" data-delay="0.3s">
-          <div class="section-text hover-scale">
-            <div class="section-header">
-              <span class="section-number">3.</span>
-              <h3 id="section3-title">Passende Einsätze finden</h3>
-            </div>
-            <p id="section3-desc">Erhalte automatische Vorschläge für relevante Projekte.</p>
-          </div>
-          <div class="section-image">
-            <img class="hover-rotate pulse" src="https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/email.png?raw=true" alt="Passende Einsätze finden">
-          </div>
-        </div>
-        <!-- Sección 4 -->
-        <div class="function-section animate-element slide-right" data-delay="0.4s">
-          <div class="section-text hover-scale">
-            <div class="section-header">
-              <span class="section-number">4.</span>
-              <h3 id="section4-title">Engagieren</h3>
-            </div>
-            <p id="section4-desc">Bestätige deinen Einsatz und hilf mit!</p>
-          </div>
-          <div class="section-image">
-            <img class="hover-rotate pulse" src="https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/ayuda%20frei.png?raw=true" alt="Engagieren">
-          </div>
-        </div>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="../#app" data-i18n="vol.ctaApp">Ver la app</a>
+        <a class="btn btn--ghost" href="../#contacto" data-i18n="vol.ctaContact">Escríbenos</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="vol.howEyebrow">Cómo funciona</span>
+        <h2 data-i18n="vol.howTitle">Cuatro pasos, una sola vez</h2>
       </div>
 
-      <!-- Apartado: Deine Vorteile als Freiwillige -->
-      <div class="advantages-wrapper">
-        <div class="advantages-text animate-element slide-up" data-delay="0.1s">
-          <h3 class="advantages-title" id="advantages-title">Deine Vorteile als Freiwillige:</h3>
-          <p class="advantage-item" id="advantage1">
-            - Schnell und einfach passende Einsatzmöglichkeiten finden
-          </p>
-          <p class="advantage-item" id="advantage2">
-            - Flexibel engagieren – wann und wie es für dich passt
-          </p>
-          <p class="advantage-item" id="advantage3">
-            - Deine Fähigkeiten sinnvoll einsetzen
-          </p>
-          <p class="advantage-item" id="advantage4">
-            - Teil einer starken Gemeinschaft werden
-          </p>
-          <p class="advantage-item" id="advantage5">
-            - Einen positiven Beitrag leisten
+      <div class="grid grid--4">
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">1</div>
+          <h3 data-i18n="vol.s1t">Regístrate</h3>
+          <p data-i18n="vol.s1b">Crea tu perfil gratis, con tu correo o tu cuenta de Google.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">2</div>
+          <h3 data-i18n="vol.s2t">Di qué sabes hacer</h3>
+          <p data-i18n="vol.s2b">Elige entre 36 habilidades, desde retirar barro hasta acompañar a una cita médica.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">3</div>
+          <h3 data-i18n="vol.s3t">Marca cuándo puedes</h3>
+          <p data-i18n="vol.s3b">Franjas por día y distancia máxima. Fuera de eso no te molestamos.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">4</div>
+          <h3 data-i18n="vol.s4t">Recibe avisos que encajan</h3>
+          <p data-i18n="vol.s4b">Solo lo que puedes hacer, cerca de ti y dentro de tu disponibilidad.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunken">
+    <div class="container">
+      <div class="split">
+        <div class="reveal">
+          <span class="eyebrow" data-i18n="vol.benEyebrow">Qué ganas</span>
+          <h2 data-i18n="vol.benTitle">Tu tiempo, donde sirve</h2>
+          <ul class="checklist">
+            <li data-i18n="vol.b1">Encuentras dónde ayudar sin rebuscar entre convocatorias</li>
+            <li data-i18n="vol.b2">Te comprometes cuando puedes, no cuando toca</li>
+            <li data-i18n="vol.b3">Usas lo que ya sabes hacer</li>
+            <li data-i18n="vol.b4">Tus horas quedan registradas y acreditadas</li>
+            <li data-i18n="vol.b5">Quedas cubierto por seguro de accidentes y responsabilidad civil</li>
+          </ul>
+          <p class="legal" data-i18n="vol.legal">
+            Conforme a la Ley 45/2015 de Voluntariado, toda persona voluntaria firma un acuerdo de
+            incorporación y queda cubierta por una póliza. Es una relación altruista: sin vínculo
+            laboral y sin remuneración.
           </p>
         </div>
-        <div class="advantages-image animate-element slide-up" data-delay="0.3s">
-          <img src="https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/voluntario%20freiwilliger.jpg?raw=true" alt="Vorteile">
+        <div class="split__media reveal">
+          <img src="../imagenes/ayuda frei.png" alt="" data-i18n-alt="vol.imgAlt" />
         </div>
       </div>
     </div>
-  
-    <!-- Apartado de Suscripción CORREGIDO -->
-    <div class="subscribe-wrapper">
-      <form id="subscription-form" class="card animate-element slide-up" data-delay="0.2s">
-        <span class="card__title" id="card-title">Abonnieren</span>
-        <p class="card__content" id="card-content">
-          Erhalte mehr Informationen über PeopleForPeople und unsere Initiative.
-        </p>
-        <div class="card__form">
-          <input placeholder="Dein Name" type="text" name="name" id="name-input" required>
-          <input placeholder="Deine Email" type="email" name="email" id="email-input" required>
-          <button type="submit" class="sign-up" id="card-button">Senden</button>
-        </div>
-        <div class="success-message" id="success-message">
-          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-          </svg>
-          <p>Vielen Dank für dein Interesse!</p>
-        </div>
-      </form>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="vol.privEyebrow">Privacidad</span>
+        <h2 data-i18n="vol.privTitle">Tus datos, en corto</h2>
+      </div>
+      <div class="grid grid--3">
+        <article class="card reveal">
+          <h3 data-i18n="vol.p1t">Tu teléfono no se publica</h3>
+          <p data-i18n="vol.p1b">Solo se comparte con quien coordina una misión que has aceptado.</p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="vol.p2t">Tu ubicación, solo en misión</h3>
+          <p data-i18n="vol.p2b">Se comparte mientras tengas una misión activa, y puedes desactivarlo cuando quieras.</p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="vol.p3t">Puedes borrarlo todo</h3>
+          <p data-i18n="vol.p3b">Desde la app, cuando quieras. Las horas acreditadas se conservan de forma anónima.</p>
+        </article>
+      </div>
+      <p style="margin-top: var(--s-lg)">
+        <a class="btn btn--navy" href="../#contacto" data-i18n="vol.ctaEnd">Quiero empezar</a>
+      </p>
     </div>
-  </main>
+  </section>
 
-  <footer>
-    <p id="footer-text"></p>
-  </footer>
-  
-   <!-- SDK de EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</main>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Importaciones Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+<footer class="footer">
+  <div class="container">
+    <div class="footer__bottom">
+      <span>© 2025 People for People</span>
+      <a href="../aviso-legal.html" data-i18n="footer.legal">Aviso legal · Impressum</a>
+      <a href="../privacidad.html" data-i18n="footer.privacy">Privacidad</a>
+      <a href="../terminos.html" data-i18n="footer.terms">Términos</a>
+    </div>
+  </div>
+</footer>
 
-    // Inicialización EmailJS CORRECTA
-    emailjs.init('51Uelkje-pi-HUR-g');
-
-    // Configuración Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyCXK3MnPhXxybf6RAJzBLcY-Krt5XsZ8B8",
-        authDomain: "subs-people-fp.firebaseapp.com",
-        projectId: "subs-people-fp",
-        storageBucket: "subs-people-fp.appspot.com",
-        messagingSenderId: "159831662337",
-        appId: "1:159831662337:web:de9bb5af3605acab60c500",
-        measurementId: "G-MPRES6G1DE"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Función para enviar el formulario CORREGIDA
-    async function handleFormSubmit(event) {
-      event.preventDefault();
-      
-      const form = event.target;
-      const submitButton = form.querySelector('#card-button');
-      const successMessage = document.getElementById('success-message');
-      const successText = successMessage.querySelector('p');
-      const nameInput = document.getElementById('name-input');
-      const emailInput = document.getElementById('email-input');
-
-      try {
-        // Validación
-        if (!form.checkValidity()) {
-          throw new Error('Bitte fülle alle Felder korrekt aus');
-        }
-
-        // Deshabilitar formulario
-        submitButton.disabled = true;
-        submitButton.textContent = 'Wird gesendet...';
-
-        // 1. Enviar email con EmailJS
-        const emailResponse = await emailjs.sendForm(
-          'default_service',
-          'template_7aylg4m',
-          form
-        );
-        console.log('Email erfolgreich gesendet:', emailResponse);
-
-        // 2. Guardar en Firebase
-        const exists = await emailExists(emailInput.value);
-        if (!exists) {
-          await addDoc(collection(db, "suscripciones"), {
-            nombre: nameInput.value,
-            email: emailInput.value,
-            fecha: new Date(),
-            idioma: document.querySelector('.lang-btn.active').dataset.lang
-          });
-        }
-
-        // Mostrar éxito
-        successText.textContent = exists 
-          ? 'Vielen Dank! Sie sind bereits registriert.' 
-          : 'Vielen Dank für dein Interesse!';
-        successMessage.classList.add('show');
-
-        // Resetear después de 5 segundos
-        setTimeout(() => {
-          form.reset();
-          successMessage.classList.remove('show');
-          submitButton.disabled = false;
-          submitButton.textContent = 'Senden';
-        }, 5000);
-
-      } catch (error) {
-        console.error('Fehler:', error);
-        alert(error.message || 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
-        submitButton.disabled = false;
-        submitButton.textContent = 'Senden';
-      }
-    }
-
-    // Función para verificar email
-    async function emailExists(email) {
-      const q = query(collection(db, "suscripciones"), where("email", "==", email));
-      return (await getDocs(q)).size > 0;
-    }
-
-    // Función para actualizar la traducción
-    function changeLanguage(lang) {
-      // Menú
-      document.getElementById("nav-home").innerText = translations[lang]["nav-home"];
-      document.getElementById("nav-app").innerText = translations[lang]["nav-app"];
-      document.getElementById("nav-info").innerText = translations[lang]["nav-info"];
-      document.getElementById("nav-dana").innerText = translations[lang]["nav-dana"];
-      document.getElementById("nav-about").innerText = translations[lang]["nav-about"];
-      document.getElementById("nav-freiwillige").innerText = translations[lang]["nav-freiwillige"];
-      document.getElementById("nav-ngos").innerText = translations[lang]["nav-ngos"];
-      document.getElementById("nav-kommunen").innerText = translations[lang]["nav-kommunen"];
-      document.getElementById("nav-unternehmen").innerText = translations[lang]["nav-unternehmen"];
-    
-      // Hero
-      document.getElementById("hero-title").innerText = translations[lang]["hero_title"];
-      document.getElementById("hero-subtitle").innerText = translations[lang]["hero_subtitle"];
-      document.getElementById("hero-description").innerText = translations[lang]["hero_description"];
-      document.getElementById("hero-section-title").innerText = translations[lang]["hero_section_title"];
-    
-      // Secciones de función
-      document.getElementById("section1-title").innerText = translations[lang]["section1_title"];
-      document.getElementById("section1-desc").innerText = translations[lang]["section1_desc"];
-      document.getElementById("section2-title").innerText = translations[lang]["section2_title"];
-      document.getElementById("section2-desc").innerText = translations[lang]["section2_desc"];
-      document.getElementById("section3-title").innerText = translations[lang]["section3_title"];
-      document.getElementById("section3-desc").innerText = translations[lang]["section3_desc"];
-      document.getElementById("section4-title").innerText = translations[lang]["section4_title"];
-      document.getElementById("section4-desc").innerText = translations[lang]["section4_desc"];
-    
-      // Ventajas
-      document.getElementById("advantages-title").innerText = translations[lang]["advantages_title"];
-      document.getElementById("advantage1").innerText = translations[lang]["advantage1"];
-      document.getElementById("advantage2").innerText = translations[lang]["advantage2"];
-      document.getElementById("advantage3").innerText = translations[lang]["advantage3"];
-      document.getElementById("advantage4").innerText = translations[lang]["advantage4"];
-      document.getElementById("advantage5").innerText = translations[lang]["advantage5"];
-    
-      // Recuadro de suscripción
-      document.getElementById("card-title").innerText = translations[lang]["card__title"];
-      document.getElementById("card-content").innerText = translations[lang]["card__content"];
-      document.getElementById("card-button").innerText = translations[lang]["card__button"];
-      document.getElementById("name-input").placeholder = translations[lang]["name__placeholder"];
-      document.getElementById("email-input").placeholder = translations[lang]["card__placeholder"];
-    
-      // Footer
-      document.getElementById("footer-text").innerText = translations[lang]["footer-text"];
-    }
-  
-    // Función para la transición de idioma
-    function runLanguageTransition(lang) {
-      const overlay = document.getElementById("lang-overlay");
-      overlay.style.transform = "translateX(0)";
-      overlay.style.opacity = "1";
-      setTimeout(() => {
-        changeLanguage(lang);
-        overlay.style.transform = "translateX(110%)";
-        overlay.style.opacity = "0";
-      }, 1000);
-      setTimeout(() => {
-        overlay.style.transform = "translateX(-110%)";
-      }, 2100);
-    }
-
-    // Función para animaciones al hacer scroll
-    function setupScrollAnimations() {
-      const animateElements = document.querySelectorAll('.animate-element');
-      
-      // Precarga de imágenes con transición suave
-      const images = document.querySelectorAll('img');
-      images.forEach(img => {
-        if (!img.complete) {
-          img.style.opacity = '0';
-          img.addEventListener('load', function() {
-            img.style.transition = 'opacity 0.5s ease';
-            img.style.opacity = '1';
-          });
-        }
-      });
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const element = entry.target;
-            const delay = element.dataset.delay || '0s';
-            
-            // Aplicar la animación con el delay especificado
-            setTimeout(() => {
-              element.classList.add('animated');
-            }, parseFloat(delay) * 1000);
-            
-            // Dejar de observar después de animar
-            observer.unobserve(element);
-          }
-        });
-      }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-      });
-
-      animateElements.forEach(element => {
-        // Configurar la transformación inicial según el tipo de animación
-        if (element.classList.contains('slide-left')) {
-          element.style.transform = 'translateX(-50px)';
-        } else if (element.classList.contains('slide-right')) {
-          element.style.transform = 'translateX(50px)';
-        } else if (element.classList.contains('slide-up')) {
-          element.style.transform = 'translateY(20px)';
-        }
-        
-        observer.observe(element);
-      });
-    }
-  
-    const translations = {
-      de: {
-        "nav-home": "Startseite",
-        "nav-app": "App",
-        "nav-info": "Informationen",
-        "nav-dana": "DANA",
-        "nav-about": "Über uns",
-        "nav-freiwillige": "Für Freiwillige",
-        "nav-ngos": "Für NGO´s",
-        "nav-kommunen": "Für Kommunen",
-        "nav-unternehmen": "Für Unternehmen",
-        "hero_title": "Werde Teil von PeopleForPeople und engagiere dich!",
-        "hero_subtitle": "Du möchtest helfen, hast aber keine Zeit, ständig nach passenden Angeboten zu suchen?",
-        "hero_description": "PeopleForPeople macht es dir leicht! Registriere dich in wenigen Minuten, gib deine Fähigkeiten und Verfügbarkeit an – unser intelligentes System verbindet dich automatisch mit passenden Einsätzen, egal ob am Wochenende, nach Feierabend oder flexibel nach deinen Möglichkeiten.",
-        "hero_section_title": "So funktioniert es:",
-        "section1_title": "Registrieren",
-        "section1_desc": "Erstelle dein kostenloses Profil",
-        "section2_title": "Fähigkeiten & Verfügbarkeit angeben",
-        "section2_desc": "Teile mit, was du kannst und wann du Zeit hast",
-        "section3_title": "Passende Einsätze finden",
-        "section3_desc": "Erhalte automatische Vorschläge für relevante Projekte.",
-        "section4_title": "Engagieren",
-        "section4_desc": "Bestätige deinen Einsatz und hilf mit!",
-        "advantages_title": "Deine Vorteile als Freiwillige:",
-        "advantage1": "- Schnell und einfach passende Einsatzmöglichkeiten finden",
-        "advantage2": "- Flexibel engagieren – wann und wie es für dich passt",
-        "advantage3": "- Deine Fähigkeiten sinnvoll einsetzen",
-        "advantage4": "- Teil einer starken Gemeinschaft werden",
-        "advantage5": "- Einen positiven Beitrag leisten",
-        "card__title": "Abonnieren",
-        "card__content": "Erhalte mehr Informationen über PeopleForPeople und unsere Initiative.",
-        "card__button": "Senden",
-        "name__placeholder": "Dein Name",
-        "card__placeholder": "Deine Email",
-        "footer-text": "© 2025 PeopleForPeople. Alle Rechte vorbehalten."
-      },
-      es: {
-        "nav-home": "Inicio",
-        "nav-app": "App",
-        "nav-info": "Información",
-        "nav-dana": "DANA",
-        "nav-about": "Quiénes Somos",
-        "nav-freiwillige": "Para voluntarios",
-        "nav-ngos": "Para ONG",
-        "nav-kommunen": "Para municipios",
-        "nav-unternehmen": "Para empresas",
-        "hero_title": "¡Sé parte de PeopleForPeople y comprométete!",
-        "hero_subtitle": "¿Quieres ayudar, pero no tienes tiempo para buscar ofertas adecuadas constantemente?",
-        "hero_description": "¡PeopleForPeople te lo facilita! Regístrate en pocos minutos, indica tus habilidades y tu disponibilidad, y nuestro sistema inteligente te conectará automáticamente con oportunidades adecuadas, ya sea los fines de semana, después del trabajo o de forma flexible según tus posibilidades.",
-        "hero_section_title": "Así funciona:",
-        "section1_title": "Registrarse",
-        "section1_desc": "Crea tu perfil gratis",
-        "section2_title": "Indica tus habilidades y disponibilidad",
-        "section2_desc": "Cuéntanos lo que puedes hacer y cuándo estás disponible",
-        "section3_title": "Encuentra oportunidades adecuadas",
-        "section3_desc": "Recibe sugerencias automáticas para proyectos relevantes.",
-        "section4_title": "Comprométete",
-        "section4_desc": "Confirma tu participación y ayuda",
-        "advantages_title": "Tus ventajas como voluntario:",
-        "advantage1": "- Encuentra oportunidades de servicio de manera rápida y sencilla",
-        "advantage2": "- Comprométete de forma flexible, cuando y como te convenga",
-        "advantage3": "- Aplica tus habilidades de forma efectiva",
-        "advantage4": "- Sé parte de una comunidad fuerte",
-        "advantage5": "- Realiza una contribución positiva",
-        "card__title": "Suscribirse",
-        "card__content": "Recibe más información sobre PeopleForPeople y nuestra iniciativa.",
-        "card__button": "Enviar",
-        "name__placeholder": "Tu nombre",
-        "card__placeholder": "Tu correo electrónico",
-        "footer-text": "© 2025 PeopleForPeople. Todos los derechos reservados."
-      }
-    };
-    
-     // Inicialización CORREGIDA
-    document.addEventListener("DOMContentLoaded", () => {
-      // Configurar el formulario
-      document.getElementById('subscription-form')
-        .addEventListener('submit', handleFormSubmit);
-      
-      // Resto de inicializaciones
-      changeLanguage("de");
-      setupScrollAnimations();
-      
-      // Configurar botones de idioma
-      let currentLang = "de";
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          runLanguageTransition(btn.dataset.lang);
-          currentLang = btn.dataset.lang;
-        });
-      });
-    });
-  </script>
+<script src="../js/i18n.js"></script>
+<script src="../js/site.js"></script>
 </body>
 </html>
