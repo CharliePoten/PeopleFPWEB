@@ -1,0 +1,1264 @@
+/* Global & smooth scroll */
+html, body {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Evita scroll horizontal en todos los dispositivos */
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #0E2431;
+  background-color: #fff;
+  padding-top: 3rem; /* space for fixed header */
+}
+section {
+  padding: 4rem 1.5rem;
+  /* min-height para que se adapte al contenido y separar secciones */
+  min-height: 100vh;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Header and Navigation */
+.l-header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(146,161,176,0.15);
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3rem;
+  padding: 0 1.5rem;
+}
+.nav-logo {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0E2431;
+}
+.nav-menu {
+  position: fixed;
+  top: 3rem;
+  right: -100%;
+  width: 80%;
+  height: 100%;
+  background-color: #0E2431;
+  padding: 2rem;
+  transition: 0.5s;
+  display: flex;
+  flex-direction: column;
+}
+.nav-menu.show {
+  right: 0;
+}
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.nav-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.3rem;
+  width: 100%;
+  height: 0.18rem;
+  background-color: #4070F4;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Language Selector */
+#lang-selector {
+  background-color: rgba(64,112,244,0.1);
+  border-radius: 25px;
+  padding: 0.2rem 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+#lang-selector:hover {
+  background-color: rgba(64,112,244,0.2);
+}
+.lang-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  outline: none;
+  color: #0E2431;
+  font-weight: 600;
+  transition: color 0.3s, transform 0.3s;
+}
+.lang-btn.active {
+  color: #4070F4;
+  transform: scale(1.1);
+}
+.nav-toggle {
+  font-size: 1.5rem;
+  color: #0E2431;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+@media screen and (min-width: 769px) {
+  .nav-menu {
+    position: initial;
+    background: none;
+    height: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+  .nav-list {
+    flex-direction: row;
+    gap: 2rem;
+  }
+  .nav-link {
+    color: #0E2431;
+  }
+  .nav-toggle {
+    display: none;
+  }
+}
+
+/* Hero Section */
+#home {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding-top: 5rem;
+  background-image: url("https://github.com/PeopleFP/PeopleFPWeb/blob/main/imagenes/algemesi.jpg?raw=true");
+  background-size: cover;
+  background-position: center;
+}
+/* Overlay en el hero para mejorar el contraste */
+#home .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+  z-index: 0;
+}
+/* Aseguramos que el contenido del hero quede encima */
+#home > *:not(.hero-overlay) {
+  position: relative;
+  z-index: 1;
+}
+.hero-company {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #4070F4;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeIn 1s forwards 0.2s;
+}
+.hero-slogan {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeIn 1s forwards 0.4s;
+}
+.hero-tagline {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 1;
+}
+
+/* Down Arrow */
+.down-arrow {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #4070F4;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 1s forwards 1s;
+}
+.down-arrow:hover {
+  color: #0E2431;
+}
+
+/* Other Sections */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeIn 1s forwards 0.5s;
+}
+.section-text {
+  font-size: 1rem;
+  max-width: 800px;
+  opacity: 1;
+  line-height: 1.5;
+}
+
+/* Sección App: dos columnas */
+.app-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem 0;
+}
+.app-description {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+}
+.app-description p {
+  margin: 1rem 0;
+}
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.feature-list li {
+  margin: 0.5rem 0;
+  text-align: left;
+}
+.feature-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.5s forwards;
+}
+.feature-item:nth-child(1) { animation-delay: 0.2s; }
+.feature-item:nth-child(2) { animation-delay: 0.4s; }
+.feature-item:nth-child(3) { animation-delay: 0.6s; }
+.feature-item:nth-child(4) { animation-delay: 0.8s; }
+.feature-item:nth-child(5) { animation-delay: 1s; }
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bloque para los botones de descarga (stores) */
+.store-section {
+  margin-top: 2rem;
+}
+.store-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4070F4;
+  margin-bottom: 1rem;
+}
+.store-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  justify-content: center;
+}
+.store-item {
+  text-align: center;
+}
+.store-img {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  max-width: 250px;
+  width: 100%;
+  display: block;
+}
+.store-img:hover {
+  transform: scale(1.05);
+}
+
+/* Columna de móviles: animación de móviles rotatorios */
+.mobile-preview {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+  height: 320px;
+  margin: 0 auto; /* Centrado */
+}
+.mobile-container {
+  position: relative;
+  width: 300px;
+  height: 100%;
+  margin: 0 auto;
+}
+.mobile-item {
+  position: absolute;
+  transition: all 0.5s ease;
+}
+.mobile-img {
+  display: block;
+  width: 75%;
+  border-radius: 8px;
+}
+
+/* Image Groups for other sections */
+.store-container,
+.feature-container,
+.info-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.store-container .store-img,
+.feature-img,
+.info-img {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  width: 30%;
+  max-width: 150px;
+}
+.store-container .store-img:hover,
+.feature-img:hover,
+.info-img:hover {
+  transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+  background-color: #0E2431;
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+/* Overlay for language transition */
+#lang-overlay {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  background: #D8E8F9;
+  opacity: 0;
+  z-index: 200;
+  border-radius: 15px;
+  transform: translateX(-110%);
+  transition: transform 1s ease, opacity 1s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes wave {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+}
+@keyframes pulsate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.pulsate {
+  animation: pulsate 2s ease-in-out infinite;
+}
+.pulsate.delayed {
+  animation-delay: 1s;
+}
+
+/* ============================
+   PeopleForPeople - Sección DANA
+   ============================ */
+
+.dana-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem 0;
+}
+.dana-description {
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+}
+.dana-description p {
+  max-width: 500px;
+  line-height: 1.5;
+}
+.dana-intro {
+  text-align: left;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  max-width: 800px;
+}
+.dana-collage {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+  width: 400px;
+  height: 400px;
+  overflow: visible;
+}
+.collage-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.collage-img {
+  position: absolute;
+  width: 48%;
+  border-radius: 8px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0.9;
+}
+.collage-img.img1 {
+  top: 5%;
+  left: 5%;
+  transform: rotate(-8deg);
+}
+.collage-img.img2 {
+  top: 5%;
+  right: 5%;
+  transform: rotate(5deg);
+}
+.collage-img.img3 {
+  bottom: 5%;
+  left: 5%;
+  transform: rotate(3deg);
+}
+.collage-img.img4 {
+  bottom: 5%;
+  right: 5%;
+  transform: rotate(-3deg);
+}
+.collage-img.highlight {
+  transform: scale(1.2) !important;
+  opacity: 1 !important;
+  z-index: 10;
+}
+.dana-additional {
+  /* Desktop los tenía alineado a la derecha; se mantendrá ahí para pantallas grandes */
+  text-align: right;
+  margin-top: -100px;  /* Ajuste para desktop */
+  margin-right: 150px;
+}
+.dana-additional img.mama-img {
+  max-width: 300px;
+  display: inline-block;
+}
+.dana-additional p {
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+.dana-news {
+  text-align: center;
+  margin-top: 1rem;
+}
+.dana-news img.algemesi-img {
+  max-width: 300px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+.dana-news p {
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+/* Animación de onda (letra por letra) */
+@keyframes waveAnimation {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+/* Animación de pulso (glowing) para destacar imágenes de ODS */
+@keyframes odsPulse {
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.9); }
+  100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+}
+.ods-highlight {
+  animation: odsPulse 2s ease-in-out infinite;
+}
+/* Glowing animation para el enlace “aquí” en la sección App */
+@keyframes glow {
+  0% { text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+  50% { text-shadow: 0 0 20px #ff0, 0 0 30px #ff0; }
+  100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+}
+.glow-link {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
+  animation: glow 2s infinite;
+}
+/* Estilos para el hero-slogan */
+.slogan-wave {
+  font-size: 2em;
+  font-weight: bold;
+}
+/* Estilos para el texto de voluntarios */
+.volunteers-wave {
+  font-size: 2em;
+  font-weight: bold;
+  color: #ADD8E6;
+  margin-top: 1em;
+}
+/* Separación entre apartados en la sección Información */
+.info-description,
+.business-model-section,
+.ods-section {
+  margin-bottom: 2em;
+}
+/* Modelo de negocio: grid de 2 columnas en una sola fila */
+.business-model {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
+}
+.business-model-item.left {
+  grid-column: 1 / 2;
+}
+.business-model-item.right {
+  grid-column: 2 / 3;
+  /* Bajar la imagen de PAY PER FREIWILLIGER */
+  margin-top: 30px;
+}
+.business-model-item img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+.business-model-item img:hover {
+  transform: scale(1.03);
+}
+.business-model-item p {
+  font-size: 1em;
+  margin-top: 0.5em;
+}
+/* Sección ODS */
+.ods-section {
+  margin-top: 2em;
+  padding: 1em;
+  background: #fff;
+  border-radius: 8px;
+  text-align: center;
+}
+.ods-header {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1em;
+}
+.ods-header img {
+  height: 50px;
+  width: auto;
+}
+.ods-items {
+  /* Por defecto se usa auto-fit; en pantallas grandes puede ser 3 columnas */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+.ods-item {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.ods-item img {
+  max-width: 300px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.ods-item p {
+  font-size: 1em;
+  margin-top: 0.5em;
+}
+/* Bloque para la web informativa debajo de ODS */
+.info-web {
+  text-align: center;
+  margin-top: 2em;
+}
+.info-web img {
+  max-width: 300px;
+  width: 100%;
+  margin: 1em auto;
+  display: block;
+  cursor: pointer;
+}
+.info-web p {
+  margin: 0.5em 0;
+}
+/* Modal overlay para ampliar imagen del collage */
+#modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#modal-overlay.active {
+  opacity: 1;
+}
+#modal-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  transform: scale(0.8);
+  transition: transform 0.5s ease;
+}
+#modal-overlay.active img {
+  transform: scale(1);
+}
+/* Sección App */
+.app-intro {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+.app-description p:not(.app-intro) {
+  text-align: left;
+}
+
+/* ==============================
+   Media Queries Adicionales
+   ============================== */
+
+/* Ajustes para Móviles (máximo 767px) */
+@media screen and (max-width: 767px) {
+  body {
+    font-size: 0.9rem;
+    padding-top: 3rem;
+  }
+  section {
+    padding: 3rem 1rem;
+    min-height: auto;
+  }
+  .nav-menu {
+    width: 100%;
+  }
+  .app-content,
+  .dana-content {
+    flex-direction: column;
+  }
+  .nav-logo {
+    font-size: 1.8rem;
+  }
+  .hero-company {
+    font-size: 2.5rem;
+  }
+  /* Ajustar el slogan para que no se corte */
+  .hero-slogan {
+    font-size: 1.6rem;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.35;
+    padding: 0 1rem;
+  }
+  .hero-tagline {
+    font-size: 1rem;
+  }
+  .mobile-container {
+    width: 90%;
+  }
+  /* Incrementar espacio inferior de la animación de apps */
+  .mobile-preview {
+    margin: 0 auto 3rem;
+  }
+  .store-container .store-img,
+  .feature-img,
+  .info-img {
+    width: 45%;
+    max-width: 120px;
+  }
+  /* Centrar la sección de “Adiós/Tschüss Mama” */
+  .dana-additional {
+    text-align: center;
+    margin-top: 1rem;
+    margin-right: 0;
+  }
+  .dana-additional img.mama-img {
+    margin: 0 auto;
+    display: block;
+    max-width: 350px;
+  }
+  .dana-additional p {
+    margin: 0.5rem 0;
+    text-align: center;
+    max-width: 100%;
+    padding: 0;
+  }
+  /* Forzar que el texto de voluntarios se envuelva correctamente */
+  .volunteers-wave,
+  #volunteers-wave-text {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  @keyframes waveAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-3px); }
+  }
+}
+
+/* Ajustes para Tablets (entre 768px y 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  body {
+    font-size: 0.95rem;
+  }
+  .app-content,
+  .dana-content {
+    flex-direction: column;
+  }
+  .mobile-preview {
+    margin-left: 0;
+  }
+  .business-model {
+    grid-template-columns: 1fr;
+  }
+  .dana-collage {
+    width: 90%;
+    height: auto;
+  }
+  /* Centrar el grid de ODS en 2 columnas */
+  .ods-items {
+    grid-template-columns: repeat(2, 1fr) !important;
+    justify-items: center;
+  }
+  .ods-item:nth-child(2) {
+    margin-bottom: 20px;
+  }
+  /* Reubicar y centrar el bloque de Mamá para iPad */
+  .dana-additional {
+    text-align: center;
+    margin-top: 1rem;  /* Valor positivo para situarla adecuadamente */
+    margin-right: 0;
+  }
+  .dana-additional img.mama-img {
+    margin: 0 auto;
+    display: block;
+    max-width: 80%;
+  }
+  .dana-additional p {
+    margin: 0.5rem auto;
+    text-align: center;
+    max-width: 90%;
+  }
+  @keyframes waveAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-3px); }
+  }
+  .volunteers-wave {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+    /* Estilos del menú */
+    .nav-list li a#nav-freiwillige,
+    .nav-list li a#nav-ngos,
+    .nav-list li a#nav-kommunen,
+    .nav-list li a#nav-unternehmen {
+      color: #2469ca;
+    }
+/* Global settings */
+          body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Header y menú principal */
+    header.l-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10003;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    main {
+      margin-top: 70px; /* Altura del header */
+    }
+
+    /* Keyframes para animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideIn {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideInFromLeft {
+      from { 
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes slideInFromRight {
+      from { 
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Clases de animación */
+    .animate-element {
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .animate-element.animated {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    
+    .fade-in {
+      animation-name: fadeIn;
+    }
+    
+    .slide-up {
+      animation-name: slideIn;
+    }
+    
+    .slide-left {
+      animation-name: slideInFromLeft;
+    }
+    
+    .slide-right {
+      animation-name: slideInFromRight;
+    }
+    
+    .pulse {
+      animation: gentlePulse 3s ease-in-out infinite;
+    }
+    
+    /* Efectos hover */
+    .hover-scale {
+      transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.03);
+    }
+    
+    .hover-rotate {
+      transition: transform 0.3s ease;
+    }
+    .hover-rotate:hover {
+      transform: rotate(2deg);
+    }
+
+    /* Estilos para el contenido principal */
+    .hero-content {
+      text-align: center;
+      max-width: 800px;
+      margin: 10px auto;
+      padding: 0 10px;
+    }
+    .hero-title {
+      color: #6cb2eb;
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      font-weight: bold;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+    .hero-description {
+      font-size: 1.1em;
+      margin-bottom: 15px;
+    }
+    .hero-section-title {
+      font-weight: bold;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+    }
+
+   /* Contenedor de secciones de función */
+.functions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 10px 0 20px 0;
+}
+
+/* Todas las secciones iguales */
+.function-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+  flex-direction: row; /* Asegura que todas tengan la misma dirección */
+}
+
+/* Texto */
+.section-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* Contenedor de secciones de función */
+.functions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 10px 0 20px 0;
+}
+
+/* Todas las secciones iguales */
+.function-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+  flex-direction: row; /* Asegura que todas tengan la misma dirección */
+}
+
+/* Texto */
+.section-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* Encabezado (número + título) */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-bottom: 5px;
+}
+
+.section-number {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.section-text h3 {
+  font-weight: bold;
+  font-size: 1.4em;
+  margin: 0;
+}
+
+.section-text p {
+  font-size: 1em;
+  color: #555;
+  margin: 0;
+}
+
+/* Imagen */
+.section-image {
+  flex-shrink: 0;
+}
+
+.section-image img {
+  width: 200px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+
+/* Imagen */
+.section-image {
+  flex-shrink: 0;
+}
+
+.section-image img {
+  width: 200px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+
+    /* Apartado "Deine Vorteile als Freiwillige" */
+    .advantages-wrapper {
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0;
+      margin-top: 40px;
+    }
+    .advantages-text {
+      width: 50%;
+      margin: 0 50px;
+      padding: 0;
+      text-align: left;
+    }
+    .advantages-image {
+      width: 80%;
+      margin: 0 70px;
+      padding: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .advantages-image img {
+      width: 800px;
+      border-radius: 10px;
+      display: block;
+    }
+  
+    /* Apartado de suscripción */
+    .subscribe-wrapper {
+      margin: 20px 0 100px 200px;
+      display: flex;
+      justify-content: flex-start;
+      padding: 10px;
+      width: 100%;
+    }
+    .card {
+      width: 240px;
+      height: 254px;
+      padding: 0 15px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card > * {
+      margin: 0;
+    }
+    .card__title {
+      font-size: 23px;
+      font-weight: 900;
+      color: #333;
+    }
+    .card__content {
+      font-size: 13px;
+      line-height: 18px;
+      color: #333;
+    }
+    .card__form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+    .card__form input {
+      margin-top: 10px;
+      outline: 0;
+      background: #fff;
+      box-shadow: transparent 0px 0px 0px 1px inset;
+      padding: 0.6em;
+      border-radius: 14px;
+      border: 1px solid #333;
+      color: black;
+    }
+    .card__form button {
+      border: 0;
+      background: #111;
+      color: #fff;
+      padding: 0.68em;
+      border-radius: 14px;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .sign-up:hover {
+      opacity: 0.8;
+      background: #333;
+      cursor: pointer;
+    }
+    .sign-up:active {
+      transform: scale(0.98);
+    }
+
+    /* Estilos del menú */
+    .nav-list li a#nav-freiwillige,
+    .nav-list li a#nav-ngos,
+    .nav-list li a#nav-kommunen,
+    .nav-list li a#nav-unternehmen {
+      color: #2469ca;
+    }
+    
+    /* Overlay para cambio de idioma */
+    #lang-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 10000;
+      transform: translateX(-110%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 1s ease, opacity 1s ease;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2em;
+      }
+      
+      .function-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .section-text {
+        text-align: center;
+      }
+      
+      .advantages-wrapper {
+        flex-direction: column;
+      }
+      
+      .advantages-text, 
+      .advantages-image {
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+      }
+      
+      .advantages-image img {
+        width: 100%;
+      }
+      
+      .subscribe-wrapper {
+        margin: 20px auto;
+        justify-content: center;
+      }
+    }
+.functions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.function-section {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ⬅️ ¡Esta es la clave! */
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section-text {
+  width: 50%;
+  max-width: 500px;
+  min-width: 280px;
+  text-align: left;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-bottom: 10px;
+}
+
+.section-number {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.section-text h3 {
+  font-weight: bold;
+  font-size: 1.4em;
+  margin: 0;
+}
+
+.section-text p {
+  font-size: 1em;
+  color: #555;
+  margin: 0;
+}
+
+.section-image {
+  width: 200px;
+  text-align: center;
+}
+
+.section-image img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 5px;
+  object-fit: cover;
+}
