@@ -181,8 +181,15 @@ p  { margin: 0 0 var(--s-base); }
 .btn--ghost { background: transparent; color: var(--navy-600); border-color: var(--n-300); }
 .btn--ghost:hover { background: var(--navy-50); color: var(--navy-700); }
 
-.section--navy .btn--ghost { color: #fff; border-color: rgba(255,255,255,0.4); }
-.section--navy .btn--ghost:hover { background: rgba(255,255,255,0.1); color: #fff; }
+/* Sobre fondo oscuro el boton fantasma va en blanco. Antes esta regla solo
+   contemplaba `.section--navy`, y el hero es azul marino sin esa clase: el
+   texto quedaba azul sobre azul y el boton solo se veia al pasar el raton,
+   cuando el hover le ponia un fondo claro detras. */
+.section--navy .btn--ghost,
+.hero .btn--ghost { color: #fff; border-color: rgba(255,255,255,0.45); }
+
+.section--navy .btn--ghost:hover,
+.hero .btn--ghost:hover { background: rgba(255,255,255,0.14); color: #fff; border-color: #fff; }
 
 /* --------------------------------------------------------------------------
    Cabecera
@@ -322,15 +329,120 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .shots img {
   width: min(210px, 44vw); border-radius: var(--r-xl);
   box-shadow: var(--shadow-raised); border: 1px solid var(--border);
+  /* La del medio va elevada; el resto parte de su sitio. Se guarda en una
+     variable para que el hover pueda sumar su propio desplazamiento sin
+     pisar la posicion base de cada movil. */
+  --lift: 0px;
+  transform: translateY(var(--lift));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
-.shots img:nth-child(2) { transform: translateY(-18px); }
+.shots img:nth-child(2) { --lift: -18px; }
+
+.shots img:hover {
+  transform: translateY(calc(var(--lift) - 10px)) scale(1.03);
+  box-shadow: 0 22px 45px rgba(0, 14, 35, 0.42);
+}
+
+/* Flotan muy despacio y desfasados entre si, para que el trio no suba y
+   baje en bloque como un solo objeto. */
+@media (prefers-reduced-motion: no-preference) {
+  .shots img { animation: flota 6s ease-in-out infinite; }
+  .shots img:nth-child(2) { animation-delay: -2s; }
+  .shots img:nth-child(3) { animation-delay: -4s; }
+  .shots img:hover { animation-play-state: paused; }
+}
+
+@keyframes flota {
+  0%, 100% { transform: translateY(var(--lift)); }
+  50%      { transform: translateY(calc(var(--lift) - 8px)); }
+}
+
+/* Insignias de las tiendas */
+.stores { display: flex; gap: var(--s-md); flex-wrap: wrap; margin-top: var(--s-base); }
+.stores a {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 18px; border-radius: var(--r-md);
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.28);
+  color: #fff; text-decoration: none;
+  transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+.stores a:hover { background: rgba(255,255,255,0.16); border-color: #fff; transform: translateY(-2px); }
+.stores svg { width: 22px; height: 22px; flex: none; fill: currentColor; }
+.stores span { display: block; font-size: 0.68rem; opacity: 0.75; line-height: 1.2; }
+.stores strong { display: block; font-size: 0.95rem; line-height: 1.2; }
 
 /* --------------------------------------------------------------------------
    DANA
    -------------------------------------------------------------------------- */
 
 .collage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-md); }
-.collage img { border-radius: var(--r-md); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.collage__item {
+  padding: 0; border: 0; background: none; cursor: zoom-in;
+  border-radius: var(--r-md); overflow: hidden; position: relative;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+.collage img {
+  border-radius: var(--r-md); aspect-ratio: 4 / 3; object-fit: cover;
+  width: 100%; display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s ease;
+}
+
+/* Se alternan las esquinas para que el conjunto se lea como un collage y
+   no como una cuadricula. */
+.collage__item:nth-child(1) { border-top-left-radius: var(--r-xl); }
+.collage__item:nth-child(2) { border-top-right-radius: var(--r-xl); margin-top: var(--s-lg); }
+.collage__item:nth-child(3) { border-bottom-left-radius: var(--r-xl); margin-top: calc(var(--s-lg) * -1); }
+.collage__item:nth-child(4) { border-bottom-right-radius: var(--r-xl); }
+
+.collage__item:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); z-index: 1; }
+.collage__item:hover img { transform: scale(1.07); }
+.collage__item:focus-visible { outline: 3px solid var(--amber-500); outline-offset: 3px; }
+
+/* Lupa que aparece al pasar por encima: sin ella nada indica que la foto
+   se puede ampliar. */
+.collage__item::after {
+  content: '⤢';
+  position: absolute; right: 10px; bottom: 8px;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(0, 30, 71, 0.82); color: #fff; font-size: 0.95rem;
+  opacity: 0; transform: scale(0.8);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.collage__item:hover::after,
+.collage__item:focus-visible::after { opacity: 1; transform: scale(1); }
+
+/* --------------------------------------------------------------------------
+   Visor de imagen ampliada
+   -------------------------------------------------------------------------- */
+
+.visor {
+  position: fixed; inset: 0; z-index: 200;
+  display: none; place-items: center;
+  padding: var(--s-lg);
+  background: rgba(0, 14, 35, 0.92);
+  opacity: 0; transition: opacity 0.25s ease;
+}
+.visor[open], .visor.abierto { display: grid; }
+.visor.visible { opacity: 1; }
+.visor img {
+  max-width: min(1100px, 94vw); max-height: 88vh;
+  border-radius: var(--r-lg); box-shadow: var(--shadow-raised);
+  transform: scale(0.96); transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.visor.visible img { transform: scale(1); }
+.visor__cerrar {
+  position: absolute; top: 18px; right: 18px;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.12);
+  color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+.visor__cerrar:hover { background: rgba(255,255,255,0.22); }
+
+@media (max-width: 640px) {
+  .collage__item:nth-child(2),
+  .collage__item:nth-child(3) { margin-top: 0; }
+}
 
 .quote {
   border-left: 4px solid var(--amber-500);
@@ -351,10 +463,31 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
    -------------------------------------------------------------------------- */
 
 .ods { display: grid; grid-template-columns: repeat(auto-fit, minmax(228px, 1fr)); gap: var(--s-lg); }
-.ods__item { text-align: left; }
-.ods__item img { width: 92px; border-radius: var(--r-md); margin-bottom: var(--s-md); }
+.ods__item {
+  text-align: left;
+  padding: var(--s-base);
+  border-radius: var(--r-lg);
+  border: 1px solid transparent;
+  transition: transform 0.22s ease, border-color 0.22s ease, background-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+.ods__item img {
+  width: 92px; border-radius: var(--r-md); margin-bottom: var(--s-md);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
 .ods__item h3 { font-size: 1rem; margin-bottom: 4px; }
 .ods__item p { font-size: 0.92rem; color: var(--text-soft); }
+
+/* Al pasar el raton el bloque se levanta y el emblema crece un poco. Los
+   emblemas de la ONU son intocables en color y forma, asi que el realce va
+   en la tarjeta, no en la imagen. */
+.ods__item:hover {
+  transform: translateY(-4px);
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: var(--shadow-card);
+}
+.ods__item:hover img { transform: scale(1.06); }
 
 /* --------------------------------------------------------------------------
    Equipo

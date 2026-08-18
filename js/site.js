@@ -192,4 +192,61 @@
       }, 800);
     });
   }
+
+  /* ---------------------------------------------------------------------
+     Visor de imagen ampliada
+
+     Las fotos del collage se abren a pantalla completa. Se guarda desde
+     dónde se abrió para devolver el foco al cerrar: quien navega con
+     teclado no debe acabar al principio de la página cada vez.
+     --------------------------------------------------------------------- */
+
+  var visor = document.getElementById('visor');
+
+  if (visor) {
+    var visorImg = visor.querySelector('img');
+    var origen = null;
+
+    function abrirVisor(src, alt, boton) {
+      origen = boton || null;
+      visorImg.src = src;
+      visorImg.alt = alt || '';
+      visor.classList.add('abierto');
+      // Un fotograma de margen para que la transición tenga desde dónde
+      // partir; sin esto aparece de golpe.
+      requestAnimationFrame(function () {
+        visor.classList.add('visible');
+      });
+      document.body.style.overflow = 'hidden';
+      visor.querySelector('.visor__cerrar').focus();
+    }
+
+    function cerrarVisor() {
+      visor.classList.remove('visible');
+      document.body.style.overflow = '';
+      setTimeout(function () {
+        visor.classList.remove('abierto');
+        visorImg.removeAttribute('src');
+        if (origen) origen.focus();
+        origen = null;
+      }, 250);
+    }
+
+    document.addEventListener('click', function (e) {
+      var boton = e.target.closest('[data-ampliar]');
+      if (boton) {
+        var img = boton.querySelector('img');
+        abrirVisor(boton.getAttribute('data-ampliar'), img ? img.alt : '', boton);
+      }
+    });
+
+    visor.addEventListener('click', function (e) {
+      // Se cierra al tocar el fondo o la equis, no al tocar la propia foto.
+      if (e.target === visor || e.target.closest('.visor__cerrar')) cerrarVisor();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && visor.classList.contains('abierto')) cerrarVisor();
+    });
+  }
 })();
