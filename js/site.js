@@ -249,4 +249,89 @@
       if (e.key === 'Escape' && visor.classList.contains('abierto')) cerrarVisor();
     });
   }
+
+  /* ==========================================================================
+     Carrusel del collage
+     --------------------------------------------------------------------------
+     La web antigua iba destacando una foto cada cinco segundos. Se recupera
+     ese ritmo tal cual, con tres cosas que alli no estaban:
+
+       · No arranca hasta que el collage se ve. Un temporizador corriendo
+         sobre algo que esta fuera de pantalla solo gasta bateria.
+       · Se para al pasar el raton o al enfocar con el teclado. Si alguien
+         esta mirando una foto, no se le mueve debajo.
+       · Se para tambien con la pestana en segundo plano.
+
+     Sin JavaScript el collage se queda quieto y completo: la clase que
+     activa el ciclo la pone este script, no el HTML.
+     ========================================================================== */
+  var collage = document.querySelector('.collage');
+
+  if (collage) {
+    var fotos = Array.prototype.slice.call(collage.querySelectorAll('.collage__item'));
+    var lento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (fotos.length > 1 && !lento) {
+      var INTERVALO = 5000; // El mismo que tenia la web antigua.
+      var actual = 0;
+      var reloj = null;
+      var pausado = false;
+
+      collage.classList.add('is-cycling');
+
+      function destacar(i) {
+        fotos.forEach(function (f, n) {
+          f.classList.toggle('is-featured', n === i);
+        });
+      }
+
+      function arrancar() {
+        if (reloj || pausado) return;
+        reloj = setInterval(function () {
+          actual = (actual + 1) % fotos.length;
+          destacar(actual);
+        }, INTERVALO);
+      }
+
+      function parar() {
+        if (!reloj) return;
+        clearInterval(reloj);
+        reloj = null;
+      }
+
+      destacar(0);
+
+      // Solo mientras se ve.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entradas) {
+          entradas.forEach(function (entrada) {
+            if (entrada.isIntersecting) arrancar();
+            else parar();
+          });
+        }, { threshold: 0.25 }).observe(collage);
+      } else {
+        arrancar();
+      }
+
+      // El puntero y el teclado mandan sobre el turno.
+      ['mouseenter', 'focusin'].forEach(function (evento) {
+        collage.addEventListener(evento, function () {
+          pausado = true;
+          parar();
+        });
+      });
+
+      ['mouseleave', 'focusout'].forEach(function (evento) {
+        collage.addEventListener(evento, function () {
+          pausado = false;
+          arrancar();
+        });
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) parar();
+        else arrancar();
+      });
+    }
+  }
 })();
