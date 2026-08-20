@@ -204,11 +204,18 @@ p  { margin: 0 0 var(--s-base); }
 }
 .header__inner { display: flex; align-items: center; gap: var(--s-lg); height: 100%; }
 
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
-.brand__mark { height: 30px; width: auto; }
+/* La marca es quien cede espacio cuando la cabecera no cabe: el isotipo se
+   queda siempre y el nombre se recorta con puntos suspensivos. Antes tenia
+   `flex-shrink: 0` y el que se estrechaba era el selector de idioma. */
+.brand {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  min-width: 0;
+}
+.brand__mark { height: 30px; width: auto; flex: none; }
 .brand__name {
   font-weight: 700; font-size: 1.02rem; color: var(--navy-600);
   letter-spacing: -0.02em; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
 }
 
 .nav { margin-left: auto; }
@@ -220,13 +227,27 @@ p  { margin: 0 0 var(--s-base); }
 .nav__link:hover { color: var(--navy-600); border-bottom-color: var(--amber-500); }
 .nav__link[aria-current="page"] { color: var(--navy-600); border-bottom-color: var(--navy-600); }
 
-.header__actions { display: flex; align-items: center; gap: var(--s-md); }
+.header__actions { display: flex; align-items: center; gap: var(--s-md); flex: none; }
 
-.lang { display: flex; border: 1px solid var(--border); border-radius: var(--r-pill); overflow: hidden; }
+/* Selector de idioma
+   --------------------------------------------------------------------------
+   `flex: none` no es decorativo: en movil la cabecera no cabe entera, el
+   flex repartia el recorte y esta pildora se llevaba la peor parte. Como
+   ademas tiene `overflow: hidden` para redondear las esquinas, lo que
+   sobraba no se veia: «ES» y «DE» salian cortados por la mitad. Lo que
+   cede ahora es el nombre de la marca, que es texto y admite recorte. */
+.lang {
+  display: flex;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
 .lang button {
   border: 0; background: transparent; cursor: pointer;
   font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--text-mute);
   padding: 6px 12px; display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
 }
 .lang button[aria-pressed="true"] { background: var(--navy-600); color: #fff; }
 
