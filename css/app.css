@@ -613,6 +613,33 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .consent input { width: 20px; height: 20px; margin-top: 3px; flex-shrink: 0; accent-color: var(--navy-600); }
 .consent label { font-size: 0.9rem; color: var(--text-soft); font-weight: 400; }
 
+/* Formulario sobre fondo azul marino
+   --------------------------------------------------------------------------
+   El bloque de contacto vive en una seccion `--navy`, y las etiquetas
+   heredaban el color de texto normal: casi negro sobre azul marino, con un
+   contraste de alrededor de 1,3:1. Se leian solo si sabias que estaban ahi.
+   Los campos en si son cajas blancas y no necesitan nada; lo que hay que
+   aclarar es todo lo que va suelto sobre el fondo. */
+.section--navy .field label { color: #fff; }
+.section--navy .field__hint { color: rgba(255, 255, 255, 0.72); }
+.section--navy .consent label { color: rgba(255, 255, 255, 0.88); }
+
+/* La casilla se dibuja con el color del texto del contenedor, asi que sobre
+   navy salia un cuadro negro invisible. */
+.section--navy .consent input {
+  accent-color: var(--amber-500);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* El foco marcaba el borde con un halo azul marino, invisible sobre el
+   propio azul marino de la seccion. */
+.section--navy .field input:focus,
+.section--navy .field textarea:focus,
+.section--navy .field select:focus {
+  border-color: var(--amber-500);
+  box-shadow: 0 0 0 3px rgba(252, 175, 23, 0.35);
+}
+
 .form-status { font-size: 0.95rem; font-weight: 500; }
 .form-status[data-state="ok"]    { color: var(--green-600); }
 .form-status[data-state="error"] { color: var(--red-600); }
