@@ -3,48 +3,171 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Personas voluntarias — PeopleForPeople</title>
-<meta name="description" content="Descubre cómo registrarte en PeopleForPeople, encontrar misiones verificadas y colaborar con organizaciones desde la app." />
+<title>Para voluntarios — People for People</title>
+<meta name="description" content="Ayuda cuando puedas, en lo que sepas hacer y cerca de donde estés. Regístrate, indica tus habilidades y recibe solo los avisos que encajan contigo." />
 <meta name="theme-color" content="#002557" />
-<link rel="icon" href="../imagenes/marca/icon.svg" type="image/svg+xml" />
+
+<link rel="icon" href="../imagenes/marca/isotipo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/app.css" />
-<link rel="stylesheet" href="../css/home.css" />
-<link rel="stylesheet" href="../css/detail.css" />
 </head>
-<body class="home detail-page">
+
+<body>
 <a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
-<header class="header is-solid" id="site-header"><div class="container header__inner">
-  <a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /></a>
-  <nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav>
-  <button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button>
-  <div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div>
-</div></header>
+
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="../">
+      <img class="brand__mark" src="../imagenes/marca/isotipo-navy.svg" alt="" />
+      <span class="brand__name">People for People</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li>
+        <li><a class="nav__link" href="../#app" data-i18n="nav.app">La app</a></li>
+        <li><a class="nav__link" href="../voluntarios/" aria-current="page" data-i18n="who.volunteers">Voluntarios</a></li>
+        <li><a class="nav__link" href="../ongs/" data-i18n="who.ngos">ONG</a></li>
+        <li><a class="nav__link" href="../comunidades/" data-i18n="who.councils">Ayuntamientos</a></li>
+        <li><a class="nav__link" href="../empresas/" data-i18n="who.companies">Empresas</a></li>
+        <li><a class="nav__link" href="../#contacto" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <div class="lang" role="group" aria-label="Idioma">
+        <button type="button" data-lang="es" aria-pressed="true">
+          <img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES
+        </button>
+        <button type="button" data-lang="de" aria-pressed="false">
+          <img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE
+        </button>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">☰</span>
+        <span style="position:absolute;left:-9999px" data-i18n="nav.menu">Menú</span>
+      </button>
+    </div>
+  </div>
+</header>
 
 <main id="main">
-  <section class="detail-hero"><div class="container reveal"><a class="breadcrumb" href="../index.html#para-quien" data-i18n="detail.back">← Volver a Para quién</a><span class="eyebrow" data-i18n="vol.eyebrow">Personas voluntarias</span><h1 data-i18n="vol.hero">Ayuda desde la app, a tu ritmo.</h1><p class="detail-hero__lead" data-i18n="vol.lead">Encuentra misiones publicadas por organizaciones verificadas, elige dónde puedes aportar y coordínate con la entidad. El acceso para voluntarios es siempre gratuito.</p><div class="detail-hero__actions"><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="vol.cta">Quiero inscribirme</a><a class="btn btn--ghost" href="#como-funciona" data-i18n="detail.how">Cómo funciona</a></div></div></section>
 
-  <section class="detail-section detail-section--white"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.benefits">Ventajas</span><h2 data-i18n="vol.benefitsTitle">Tu tiempo llega donde realmente hace falta.</h2><p data-i18n="vol.benefitsLead">Las necesidades las publican ONG, ayuntamientos y empresas verificadas. Las personas particulares no pueden solicitar ayuda directamente.</p></div><div class="benefit-grid">
-    <article class="benefit-card reveal"><span class="benefit-card__number">01</span><h3 data-i18n="vol.b1t">Misiones fiables</h3><p data-i18n="vol.b1b">Consulta oportunidades creadas por entidades verificadas, con lugar, fecha, plazas y objetivo claros.</p></article>
-    <article class="benefit-card reveal"><span class="benefit-card__number">02</span><h3 data-i18n="vol.b2t">Encaje personal</h3><p data-i18n="vol.b2b">Recibe avisos según tu cercanía y las causas que prefieras.</p></article>
-    <article class="benefit-card reveal"><span class="benefit-card__number">03</span><h3 data-i18n="vol.b3t">Decisión libre</h3><p data-i18n="vol.b3b">Tú eliges a qué misión unirte. No hay compromisos automáticos ni publicaciones particulares.</p></article>
-  </div></div></section>
+  <section class="section section--navy">
+    <div class="container">
+      <span class="eyebrow" data-i18n="vol.eyebrow">Para voluntarios</span>
+      <h1 data-i18n="vol.title">Ayudar no debería costar tiempo de buscar</h1>
+      <p class="lead" data-i18n="vol.lead">
+        Dinos qué sabes hacer y cuándo puedes. Nosotros te avisamos solo cuando hace falta algo
+        que encaja contigo y está cerca de donde estás.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="../#app" data-i18n="vol.ctaApp">Ver la app</a>
+        <a class="btn btn--ghost" href="../#contacto" data-i18n="vol.ctaContact">Escríbenos</a>
+      </div>
+    </div>
+  </section>
 
-  <section class="detail-section detail-section--navy" id="como-funciona"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.steps">Primeros pasos</span><h2 data-i18n="vol.stepsTitle">Registrarte te llevará solo unos minutos.</h2></div><div class="steps">
-    <article class="step reveal"><h3 data-i18n="vol.s1t">Descarga la app</h3><p data-i18n="vol.s1b">Cuando esté disponible, entra desde App Store o Google Play.</p></article>
-    <article class="step reveal"><h3 data-i18n="vol.s2t">Elige “Quiero ayudar”</h3><p data-i18n="vol.s2b">Crea tu cuenta como persona voluntaria; no necesitas representar a una entidad.</p></article>
-    <article class="step reveal"><h3 data-i18n="vol.s3t">Completa tu perfil</h3><p data-i18n="vol.s3b">Añade tu zona y selecciona las causas y tipos de misión que prefieras.</p></article>
-    <article class="step reveal"><h3 data-i18n="vol.s4t">Únete a una misión</h3><p data-i18n="vol.s4b">Revisa los detalles, reserva una plaza y habla con la organización coordinadora.</p></article>
-  </div></div></section>
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="vol.howEyebrow">Cómo funciona</span>
+        <h2 data-i18n="vol.howTitle">Cuatro pasos, una sola vez</h2>
+      </div>
 
-  <section class="detail-section"><div class="container"><div class="info-band"><div class="reveal"><span class="eyebrow" data-i18n="vol.useful">Información útil</span><h2 data-i18n="vol.safeTitle">Participa con información y seguridad.</h2><p data-i18n="vol.safeLead">La organización responsable de cada misión define requisitos, medidas de seguridad y contacto. Lee siempre la ficha completa antes de apuntarte.</p></div><ul class="checklist reveal"><li data-i18n="vol.safe1">Tu registro y uso de la app son gratuitos.</li><li data-i18n="vol.safe2">Puedes consultar la entidad responsable antes de unirte.</li><li data-i18n="vol.safe3">Si no puedes asistir, avisa desde la app antes del inicio.</li><li data-i18n="vol.safe4">Ante una emergencia vital, llama al 112: PeopleForPeople no sustituye a los servicios de emergencia.</li></ul></div></div></section>
+      <div class="grid grid--4">
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">1</div>
+          <h3 data-i18n="vol.s1t">Regístrate</h3>
+          <p data-i18n="vol.s1b">Crea tu perfil gratis, con tu correo o tu cuenta de Google.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">2</div>
+          <h3 data-i18n="vol.s2t">Di qué sabes hacer</h3>
+          <p data-i18n="vol.s2b">Elige entre 36 habilidades, desde retirar barro hasta acompañar a una cita médica.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">3</div>
+          <h3 data-i18n="vol.s3t">Marca cuándo puedes</h3>
+          <p data-i18n="vol.s3b">Franjas por día y distancia máxima. Fuera de eso no te molestamos.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon" aria-hidden="true">4</div>
+          <h3 data-i18n="vol.s4t">Recibe avisos que encajan</h3>
+          <p data-i18n="vol.s4b">Solo lo que puedes hacer, cerca de ti y dentro de tu disponibilidad.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-  <section class="detail-section detail-section--white"><div class="container"><div class="cta-panel reveal"><div><h2 data-i18n="vol.finalTitle">La inscripción será desde la app.</h2><p data-i18n="vol.finalLead">Los botones de descarga ya están preparados y se activarán cuando PeopleForPeople se publique en las tiendas.</p></div><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="vol.cta">Quiero inscribirme</a></div></div></section>
+  <section class="section section--sunken">
+    <div class="container">
+      <div class="split">
+        <div class="reveal">
+          <span class="eyebrow" data-i18n="vol.benEyebrow">Qué ganas</span>
+          <h2 data-i18n="vol.benTitle">Tu tiempo, donde sirve</h2>
+          <ul class="checklist">
+            <li data-i18n="vol.b1">Encuentras dónde ayudar sin rebuscar entre convocatorias</li>
+            <li data-i18n="vol.b2">Te comprometes cuando puedes, no cuando toca</li>
+            <li data-i18n="vol.b3">Usas lo que ya sabes hacer</li>
+            <li data-i18n="vol.b4">Tus horas quedan registradas y acreditadas</li>
+            <li data-i18n="vol.b5">Quedas cubierto por seguro de accidentes y responsabilidad civil</li>
+          </ul>
+          <p class="legal" data-i18n="vol.legal">
+            Conforme a la Ley 45/2015 de Voluntariado, toda persona voluntaria firma un acuerdo de
+            incorporación y queda cubierta por una póliza. Es una relación altruista: sin vínculo
+            laboral y sin remuneración.
+          </p>
+        </div>
+        <div class="split__media reveal">
+          <img src="../imagenes/ayuda frei.png" alt="" data-i18n-alt="vol.imgAlt" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="vol.privEyebrow">Privacidad</span>
+        <h2 data-i18n="vol.privTitle">Tus datos, en corto</h2>
+      </div>
+      <div class="grid grid--3">
+        <article class="card reveal">
+          <h3 data-i18n="vol.p1t">Tu teléfono no se publica</h3>
+          <p data-i18n="vol.p1b">Solo se comparte con quien coordina una misión que has aceptado.</p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="vol.p2t">Tu ubicación, solo en misión</h3>
+          <p data-i18n="vol.p2b">Se comparte mientras tengas una misión activa, y puedes desactivarlo cuando quieras.</p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="vol.p3t">Puedes borrarlo todo</h3>
+          <p data-i18n="vol.p3b">Desde la app, cuando quieras. Las horas acreditadas se conservan de forma anónima.</p>
+        </article>
+      </div>
+      <p style="margin-top: var(--s-lg)">
+        <a class="btn btn--navy" href="../#contacto" data-i18n="vol.ctaEnd">Quiero empezar</a>
+      </p>
+    </div>
+  </section>
+
 </main>
 
-<footer class="footer"><div class="container"><div class="footer__grid"><div class="footer__brand"><img src="../imagenes/marca/logotipo-transparente.svg" alt="PeopleForPeople" /><p data-i18n="footer.tagline">Tu ayuda. Su esperanza. Nosotros unimos.</p></div><div><h4 data-i18n="footer.platform">Plataforma</h4><ul><li><a href="../index.html#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li><li><a href="../index.html#app" data-i18n="nav.app">La app</a></li><li><a href="../index.html#para-quien" data-i18n="nav.who">Para quién</a></li><li><a href="../index.html#contacto" data-i18n="nav.contact">Contacto</a></li></ul></div><div><h4 data-i18n="footer.resources">Recursos</h4><ul><li><a href="../voluntarios/index.html" data-i18n="who.v_t">Voluntarios</a></li><li><a href="../ongs/index.html" data-i18n="who.o_t">ONG y asociaciones</a></li><li><a href="../comunidades/index.html" data-i18n="who.m_t">Ayuntamientos</a></li><li><a href="../empresas/index.html" data-i18n="who.e_t">Empresas con iniciativa RSC</a></li><li><a href="../documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></div><div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="../aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="../privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="../terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></li></ul></div></div><div class="footer__bottom"><span data-i18n="footer.rights">© 2026 PeopleForPeople. Todos los derechos reservados.</span><span data-i18n="footer.madein">Creado para que ayudar sea más fácil.</span></div></div></footer>
-<script src="../js/i18n.js"></script><script src="../js/home-i18n.js"></script><script src="../js/detail-i18n.js"></script><script src="../js/site.js"></script><script src="../js/home.js"></script>
+<footer class="footer">
+  <div class="container">
+    <div class="footer__bottom">
+      <span>© 2025 People for People</span>
+      <a href="../aviso-legal.html" data-i18n="footer.legal">Aviso legal · Impressum</a>
+      <a href="../privacidad.html" data-i18n="footer.privacy">Privacidad</a>
+      <a href="../terminos.html" data-i18n="footer.terms">Términos</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/i18n.js"></script>
+<script src="../js/site.js"></script>
 </body>
 </html>

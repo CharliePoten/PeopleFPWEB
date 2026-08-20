@@ -1,17 +1,162 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Ayuntamientos — PeopleForPeople</title><meta name="description" content="Moviliza a la ciudadanía y coordina misiones locales o urgencias desde tu ayuntamiento con PeopleForPeople." /><meta name="theme-color" content="#002557" /><link rel="icon" href="../imagenes/marca/icon.svg" type="image/svg+xml" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../css/app.css" /><link rel="stylesheet" href="../css/home.css" /><link rel="stylesheet" href="../css/detail.css" /></head>
-<body class="home detail-page"><a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
-<header class="header is-solid" id="site-header"><div class="container header__inner"><a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /></a><nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav><button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button><div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div></div></header>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Para ayuntamientos — People for People</title>
+<meta name="description" content="Coordina la respuesta ante emergencias con el tejido vecinal y fomenta la participación ciudadana. Piloto gratuito disponible." />
+<meta name="theme-color" content="#002557" />
+
+<link rel="icon" href="../imagenes/marca/isotipo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/app.css" />
+</head>
+
+<body>
+<a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
+
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="../">
+      <img class="brand__mark" src="../imagenes/marca/isotipo-navy.svg" alt="" />
+      <span class="brand__name">People for People</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li>
+        <li><a class="nav__link" href="../#app" data-i18n="nav.app">La app</a></li>
+        <li><a class="nav__link" href="../voluntarios/" data-i18n="who.volunteers">Voluntarios</a></li>
+        <li><a class="nav__link" href="../ongs/" data-i18n="who.ngos">ONG</a></li>
+        <li><a class="nav__link" href="../comunidades/" aria-current="page" data-i18n="who.councils">Ayuntamientos</a></li>
+        <li><a class="nav__link" href="../empresas/" data-i18n="who.companies">Empresas</a></li>
+        <li><a class="nav__link" href="../#contacto" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <div class="lang" role="group" aria-label="Idioma">
+        <button type="button" data-lang="es" aria-pressed="true">
+          <img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES
+        </button>
+        <button type="button" data-lang="de" aria-pressed="false">
+          <img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE
+        </button>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">☰</span>
+        <span style="position:absolute;left:-9999px" data-i18n="nav.menu">Menú</span>
+      </button>
+    </div>
+  </div>
+</header>
+
 <main id="main">
-  <section class="detail-hero"><div class="container reveal"><a class="breadcrumb" href="../index.html#para-quien" data-i18n="detail.back">← Volver a Para quién</a><span class="eyebrow" data-i18n="mun.eyebrow">Ayuntamientos</span><h1 data-i18n="mun.hero">Una ciudadanía lista para actuar.</h1><p class="detail-hero__lead" data-i18n="mun.lead">Convoca voluntariado para misiones municipales planificadas o urgentes, con información clara y una visión compartida de cada misión.</p><div class="detail-hero__actions"><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="mun.cta">Inscribirme como ayuntamiento</a><a class="btn btn--ghost" href="#precios" data-i18n="detail.prices">Ver precios</a></div></div></section>
-  <section class="detail-section detail-section--white"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.benefits">Ventajas</span><h2 data-i18n="mun.benefitsTitle">Misiones locales más claras y accesibles.</h2><p data-i18n="mun.benefitsLead">El ayuntamiento publica cada misión y conserva la responsabilidad sobre ella; la ciudadanía se incorpora desde la app.</p></div><div class="benefit-grid"><article class="benefit-card reveal"><span class="benefit-card__number">01</span><h3 data-i18n="mun.b1t">Alcance local</h3><p data-i18n="mun.b1b">Activa a personas cercanas para acompañamiento, medioambiente, cultura o apoyo comunitario.</p></article><article class="benefit-card reveal"><span class="benefit-card__number">02</span><h3 data-i18n="mun.b2t">Respuesta urgente</h3><p data-i18n="mun.b2b">Publica urgencias como misiones claras para movilizar ayuda de forma inmediata.</p></article><article class="benefit-card reveal"><span class="benefit-card__number">03</span><h3 data-i18n="mun.b3t">Información unificada</h3><p data-i18n="mun.b3b">Evita mensajes dispersos: instrucciones, plazas y estado viven en una misma misión.</p></article></div></div></section>
-  <section class="detail-section detail-section--navy"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.workflow">Flujo de trabajo</span><h2 data-i18n="mun.stepsTitle">Desde el área municipal hasta la ciudadanía.</h2></div><div class="steps"><article class="step reveal"><h3 data-i18n="mun.s1t">Da de alta el ayuntamiento</h3><p data-i18n="mun.s1b">Verificamos la entidad y las personas responsables.</p></article><article class="step reveal"><h3 data-i18n="mun.s2t">Crea una misión</h3><p data-i18n="mun.s2b">Publica una misión planificada o urgente con toda la información necesaria.</p></article><article class="step reveal"><h3 data-i18n="mun.s3t">Moviliza por afinidad</h3><p data-i18n="mun.s3b">La app muestra la misión a personas cercanas que pueden encajar.</p></article><article class="step reveal"><h3 data-i18n="mun.s4t">Coordina la cobertura</h3><p data-i18n="mun.s4b">Mantén al equipo informado y revisa las plazas disponibles.</p></article></div></div></section>
-  <section class="detail-section" id="precios"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.pricing">Tarifas</span><h2 data-i18n="mun.priceTitle">Una tarifa ajustada al tamaño del municipio.</h2><p data-i18n="mun.priceLead">La categoría se determina por población municipal, una referencia pública y fácil de comprobar.</p></div><div class="trial-banner reveal"><div class="trial-banner__icon">2×</div><div><h3 data-i18n="detail.trialTitle">Prueba dos publicaciones gratis</h3><p data-i18n="detail.trialBody">Tus dos primeras misiones o urgencias no tienen coste ni requieren tarjeta. La suscripción empieza solo si decides publicar una tercera.</p></div></div><div class="pricing-grid">
-    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.small">Pequeño</h3><p class="price-card__size" data-i18n="mun.smallSize">Hasta 10.000 habitantes</p><p class="price"><strong>49 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.support">Soporte por correo</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="mun.cta">Inscribirme como ayuntamiento</a></article>
-    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.medium">Mediano</h3><p class="price-card__size" data-i18n="mun.mediumSize">De 10.001 a 50.000 habitantes</p><p class="price"><strong>99 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.priority">Soporte prioritario</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="mun.cta">Inscribirme como ayuntamiento</a></article>
-    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.large">Grande</h3><p class="price-card__size" data-i18n="mun.largeSize">Más de 50.000 habitantes</p><p class="price"><strong>199 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.onboarding">Acompañamiento de puesta en marcha</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="mun.cta">Inscribirme como ayuntamiento</a></article>
-  </div><p class="pricing-note" data-i18n="detail.priceNote">Precios sin IVA. Pago mensual, sin permanencia. Con pago anual, dos meses gratis. El tamaño del plan se revisa al renovar.</p></div></section>
-  <section class="detail-section detail-section--white"><div class="container"><div class="cta-panel reveal"><div><h2 data-i18n="mun.finalTitle">Empieza con una misión municipal.</h2><p data-i18n="mun.finalLead">La verificación y las dos primeras publicaciones son gratuitas.</p></div><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="mun.cta">Inscribirme como ayuntamiento</a></div></div></section>
+
+  <section class="section section--navy">
+    <div class="container">
+      <span class="eyebrow" data-i18n="kom.eyebrow">Para ayuntamientos</span>
+      <h1 data-i18n="kom.title">Coordina la respuesta con el tejido vecinal</h1>
+      <p class="lead" data-i18n="kom.lead">
+        Registra necesidades en tiempo real y llega a los vecinos dispuestos a ayudar en una
+        emergencia. Y el resto del a&#241;o, a los proyectos del municipio.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="../#contacto" data-i18n="kom.ctaPilot">Solicitar un piloto gratuito</a>
+        <a class="btn btn--ghost" href="../#app" data-i18n="kom.ctaApp">Ver la app</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div class="reveal">
+          <span class="eyebrow" data-i18n="kom.emEyebrow">Protecci&#243;n civil</span>
+          <h2 data-i18n="kom.emTitle">Cuando el tiempo es lo que falta</h2>
+          <p data-i18n="kom.emBody">
+            Ante una inundaci&#243;n, un incendio o cualquier emergencia, la plataforma moviliza
+            voluntarios de forma r&#225;pida y dirigida, y refuerza la capacidad de respuesta de
+            vuestros servicios sin sustituirlos.
+          </p>
+          <ul class="checklist">
+            <li data-i18n="kom.e1">Apoyo en evacuaciones</li>
+            <li data-i18n="kom.e2">Atenci&#243;n a personas afectadas</li>
+            <li data-i18n="kom.e3">Reparto de bienes de primera necesidad</li>
+            <li data-i18n="kom.e4">Trabajos de limpieza y desescombro</li>
+          </ul>
+        </div>
+        <div class="split__media reveal">
+          <img src="../imagenes/Ayuntamiento berlin.jpg" alt="" data-i18n-alt="kom.imgAlt" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunken">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="kom.civEyebrow">El resto del a&#241;o</span>
+        <h2 data-i18n="kom.civTitle">Participaci&#243;n ciudadana</h2>
+        <p data-i18n="kom.civLead">
+          Fomenta la implicaci&#243;n de los vecinos en los proyectos del municipio y refuerza la
+          cohesi&#243;n social: acompa&#241;amiento a personas mayores, apoyo a la integraci&#243;n, refuerzo
+          educativo o actividades de barrio.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="kom.priceEyebrow">Precio</span>
+        <h2 data-i18n="kom.priceTitle">Seg&#250;n el tama&#241;o del municipio</h2>
+        <p data-i18n="kom.priceLead">Cifras orientativas anuales; el presupuesto final se ajusta a cada caso.</p>
+      </div>
+      <div class="grid grid--4">
+        <article class="card reveal">
+          <h3 data-i18n="kom.t1">Hasta 10.000 habitantes</h3>
+          <p><strong data-i18n="kom.p1">desde 299 &#8364; al a&#241;o</strong></p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="kom.t2">De 10.001 a 50.000</h3>
+          <p><strong data-i18n="kom.p2">desde 799 &#8364; al a&#241;o</strong></p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="kom.t3">De 50.001 a 100.000</h3>
+          <p><strong data-i18n="kom.p3">desde 1.499 &#8364; al a&#241;o</strong></p>
+        </article>
+        <article class="card reveal">
+          <h3 data-i18n="kom.t4">Ciudades y diputaciones</h3>
+          <p><strong data-i18n="kom.p4">presupuesto a medida</strong></p>
+        </article>
+      </div>
+      <p class="legal" style="margin-top: var(--s-lg)" data-i18n="kom.pilot">
+        Pod&#233;is probar la plataforma con un piloto gratuito y sin compromiso antes de decidir.
+      </p>
+      <p>
+        <a class="btn btn--navy" href="../#contacto" data-i18n="kom.ctaEnd">Hablemos del piloto</a>
+      </p>
+    </div>
+  </section>
+
 </main>
-<footer class="footer"><div class="container"><div class="footer__grid"><div class="footer__brand"><img src="../imagenes/marca/logotipo-transparente.svg" alt="PeopleForPeople" /><p data-i18n="footer.tagline">Tu ayuda. Su esperanza. Nosotros unimos.</p></div><div><h4 data-i18n="footer.platform">Plataforma</h4><ul><li><a href="../index.html#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li><li><a href="../index.html#app" data-i18n="nav.app">La app</a></li><li><a href="../index.html#para-quien" data-i18n="nav.who">Para quién</a></li><li><a href="../index.html#contacto" data-i18n="nav.contact">Contacto</a></li></ul></div><div><h4 data-i18n="footer.resources">Recursos</h4><ul><li><a href="../voluntarios/index.html" data-i18n="who.v_t">Voluntarios</a></li><li><a href="../ongs/index.html" data-i18n="who.o_t">ONG y asociaciones</a></li><li><a href="../comunidades/index.html" data-i18n="who.m_t">Ayuntamientos</a></li><li><a href="../empresas/index.html" data-i18n="who.e_t">Empresas con iniciativa RSC</a></li><li><a href="../documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></div><div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="../aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="../privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="../terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></li></ul></div></div><div class="footer__bottom"><span data-i18n="footer.rights">© 2026 PeopleForPeople. Todos los derechos reservados.</span><span data-i18n="footer.madein">Creado para que ayudar sea más fácil.</span></div></div></footer>
-<script src="../js/i18n.js"></script><script src="../js/home-i18n.js"></script><script src="../js/detail-i18n.js"></script><script src="../js/site.js"></script><script src="../js/home.js"></script></body></html>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__bottom">
+      <span>© 2025 People for People</span>
+      <a href="../aviso-legal.html" data-i18n="footer.legal">Aviso legal · Impressum</a>
+      <a href="../privacidad.html" data-i18n="footer.privacy">Privacidad</a>
+      <a href="../terminos.html" data-i18n="footer.terms">Términos</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/i18n.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>
