@@ -284,19 +284,38 @@ p  { margin: 0 0 var(--s-base); }
   padding: var(--s-lg);
   box-shadow: var(--shadow-card);
 }
-.card h3 { margin-bottom: var(--s-sm); color: var(--navy-600); }
+/* El titulo es ahora el ancla visual de la tarjeta: antes ese papel lo
+   hacia un emoji, y al quitarlo la tarjeta se quedaba sin jerarquia. Sube
+   de tamano, baja de interlineado y ajusta el espaciado optico. */
+.card h3 {
+  margin-bottom: var(--s-md);
+  color: var(--navy-600);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
 .card p:last-child { margin-bottom: 0; }
+
+/* Cierre de seccion: una frase que recoge lo dicho arriba. Centrada y algo
+   mayor que el cuerpo, para que se lea como conclusion y no como otra
+   linea mas de texto corrido. */
+.section-note {
+  margin-top: var(--s-2xl);
+  margin-bottom: 0;
+  text-align: center;
+  max-width: 56ch;
+  margin-inline: auto;
+  color: var(--text-soft);
+  font-size: 1.05rem;
+  text-wrap: balance;
+}
 .card p { color: var(--text-soft); font-size: 0.98rem; }
 
 /* Tarjeta que es enlace: toda la superficie, no solo el texto. */
 a.card { text-decoration: none; color: inherit; display: block; transition: transform 0.15s ease, box-shadow 0.15s ease; }
 a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 
-.card__icon {
-  width: 46px; height: 46px; border-radius: var(--r-md);
-  background: var(--navy-50); color: var(--navy-600);
-  display: grid; place-items: center; font-size: 1.4rem; margin-bottom: var(--s-base);
-}
 .card__more { color: var(--navy-500); font-weight: 600; font-size: 0.94rem; }
 
 .section--navy .card {
@@ -304,7 +323,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 }
 .section--navy .card h3 { color: #fff; }
 .section--navy .card p { color: rgba(255,255,255,0.78); }
-.section--navy .card__icon { background: rgba(252,175,23,0.16); color: var(--amber-300); }
 
 /* --------------------------------------------------------------------------
    Bloques de dos columnas
@@ -397,6 +415,54 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .collage__item:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); z-index: 1; }
 .collage__item:hover img { transform: scale(1.07); }
 .collage__item:focus-visible { outline: 3px solid var(--amber-500); outline-offset: 3px; }
+
+/* Carrusel del collage
+   --------------------------------------------------------------------------
+   La web antigua iba resaltando una foto cada cinco segundos: las demas se
+   quedaban algo apagadas y la de turno crecia. Se recupera ese ritmo, con
+   dos diferencias. El resalte se hace con `transform` y `opacity`, que el
+   navegador compone en la GPU sin recalcular la maqueta, y todo cuelga de
+   una clase en el contenedor que solo pone el JS: si el script no llega a
+   ejecutarse, el collage se queda quieto y perfectamente legible en vez de
+   a medias.
+
+   El atenuado va en las hermanas y no en `.collage` entero para que la
+   destacada mantenga su color y su sombra propias. */
+.collage.is-cycling .collage__item {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.6s ease,
+              box-shadow 0.4s ease;
+}
+.collage.is-cycling .collage__item:not(.is-featured) { opacity: 0.72; }
+.collage.is-cycling .collage__item.is-featured {
+  opacity: 1;
+  transform: scale(1.06);
+  box-shadow: var(--shadow-raised);
+  z-index: 2;
+}
+
+/* El puntero manda sobre el turno: si alguien esta mirando una foto, no se
+   le encoge debajo del raton. */
+.collage.is-cycling .collage__item:hover,
+.collage.is-cycling .collage__item:focus-visible {
+  transform: translateY(-3px) scale(1.06);
+  opacity: 1;
+  z-index: 3;
+}
+
+/* Quien pide menos movimiento se queda con el collage quieto. */
+@media (prefers-reduced-motion: reduce) {
+  /* Se repite `:not(.is-featured)` a proposito: la regla que atenua las
+     hermanas tiene mas especificidad que un selector suelto, asi que sin
+     esto el atenuado seguiria ganando aqui. */
+  .collage.is-cycling .collage__item,
+  .collage.is-cycling .collage__item:not(.is-featured),
+  .collage.is-cycling .collage__item.is-featured {
+    transform: none;
+    opacity: 1;
+    box-shadow: var(--shadow-card);
+  }
+}
 
 /* Lupa que aparece al pasar por encima: sin ella nada indica que la foto
    se puede ampliar. */
