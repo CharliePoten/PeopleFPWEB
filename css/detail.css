@@ -7,6 +7,47 @@
 .detail-page .detail-hero .container { position: relative; }
 .detail-page .breadcrumb { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; color: rgba(255,255,255,.66); font-size: .85rem; text-decoration: none; }
 .detail-page .breadcrumb:hover { color: #fff; }
+/* Nombre de la seccion, en grande.
+   --------------------------------------------------------------------------
+   Las cinco paginas de detalle comparten portada, y el nombre de la seccion
+   —«Ayuntamientos», «ONG y asociaciones»— iba en el `eyebrow` generico: 0,78rem
+   en versalitas. El titulo grande es el eslogan, que es distinto en cada una
+   pero no dice DONDE estas. Resultado: las cinco se parecian entre si y habia
+   que leer el parrafo para saber en cual habias entrado.
+
+   Aqui el nombre pasa a leerse como lo que es, el titulo de la seccion, y el
+   eslogan se queda de titular debajo. Solo dentro de esta portada: el
+   `eyebrow` del resto del sitio no se toca.
+
+   Sin versalitas a proposito. A 2rem, «ONG Y ASOCIACIONES» grita y las tildes
+   se leen peor; en caja normal se lee como un titulo y no como una etiqueta.
+
+   Ambar 300 sobre azul marino 700 da 10,8:1 de contraste, holgado para AAA. */
+.detail-page .detail-hero .eyebrow {
+  display: block;
+  max-width: 20ch;
+  margin-bottom: 16px;
+  color: var(--amber-300);
+  font-size: clamp(1.4rem, 3.4vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+/* Filete corto: separa el nombre del eslogan sin meter una linea entera de
+   aire, y ata visualmente los dos como una sola cabecera. */
+.detail-page .detail-hero .eyebrow::after {
+  content: '';
+  display: block;
+  width: 54px;
+  height: 3px;
+  margin-top: 16px;
+  border-radius: 2px;
+  background: var(--amber-500);
+}
+
 .detail-page .detail-hero h1 { max-width: 17ch; color: #fff; font-size: clamp(2.45rem, 6vw, 5rem); line-height: 1.04; text-wrap: balance; }
 .detail-page .detail-hero__lead { max-width: 64ch; margin: 24px 0 0; color: rgba(255,255,255,.8); font-size: clamp(1.02rem, 2vw, 1.22rem); }
 .detail-page .detail-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
