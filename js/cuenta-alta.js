@@ -225,6 +225,187 @@
     });
   }
 
+
+  /* =====================================================================
+     ALTA DE ENTIDAD
+     =====================================================================
+     Tres escrituras, en el mismo orden que la app: la organizacion, el
+     alta de quien la crea como responsable, y el perfil marcado como
+     completo. Los servicios de emergencia no se ofrecen aqui tampoco:
+     bomberos, policia local y proteccion civil dependen de su
+     ayuntamiento, y Cruz Roja es una ONG. */
+
+  var TIPOS = [
+    ['ngo', 'ONG o asociacion', 'Entidad sin animo de lucro inscrita en su registro.'],
+    ['municipality', 'Administracion publica', 'Ayuntamiento, mancomunidad o diputacion.'],
+    ['company', 'Empresa', 'Programas de responsabilidad social corporativa.'],
+  ];
+
+  function paginaOrganizacion() {
+    if (!UI.exigirSesion()) return;
+
+    var tipo = 'ngo';
+    var punto = null;
+
+    var cajaTipos = $('#tipos');
+    TIPOS.forEach(function (t) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opcion';
+      b.setAttribute('aria-pressed', String(t[0] === tipo));
+      b.innerHTML =
+        '<span class="opcion__texto"><strong>' + t[1] + '</strong><span>' + t[2] + '</span></span>';
+      b.addEventListener('click', function () {
+        tipo = t[0];
+        $$('#tipos .opcion').forEach(function (o) {
+          o.setAttribute('aria-pressed', String(o === b));
+        });
+      });
+      cajaTipos.appendChild(b);
+    });
+
+    var casillaUbi = $('#ubicacion');
+    var estadoUbi = $('#estado-ubicacion');
+    casillaUbi.addEventListener('change', function () {
+      if (!casillaUbi.checked) {
+        punto = null;
+        estadoUbi.textContent = '';
+        return;
+      }
+      if (!navigator.geolocation) {
+        estadoUbi.textContent = 'Este navegador no puede darnos la ubicacion.';
+        return;
+      }
+      estadoUbi.textContent = 'Pidiendo permiso\u2026';
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          punto = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          estadoUbi.textContent = 'Ubicacion guardada.';
+        },
+        function () {
+          casillaUbi.checked = false;
+          punto = null;
+          estadoUbi.textContent = 'No has dado permiso. No pasa nada: es opcional.';
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+      );
+    });
+
+    /* El CIF se normaliza al salir del campo. Ver como se convierte solo en
+       mayusculas y sin guiones confirma que se ha entendido, y quita la
+       duda de si habia que escribirlo de otra forma. */
+    var campoCif = $('#cif');
+    campoCif.addEventListener('blur', function () {
+      if (campoCif.value.trim()) campoCif.value = window.PFP_NIF.normalizar(campoCif.value);
+    });
+
+    $('#form-organizacion').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      UI.limpiarAvisos();
+
+      var razon = $('#razon').value.trim();
+      var nombre = $('#nombre').value.trim();
+      var cif = window.PFP_NIF.normalizar(campoCif.value);
+      var calle = $('#calle').value.trim();
+      var ciudad = $('#ciudad').value.trim();
+      var provincia = $('#provincia').value.trim();
+      var cp = $('#cp').value.trim();
+      var telefono = $('#telefono').value.trim();
+      var acepta = $('#acepta').checked;
+
+      if (razon.length < 3) return UI.avisar('aviso', 'Escribe la razon social completa.');
+      if (nombre.length < 2) return UI.avisar('aviso', 'Escribe el nombre con el que os conocen.');
+      if (!window.PFP_NIF.valido(cif)) {
+        return UI.avisar('aviso', 'Ese CIF o NIF no cuadra. Revisa las cifras y la letra final.');
+      }
+      if (calle.length < 3) return UI.avisar('aviso', 'Escribe la direccion.');
+      if (ciudad.length < 2) return UI.avisar('aviso', 'Escribe la ciudad.');
+      if (provincia.length < 2) return UI.avisar('aviso', 'Escribe la provincia.');
+      if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', 'El codigo postal tiene cinco cifras.');
+      if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
+        return UI.avisar('aviso', 'Escribe un telefono de contacto valido.');
+      }
+      if (!acepta) return UI.avisar('aviso', 'Hay que aceptar los terminos para continuar.');
+
+      var boton = $('#btn-crear');
+      UI.ocupado(boton, true, 'Enviando\u2026');
+
+      PFP.db
+        .select('profiles', 'select=id,email&limit=1')
+        .then(function (filas) {
+          var yo = filas && filas[0];
+          if (!yo) throw PFP.error('sin_sesion');
+
+          return PFP.db
+            .insert(
+              'organizations',
+              {
+                kind: tipo,
+                legal_name: razon,
+                display_name: nombre,
+                tax_id: cif,
+                street: calle,
+                city: ciudad,
+                province: provincia,
+                postal_code: cp,
+                country: 'ES',
+                location: punto ? 'SRID=4326;POINT(' + punto.lng + ' ' + punto.lat + ')' : null,
+                contact_email: yo.email,
+                contact_phone: telefono,
+                created_by: yo.id,
+              },
+              true
+            )
+            .then(function (creada) {
+              var org = creada && creada[0];
+              if (!org) throw PFP.error('unknown', 'No se ha podido crear la entidad.');
+
+              // Quien la da de alta queda como responsable. Sin esto la
+              // entidad existe y nadie puede administrarla.
+              return PFP.db
+                .insert('organization_members', {
+                  organization_id: org.id,
+                  profile_id: yo.id,
+                  is_admin: true,
+                })
+                .then(function () {
+                  return PFP.db.update('profiles', 'id=eq.' + encodeURIComponent(yo.id), {
+                    onboarding_complete: true,
+                    updated_at: new Date().toISOString(),
+                  });
+                })
+                .then(function () {
+                  return nombre;
+                });
+            });
+        })
+        .then(function (nombreCreado) {
+          try {
+            sessionStorage.setItem('pfp.entidadCreada', nombreCreado);
+          } catch (e) {}
+          UI.ir('enviada.html');
+        })
+        .catch(function (e) {
+          UI.ocupado(boton, false);
+          UI.avisar('aviso', UI.explicar(e));
+        });
+    });
+  }
+
+  /* Confirmacion tras enviar.
+     Sin ella el formulario terminaba y la pantalla cambiaba sin decir nada:
+     despues de rellenar el CIF, la direccion y el telefono, que no pase
+     nada visible se lee como que ha fallado, y la reaccion natural es
+     volver a enviarlo. Igual que en la app. */
+  function paginaEnviada() {
+    var nombre = '';
+    try {
+      nombre = sessionStorage.getItem('pfp.entidadCreada') || '';
+    } catch (e) {}
+    var destino = $('#nombre-entidad');
+    if (destino) destino.textContent = nombre || 'tu entidad';
+  }
+
   /* =====================================================================
      ARRANQUE
      ===================================================================== */
@@ -232,5 +413,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     var pagina = document.body.dataset.pagina;
     if (pagina === 'voluntario') paginaVoluntario();
+    if (pagina === 'organizacion') paginaOrganizacion();
+    if (pagina === 'enviada') paginaEnviada();
   });
 })();

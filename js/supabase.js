@@ -103,6 +103,14 @@
       return PfpError('invalid_code', msg);
     }
     if (/password should be|password.*at least|weak/i.test(msg)) return PfpError('weak_password', msg);
+
+    // Un 401 es siempre el mismo problema: el testigo ya no vale. Se
+    // detecta por el codigo y no por el texto, que PostgREST y GoTrue
+    // redactan distinto. Sin esto, a quien se le caducaba la sesion a
+    // mitad de un formulario le salia «algo ha fallado» y no tenia forma
+    // de saber que bastaba con volver a entrar.
+    if (estado === 401 || estado === 403) return PfpError('sin_sesion', msg);
+
     if (estado === 0) return PfpError('network', msg);
     return PfpError('unknown', msg || ('HTTP ' + estado));
   }
