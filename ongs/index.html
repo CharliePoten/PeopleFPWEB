@@ -1,164 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Para ONG — People for People</title>
-<meta name="description" content="Encuentra voluntarios que encajan con cada tarea, gestiona emergencias y proyectos, y justifica las horas. Gratis para entidades pequeñas." />
-<meta name="theme-color" content="#002557" />
-
-<link rel="icon" href="../imagenes/marca/isotipo.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="../css/app.css" />
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ONG y asociaciones — PeopleForPeople</title>
+<meta name="description" content="Publica misiones, moviliza voluntariado y coordina la respuesta de tu ONG con PeopleForPeople." /><meta name="theme-color" content="#002557" />
+<link rel="icon" href="../imagenes/marca/icon.svg" type="image/svg+xml" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../css/app.css" /><link rel="stylesheet" href="../css/home.css" /><link rel="stylesheet" href="../css/detail.css" />
 </head>
-
-<body>
-<a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
-
-<header class="header">
-  <div class="container header__inner">
-    <a class="brand" href="../">
-      <img class="brand__mark" src="../imagenes/marca/isotipo-navy.svg" alt="" />
-      <span class="brand__name">People for People</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Principal">
-      <ul class="nav__list">
-        <li><a class="nav__link" href="../#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li>
-        <li><a class="nav__link" href="../#app" data-i18n="nav.app">La app</a></li>
-        <li><a class="nav__link" href="../voluntarios/" data-i18n="who.volunteers">Voluntarios</a></li>
-        <li><a class="nav__link" href="../ongs/" aria-current="page" data-i18n="who.ngos">ONG</a></li>
-        <li><a class="nav__link" href="../comunidades/" data-i18n="who.councils">Ayuntamientos</a></li>
-        <li><a class="nav__link" href="../empresas/" data-i18n="who.companies">Empresas</a></li>
-        <li><a class="nav__link" href="../#contacto" data-i18n="nav.contact">Contacto</a></li>
-      </ul>
-    </nav>
-
-    <div class="header__actions">
-      <div class="lang" role="group" aria-label="Idioma">
-        <button type="button" data-lang="es" aria-pressed="true">
-          <img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES
-        </button>
-        <button type="button" data-lang="de" aria-pressed="false">
-          <img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE
-        </button>
-      </div>
-      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav">
-        <span aria-hidden="true">☰</span>
-        <span style="position:absolute;left:-9999px" data-i18n="nav.menu">Menú</span>
-      </button>
-    </div>
-  </div>
-</header>
-
+<body class="home detail-page"><a class="skip-link" href="#main" data-i18n="skip">Saltar al contenido</a>
+<header class="header is-solid" id="site-header"><div class="container header__inner"><a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /></a><nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav><button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button><div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div></div></header>
 <main id="main">
-
-  <section class="section section--navy">
-    <div class="container">
-      <span class="eyebrow" data-i18n="ngo.eyebrow">Para ONG y asociaciones</span>
-      <h1 data-i18n="ngo.title">Encuentra a quien encaja con cada tarea</h1>
-      <p class="lead" data-i18n="ngo.lead">
-        Publica lo que necesitas y la plataforma te propone voluntarios por habilidades,
-        distancia y disponibilidad. Sin listas de correo ni grupos de WhatsApp.
-      </p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="../#contacto" data-i18n="ngo.ctaDemo">Pedir una demostraci&#243;n</a>
-        <a class="btn btn--ghost" href="../#app" data-i18n="ngo.ctaApp">Ver la app</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="split">
-        <div class="reveal">
-          <span class="eyebrow" data-i18n="ngo.emEyebrow">Emergencias</span>
-          <h2 data-i18n="ngo.emTitle">Movilizar en minutos</h2>
-          <p data-i18n="ngo.emBody">
-            Lanza una operaci&#243;n desde un escenario preparado &#8212; inundaci&#243;n, ola de calor, reparto
-            de alimentos &#8212; y el aviso llega a quien puede ayudar y est&#225; cerca. Ves en directo qu&#233;
-            tareas est&#225;n cubiertas y cu&#225;les siguen sin gente.
-          </p>
-          <ul class="checklist">
-            <li data-i18n="ngo.e1">Escenarios con tareas y plazas ya definidas</li>
-            <li data-i18n="ngo.e2">Aviso autom&#225;tico a quien encaja y est&#225; disponible</li>
-            <li data-i18n="ngo.e3">C&#243;digo de llegada para confirmar qui&#233;n est&#225; sobre el terreno</li>
-          </ul>
-        </div>
-        <div class="split__media reveal">
-          <img src="../imagenes/Effiziente Freiwilligenverwaltung.png" alt="" data-i18n-alt="ngo.imgAlt" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--sunken">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow" data-i18n="ngo.projEyebrow">Proyectos</span>
-        <h2 data-i18n="ngo.projTitle">Y tambi&#233;n lo que no es urgente</h2>
-      </div>
-      <div class="grid grid--3">
-        <article class="card reveal">
-          <h3 data-i18n="ngo.c1t">Actividades con fecha</h3>
-          <p data-i18n="ngo.c1b">Define tareas, plazas y horarios. Los voluntarios se apuntan a lo que pueden.</p>
-        </article>
-        <article class="card reveal">
-          <h3 data-i18n="ngo.c2t">Acreditaciones verificadas</h3>
-          <p data-i18n="ngo.c2b">Las habilidades que exigen titulaci&#243;n se revisan antes de asignar a nadie.</p>
-        </article>
-        <article class="card reveal">
-          <h3 data-i18n="ngo.c3t">Informe de horas</h3>
-          <p data-i18n="ngo.c3b">Horas acreditadas por persona, exportables a CSV para justificar subvenciones.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow" data-i18n="ngo.priceEyebrow">Precio</span>
-        <h2 data-i18n="ngo.priceTitle">Gratis si tu entidad es peque&#241;a</h2>
-      </div>
-      <div class="grid grid--2">
-        <article class="card reveal">
-          <h3 data-i18n="ngo.f1t">Freemium</h3>
-          <p data-i18n="ngo.f1b">
-            Entidades con menos de 500.000 &#8364; de facturaci&#243;n anual: sin coste, sin l&#237;mite de
-            voluntarios ni de operaciones.
-          </p>
-        </article>
-        <article class="card reveal">
-          <h3 data-i18n="ngo.f2t">Pago por voluntario</h3>
-          <p data-i18n="ngo.f2b">
-            A partir de esa cifra se paga por voluntario movilizado: por resultado, no por tener
-            la herramienta abierta.
-          </p>
-        </article>
-      </div>
-      <p style="margin-top: var(--s-lg)">
-        <a class="btn btn--navy" href="../#contacto" data-i18n="ngo.ctaEnd">Hablemos de vuestro caso</a>
-      </p>
-    </div>
-  </section>
-
+  <section class="detail-hero"><div class="container reveal"><a class="breadcrumb" href="../index.html#para-quien" data-i18n="detail.back">← Volver a Para quién</a><span class="eyebrow" data-i18n="ngo.eyebrow">ONG y asociaciones</span><h1 data-i18n="ngo.hero">Más manos para cada misión.</h1><p class="detail-hero__lead" data-i18n="ngo.lead">Publica misiones planificadas o urgentes, cubre plazas y mantén informadas a las personas voluntarias desde un solo lugar.</p><div class="detail-hero__actions"><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="ngo.cta">Inscribirme como ONG</a><a class="btn btn--ghost" href="#precios" data-i18n="detail.prices">Ver precios</a></div></div></section>
+  <section class="detail-section detail-section--white"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.benefits">Ventajas</span><h2 data-i18n="ngo.benefitsTitle">Coordina sin perder tiempo entre herramientas.</h2><p data-i18n="ngo.benefitsLead">PeopleForPeople ayuda a convertir una necesidad detectada por tu entidad en una misión clara y fácil de cubrir.</p></div><div class="benefit-grid"><article class="benefit-card reveal"><span class="benefit-card__number">01</span><h3 data-i18n="ngo.b1t">Publicación ágil</h3><p data-i18n="ngo.b1b">Indica objetivo, ubicación, fecha, requisitos y plazas. Tu ONG mantiene el control de lo publicado.</p></article><article class="benefit-card reveal"><span class="benefit-card__number">02</span><h3 data-i18n="ngo.b2t">Voluntariado afín</h3><p data-i18n="ngo.b2b">Llega a personas cuya disponibilidad, cercanía e intereses encajan con la misión.</p></article><article class="benefit-card reveal"><span class="benefit-card__number">03</span><h3 data-i18n="ngo.b3t">Cobertura visible</h3><p data-i18n="ngo.b3b">Consulta plazas, mensajes y estado de cada misión para actuar a tiempo.</p></article></div></div></section>
+  <section class="detail-section detail-section--navy"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.workflow">Flujo de trabajo</span><h2 data-i18n="ngo.stepsTitle">De la necesidad a una misión coordinada.</h2></div><div class="steps"><article class="step reveal"><h3 data-i18n="ngo.s1t">Verifica tu entidad</h3><p data-i18n="ngo.s1b">Confirma los datos de la ONG y las personas responsables.</p></article><article class="step reveal"><h3 data-i18n="ngo.s2t">Publica la misión</h3><p data-i18n="ngo.s2b">Define el alcance, el lugar, la fecha y las plazas necesarias.</p></article><article class="step reveal"><h3 data-i18n="ngo.s3t">Recibe candidaturas</h3><p data-i18n="ngo.s3b">Revisa perfiles y comunica indicaciones desde el mismo espacio.</p></article><article class="step reveal"><h3 data-i18n="ngo.s4t">Sigue la cobertura</h3><p data-i18n="ngo.s4b">Comprueba plazas cubiertas y estado de la misión.</p></article></div></div></section>
+  <section class="detail-section" id="precios"><div class="container"><div class="detail-heading reveal"><span class="eyebrow" data-i18n="detail.pricing">Tarifas</span><h2 data-i18n="ngo.priceTitle">Precios que crecen con tu comunidad.</h2><p data-i18n="ngo.priceLead">Clasificamos cada plan por el número de personas voluntarias activas gestionadas por la ONG.</p></div><div class="trial-banner reveal"><div class="trial-banner__icon">2×</div><div><h3 data-i18n="detail.trialTitle">Prueba dos publicaciones gratis</h3><p data-i18n="detail.trialBody">Tus dos primeras misiones o urgencias no tienen coste ni requieren tarjeta. La suscripción empieza solo si decides publicar una tercera.</p></div></div><div class="pricing-grid">
+    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.small">Pequeña</h3><p class="price-card__size" data-i18n="ngo.smallSize">Hasta 50 voluntarios activos</p><p class="price"><strong>19 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.support">Soporte por correo</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="ngo.cta">Inscribirme como ONG</a></article>
+    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.medium">Mediana</h3><p class="price-card__size" data-i18n="ngo.mediumSize">De 51 a 250 voluntarios activos</p><p class="price"><strong>49 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.priority">Soporte prioritario</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="ngo.cta">Inscribirme como ONG</a></article>
+    <article class="price-card reveal" tabindex="0"><h3 data-i18n="plan.large">Grande</h3><p class="price-card__size" data-i18n="ngo.largeSize">Más de 250 voluntarios activos</p><p class="price"><strong>99 €</strong><span data-i18n="detail.month">/ mes</span></p><ul><li data-i18n="detail.unlimited">Misiones ilimitadas</li><li data-i18n="detail.messaging">Mensajería y cobertura de plazas</li><li data-i18n="detail.onboarding">Acompañamiento de puesta en marcha</li></ul><a class="btn btn--ghost" href="../index.html#descargar-app" data-i18n="ngo.cta">Inscribirme como ONG</a></article>
+  </div><p class="pricing-note" data-i18n="detail.priceNote">Precios sin IVA. Pago mensual, sin permanencia. Con pago anual, dos meses gratis. El tamaño del plan se revisa al renovar.</p></div></section>
+  <section class="detail-section detail-section--white"><div class="container"><div class="cta-panel reveal"><div><h2 data-i18n="ngo.finalTitle">Prueba PeopleForPeople con una misión real.</h2><p data-i18n="ngo.finalLead">Te ayudamos a verificar la entidad y preparar la primera publicación.</p></div><a class="btn btn--primary" href="../index.html#descargar-app" data-i18n="ngo.cta">Inscribirme como ONG</a></div></div></section>
 </main>
-
-<footer class="footer">
-  <div class="container">
-    <div class="footer__bottom">
-      <span>© 2025 People for People</span>
-      <a href="../aviso-legal.html" data-i18n="footer.legal">Aviso legal · Impressum</a>
-      <a href="../privacidad.html" data-i18n="footer.privacy">Privacidad</a>
-      <a href="../terminos.html" data-i18n="footer.terms">Términos</a>
-    </div>
-  </div>
-</footer>
-
-<script src="../js/i18n.js"></script>
-<script src="../js/site.js"></script>
-</body>
-</html>
+<footer class="footer"><div class="container"><div class="footer__grid"><div class="footer__brand"><img src="../imagenes/marca/logotipo-transparente.svg" alt="PeopleForPeople" /><p data-i18n="footer.tagline">Tu ayuda. Su esperanza. Nosotros unimos.</p></div><div><h4 data-i18n="footer.platform">Plataforma</h4><ul><li><a href="../index.html#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li><li><a href="../index.html#app" data-i18n="nav.app">La app</a></li><li><a href="../index.html#para-quien" data-i18n="nav.who">Para quién</a></li><li><a href="../index.html#contacto" data-i18n="nav.contact">Contacto</a></li></ul></div><div><h4 data-i18n="footer.resources">Recursos</h4><ul><li><a href="../voluntarios/index.html" data-i18n="who.v_t">Voluntarios</a></li><li><a href="../ongs/index.html" data-i18n="who.o_t">ONG y asociaciones</a></li><li><a href="../comunidades/index.html" data-i18n="who.m_t">Ayuntamientos</a></li><li><a href="../empresas/index.html" data-i18n="who.e_t">Empresas con iniciativa RSC</a></li><li><a href="../documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></div><div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="../aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="../privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="../terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></li></ul></div></div><div class="footer__bottom"><span data-i18n="footer.rights">© 2026 PeopleForPeople. Todos los derechos reservados.</span><span data-i18n="footer.madein">Creado para que ayudar sea más fácil.</span></div></div></footer>
+<script src="../js/i18n.js"></script><script src="../js/home-i18n.js"></script><script src="../js/detail-i18n.js"></script><script src="../js/site.js"></script><script src="../js/home.js"></script></body></html>

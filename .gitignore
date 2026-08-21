@@ -1,0 +1,7 @@
+# Basura de macOS. Daniel trabaja en Mac y estos ficheros venian en el repo
+# de origen; no son parte del sitio y GitHub Pages los publicaria igual.
+.DS_Store
+**/.DS_Store
+
+# Configuracion local del editor.
+.claude/
