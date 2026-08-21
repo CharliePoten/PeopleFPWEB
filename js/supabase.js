@@ -339,6 +339,23 @@
       });
     },
 
+    /**
+     * DELETE con filtro.
+     *
+     * PostgREST exige el filtro en la URL y borra TODO lo que encaje. No
+     * hay proteccion contra un filtro olvidado mas alla de las politicas
+     * RLS, asi que aqui se rechaza una consulta vacia antes de salir: un
+     * `delete` sin `where` contra una tabla es un accidente, nunca una
+     * intencion.
+     */
+    delete: function (tabla, consulta) {
+      if (!consulta) return Promise.reject(PfpError('unknown', 'Borrado sin filtro.'));
+      return pedirAuth('/rest/v1/' + tabla + '?' + consulta, {
+        metodo: 'DELETE',
+        cabeceras: { Prefer: 'return=minimal' },
+      });
+    },
+
     update: function (tabla, consulta, cambios) {
       return pedirAuth('/rest/v1/' + tabla + '?' + consulta, {
         metodo: 'PATCH',

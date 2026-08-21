@@ -122,6 +122,13 @@
 .fila { display: grid; gap: var(--s-base); grid-template-columns: 1fr 1fr; }
 @media (max-width: 640px) { .fila { grid-template-columns: 1fr; } }
 
+/* Los campos de una fila se alinean ARRIBA.
+   `.field` es a su vez una rejilla, y al estirarse para igualar la altura
+   de su vecino, la ultima fila —el propio recuadro— crecia con ella: el
+   campo que no llevaba texto de ayuda debajo salia mas alto que el otro y
+   veinticinco pixeles mas abajo. */
+.fila > .field { align-content: start; }
+
 /* --------------------------------------------------------------------------
    Casillas y grupos de elección
    -------------------------------------------------------------------------- */
