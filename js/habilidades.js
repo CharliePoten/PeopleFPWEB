@@ -266,4 +266,4 @@ window.PFP_HABILIDADES = [
   }
 ];
 
-window.PFP_CATEGORIAS = { es: {"emergency": "Emergencias", "logistics": "Logística", "care": "Cuidados", "daily_support": "Apoyo diario", "technical": "Técnico", "language": "Idiomas"}, de: {"emergency": "Notfall", "logistics": "Logistik", "care": "Betreuung", "daily_support": "Alltägliche Hilfe", "technical": "Technik", "language": "Sprachen"} };
+window.PFP_CATEGORIAS = { es: {"emergency": "Emergencias", "logistics": "Logística", "health": "Salud", "daily_support": "Apoyo diario", "technical": "Técnico", "language": "Idiomas"}, de: {"emergency": "Notfälle", "logistics": "Logistik", "health": "Gesundheit", "daily_support": "Alltagshilfe", "technical": "Technik", "language": "Sprachen"} };

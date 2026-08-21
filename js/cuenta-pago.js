@@ -21,6 +21,11 @@
 
   var CLAVE_PLAN = 'pfp.planElegido';
 
+  /** Los catalogos traen `es` y `de` dentro; se elige aqui. */
+  function idioma() {
+    return document.documentElement.lang === 'de' ? 'de' : 'es';
+  }
+
   /** 29900 -> «299 €». Sin decimales cuando son cero, que es siempre aqui. */
   function euros(centimos) {
     return new Intl.NumberFormat('es-ES', {
@@ -58,8 +63,8 @@
       .then(function (e) {
         if (!e.organizacion) {
           caja.innerHTML =
-            '<p class="field__hint">Primero hay que dar de alta la organización.</p>' +
-            '<a class="btn btn--primary" href="organizacion.html">Darla de alta</a>';
+            '<p class="field__hint">' + UI.T('c.pl.primero') + '</p>' +
+            '<a class="btn btn--primary" href="organizacion.html">' + UI.T('c.pl.darla') + '</a>';
           boton.style.display = 'none';
           return;
         }
@@ -70,7 +75,7 @@
            tiempo. */
         if (e.plan && e.plan.status === 'active') {
           caja.innerHTML =
-            '<p class="field__hint">Ya tenéis un plan activo. Para cambiarlo, escribidnos a ' +
+            '<p class="field__hint">' + UI.T('c.pl.yaHay') + ' ' +
             escapar((window.PFP_COBRO || {}).correo || '') +
             '.</p>';
           boton.style.display = 'none';
@@ -86,7 +91,7 @@
 
         if (!suyos.length) {
           caja.innerHTML =
-            '<p class="field__hint">No hay planes para este tipo de entidad. Escribidnos y lo vemos.</p>';
+            '<p class="field__hint">' + UI.T('c.pl.ninguno') + '</p>';
           boton.style.display = 'none';
           return;
         }
@@ -94,10 +99,10 @@
         caja.innerHTML = '';
         suyos.forEach(function (p) {
           var precio = p.aMedida
-            ? 'A convenir'
+            ? UI.T('c.pl.aConvenir')
             : p.precio === 0
-              ? 'Gratis'
-              : euros(p.precio) + ' al año';
+              ? UI.T('c.pl.gratis')
+              : euros(p.precio) + ' ' + UI.T('c.pl.alAno');
 
           var b = document.createElement('button');
           b.type = 'button';
@@ -105,11 +110,11 @@
           b.setAttribute('aria-pressed', 'false');
           b.innerHTML =
             '<span class="plan__cabeza"><span class="plan__nombre">' +
-            escapar(p.nombre.es) +
+            escapar(p.nombre[idioma()]) +
             '</span><span class="plan__precio">' +
             escapar(precio) +
             '</span></span><p class="plan__detalle">' +
-            escapar(p.detalle.es) +
+            escapar(p.detalle[idioma()]) +
             '</p>';
           b.addEventListener('click', function () {
             elegido = p.id;
@@ -144,23 +149,23 @@
   function formasPara(plan) {
     var cobro = window.PFP_COBRO || {};
     if (plan.aMedida) {
-      return [['invoice', 'Pedir presupuesto', 'Hablamos y os pasamos la factura.']];
+      return [['invoice', UI.T('c.pg.presupuesto'), UI.T('c.pg.presupuestoSub')]];
     }
     if (plan.precio === 0) {
-      return [['free', 'Plan gratuito', 'No hay nada que pagar.']];
+      return [['free', UI.T('c.pg.gratis'), UI.T('c.pg.gratisSub')]];
     }
 
-    var formas = [['transfer', 'Transferencia bancaria', 'Os damos el IBAN y el concepto.']];
+    var formas = [['transfer', UI.T('c.pg.transfer'), UI.T('c.pg.transferSub')]];
     // Bizum solo si hay un numero al que cobrar: ensenar la opcion sin el
     // seria mandar el dinero a ningun sitio.
-    if (cobro.bizum) formas.push(['bizum', 'Bizum', 'Os damos el número y el concepto.']);
+    if (cobro.bizum) formas.push(['bizum', UI.T('c.pg.bizum'), UI.T('c.pg.bizumSub')]);
 
     var enlace = (cobro.stripe || {})[plan.id];
     if (enlace) {
       formas.push([
         'apple_pay',
-        'Tarjeta, Apple Pay o Google Pay',
-        'Pago inmediato con recibo al momento.',
+        UI.T('c.pg.tarjeta'),
+        UI.T('c.pg.tarjetaSub'),
       ]);
     }
     return formas;
@@ -176,17 +181,17 @@
 
     var plan = planPorId(idPlan);
     if (!plan) {
-      UI.avisar('aviso', 'No sabemos qué plan quieres contratar. Vuelve a elegirlo.');
-      $('#paso-formas').innerHTML = '<a class="btn btn--primary" href="planes.html">Ver los planes</a>';
+      UI.avisar('aviso', UI.T('c.pg.sinPlan'));
+      $('#paso-formas').innerHTML = '<a class="btn btn--primary" href="planes.html">' + UI.T('c.pg.verPlanes') + '</a>';
       return;
     }
 
-    $('#resumen-plan').textContent = plan.nombre.es;
+    $('#resumen-plan').textContent = plan.nombre[idioma()];
     $('#resumen-precio').textContent = plan.aMedida
-      ? 'A convenir'
+      ? UI.T('c.pl.aConvenir')
       : plan.precio === 0
-        ? 'Gratis'
-        : euros(plan.precio) + ' al año';
+        ? UI.T('c.pl.gratis')
+        : euros(plan.precio) + ' ' + UI.T('c.pl.alAno');
 
     var forma = null;
     var caja = $('#formas');
@@ -214,11 +219,11 @@
       UI.limpiarAvisos();
 
       var boton = $('#btn-contratar');
-      UI.ocupado(boton, true, 'Contratando…');
+      UI.ocupado(boton, true, UI.T('c.pg.contratando'));
 
       UI.cargarEstado()
         .then(function (e) {
-          if (!e.organizacion) throw PFP.error('unknown', 'No hay ninguna entidad dada de alta.');
+          if (!e.organizacion) throw PFP.error('unknown', UI.T('c.pg.sinEntidad'));
           return PFP.db.rpc('start_subscription', {
             p_org: e.organizacion.id,
             p_plan: plan.id,
@@ -252,22 +257,21 @@
     var partes = [];
 
     partes.push(
-      '<div class="aviso aviso--espera" data-visible="true">Ya está reservado vuestro plan. ' +
-        'Haced el ingreso con estos datos; al verlo en el banco lo activamos.</div>',
+      '<div class="aviso aviso--espera" data-visible="true">' + UI.T('c.pg.reservado') + '</div>',
     );
 
     /* El concepto va primero y se puede copiar de un toque: es lo unico que
        permite casar un ingreso con quien lo hizo cuando el pago llega por
        fuera de la plataforma. */
-    partes.push(dato('Concepto del ingreso', r.reference, true));
+    partes.push(dato(UI.T('c.mi.concepto'), r.reference, true));
 
-    if (r.amount_cents > 0) partes.push(dato('Importe', euros(r.amount_cents), false));
+    if (r.amount_cents > 0) partes.push(dato(UI.T('c.pg.importe'), euros(r.amount_cents), false));
 
     if (forma === 'transfer') {
-      partes.push(dato('IBAN', cobro.iban, true));
-      partes.push(dato('Titular', cobro.titular, false));
+      partes.push(dato(UI.T('c.pg.iban'), cobro.iban, true));
+      partes.push(dato(UI.T('c.pg.titular'), cobro.titular, false));
     }
-    if (forma === 'bizum') partes.push(dato('Teléfono de Bizum', cobro.bizum, true));
+    if (forma === 'bizum') partes.push(dato(UI.T('c.pg.telBizum'), cobro.bizum, true));
 
     if (forma === 'apple_pay') {
       var enlace = (cobro.stripe || {})[plan.id];
@@ -278,20 +282,20 @@
           'client_reference_id=' + encodeURIComponent(r.reference);
         if (/\/test_/.test(enlace)) {
           partes.push(
-            '<div class="aviso aviso--espera" data-visible="true">Este enlace es de PRUEBA de ' +
-              'Stripe: acepta tarjetas de mentira y no cobra nada.</div>',
+            '<div class="aviso aviso--espera" data-visible="true">' + UI.T('c.pg.pruebas') +
+              '</div>',
           );
         }
         partes.push(
           '<a class="btn btn--primary" target="_blank" rel="noopener" href="' +
-            escapar(url) + '">Ir a la pasarela de pago</a>',
+            escapar(url) + '">' + UI.T('c.pg.pasarela') + '</a>',
         );
       }
     }
 
     if (forma === 'invoice') {
       partes.push(
-        '<p class="field__hint">Escribidnos con esta referencia y os preparamos un presupuesto.</p>' +
+        '<p class="field__hint">' + UI.T('c.pg.escribid') + '</p>' +
           '<a class="btn btn--ghost" href="mailto:' + escapar(cobro.correo) +
           '?subject=' + encodeURIComponent('Plan ' + plan.id + ' — ' + r.reference) +
           '">' + escapar(cobro.correo) + '</a>',
@@ -299,10 +303,9 @@
     }
 
     partes.push(
-      '<p class="field__hint">Copiad el concepto tal cual: es lo que nos permite saber que el ' +
-        'ingreso es vuestro.</p>',
+      '<p class="field__hint">' + UI.T('c.pg.copiad') + '</p>',
     );
-    partes.push('<a class="btn btn--ghost" href="index.html">Volver a mi cuenta</a>');
+    partes.push('<a class="btn btn--ghost" href="index.html">' + UI.T('c.volver') + '</a>');
 
     $('#paso-formas').innerHTML = partes.join('');
     engancharCopiar();
@@ -314,7 +317,7 @@
       '<span class="dato__clave">' + escapar(clave) + '</span>' +
       '<span class="dato__valor">' + escapar(valor) + '</span></span>' +
       (copiable
-        ? '<button class="dato__copiar" type="button" data-copiar="' + escapar(valor) + '">Copiar</button>'
+        ? '<button class="dato__copiar" type="button" data-copiar="' + escapar(valor) + '">' + UI.T('c.mi.copiar') + '</button>'
         : '') +
       '</div>'
     );
@@ -327,9 +330,9 @@
         // banco, y pegarlo con ellos da error en la mitad de las webs.
         var v = b.dataset.copiar.replace(/\s/g, '');
         navigator.clipboard.writeText(v).then(function () {
-          b.textContent = 'Copiado';
+          b.textContent = UI.T('c.mi.copiado');
           setTimeout(function () {
-            b.textContent = 'Copiar';
+            b.textContent = UI.T('c.mi.copiar');
           }, 1800);
         });
       });

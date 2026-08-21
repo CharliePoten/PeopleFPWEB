@@ -29,20 +29,17 @@
   }
 
   /** Mensajes por código de error. Los mismos códigos que usa la app. */
-  var MENSAJES = {
-    invalid_credentials: 'El correo o la contraseña no son correctos.',
-    email_taken: 'Ya hay una cuenta con ese correo. Prueba a entrar.',
-    weak_password: 'La contraseña debe tener al menos 8 caracteres.',
-    email_not_confirmed: 'Falta confirmar tu correo. Te llevamos a hacerlo.',
-    invalid_code: 'El código no es correcto o ya ha caducado. Pide otro.',
-    rate_limited: 'Has pedido demasiados correos seguidos. Espera un minuto.',
-    network: 'Sin conexión con el servidor. Revisa tu red e inténtalo otra vez.',
-    sin_sesion: 'Tu sesión ha caducado. Entra de nuevo.',
-    unknown: 'Algo ha fallado. Inténtalo de nuevo.',
-  };
+  /* Los mensajes viven en el diccionario, como el resto. Se resuelven por
+     el codigo del error, que es igual en la web y en la app. */
+  var CODIGOS = [
+    'invalid_credentials', 'email_taken', 'weak_password', 'email_not_confirmed',
+    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'unknown',
+  ];
 
   function explicar(e) {
-    return (e && MENSAJES[e.codigo]) || (e && e.message) || MENSAJES.unknown;
+    var c = e && e.codigo;
+    if (c && CODIGOS.indexOf(c) !== -1) return T('c.e.' + c);
+    return (e && e.message) || T('c.e.unknown');
   }
 
   function avisar(id, texto, tipo) {
@@ -65,7 +62,7 @@
     if (!boton) return;
     if (si) {
       boton.dataset.textoOriginal = boton.dataset.textoOriginal || boton.textContent;
-      boton.textContent = textoOcupado || 'Un momento…';
+      boton.textContent = textoOcupado || T('c.espera');
       boton.disabled = true;
     } else {
       if (boton.dataset.textoOriginal) boton.textContent = boton.dataset.textoOriginal;
@@ -95,6 +92,48 @@
       return '';
     }
   }
+
+  /* ---------------------------------------------------------------------
+     Idioma
+     --------------------------------------------------------------------- */
+
+  /**
+   * Texto por clave, en el idioma que este puesto.
+   *
+   * Para lo que genera el JavaScript. Lo que ya existe en el HTML lleva
+   * `data-i18n` y lo traduce `site.js` solo.
+   */
+  function T(clave) {
+    var lang = document.documentElement.lang || 'es';
+    var d = (window.I18N && window.I18N[lang]) || {};
+    if (clave in d) return d[clave];
+    var es = (window.I18N && window.I18N.es) || {};
+    return clave in es ? es[clave] : clave;
+  }
+
+  /**
+   * Vuelve a traducir lo que se creo desde JavaScript.
+   *
+   * `site.js` solo sabe de `data-i18n`, que se resuelve una vez. Los
+   * elementos que se construyen aqui con texto de dos idiomas —las
+   * habilidades, los nombres de los planes— guardan las dos versiones en
+   * `data-es` y `data-de`, y esto las cambia al pulsar el boton de idioma.
+   * Sin ello habria que recargar, y quien estuviera a medio rellenar el
+   * formulario perderia lo escrito.
+   */
+  function retraducir() {
+    var lang = document.documentElement.lang || 'es';
+    $$('[data-es][data-de]').forEach(function (el) {
+      var t = el.getAttribute('data-' + lang);
+      if (t) el.textContent = t;
+    });
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest ? ev.target.closest('.lang [data-lang]') : null;
+    // Despues de que `site.js` haya hecho lo suyo con el mismo clic.
+    if (b) setTimeout(retraducir, 0);
+  });
 
   /* ---------------------------------------------------------------------
      Perfil de quien ha entrado
@@ -194,11 +233,11 @@
       var boton = $('#btn-entrar');
 
       if (!email || !clave) {
-        avisar('aviso', 'Escribe tu correo y tu contraseña.');
+        avisar('aviso', T('c.e.faltaEmail'));
         return;
       }
 
-      ocupado(boton, true, 'Entrando…');
+      ocupado(boton, true, T('c.entrar.yendo'));
       PFP.auth
         .signIn(email, clave)
         .then(function () {
@@ -248,15 +287,15 @@
       var acepta = $('#acepta').checked;
       var boton = $('#btn-registro');
 
-      if (nombre.length < 2) return avisar('aviso', 'Escribe tu nombre y apellidos.');
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return avisar('aviso', 'Ese correo no es válido.');
-      if (clave.length < 8) return avisar('aviso', MENSAJES.weak_password);
+      if (nombre.length < 2) return avisar('aviso', T('c.e.nombreCorto'));
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return avisar('aviso', T('c.e.emailMalo'));
+      if (clave.length < 8) return avisar('aviso', T('c.e.weak_password'));
       // Se pide dos veces porque no se ve al escribirla: un error de tecleo
       // aquí deja a alguien sin poder entrar a una cuenta que acaba de crear.
-      if (clave !== repetir) return avisar('aviso', 'Las dos contraseñas no coinciden.');
-      if (!acepta) return avisar('aviso', 'Hay que aceptar la privacidad y los términos.');
+      if (clave !== repetir) return avisar('aviso', T('c.e.noCoinciden'));
+      if (!acepta) return avisar('aviso', T('c.e.aceptar'));
 
-      ocupado(boton, true, 'Creando la cuenta…');
+      ocupado(boton, true, T('c.reg.creando'));
       PFP.auth
         .signUp(email, clave, nombre, rol)
         .then(function (r) {
@@ -282,7 +321,7 @@
 
     var email = correoPendiente();
     if (!email) {
-      avisar('aviso', 'No sabemos a qué correo enviarlo. Vuelve a empezar.', 'error');
+      avisar('aviso', T('c.ver.sinCorreo'), 'error');
       $('#form-verificar').style.display = 'none';
       return;
     }
@@ -304,12 +343,12 @@
       if (!btnReenviar) return;
       if (espera > 0) {
         btnReenviar.disabled = true;
-        btnReenviar.textContent = 'Enviar otro código (' + espera + ' s)';
+        btnReenviar.textContent = T('c.ver.reenviar') + ' (' + espera + ' s)';
         espera--;
         setTimeout(pintarEspera, 1000);
       } else {
         btnReenviar.disabled = false;
-        btnReenviar.textContent = 'Enviar otro código';
+        btnReenviar.textContent = T('c.ver.reenviar');
       }
     }
     pintarEspera();
@@ -319,10 +358,10 @@
       limpiarAvisos();
 
       var codigo = campo.value.trim();
-      if (codigo.length !== 6) return avisar('aviso', 'El código tiene seis dígitos.');
+      if (codigo.length !== 6) return avisar('aviso', T('c.ver.seisDigitos'));
 
       var boton = $('#btn-verificar');
-      ocupado(boton, true, 'Comprobando…');
+      ocupado(boton, true, T('c.ver.comprobando'));
       PFP.auth
         .verificarCodigo(email, codigo)
         .then(function () {
@@ -337,12 +376,12 @@
     if (btnReenviar) {
       btnReenviar.addEventListener('click', function () {
         limpiarAvisos();
-        ocupado(btnReenviar, true, 'Enviando…');
+        ocupado(btnReenviar, true, T('c.ver.enviando'));
         PFP.auth
           .reenviarCodigo(email)
           .then(function () {
             ocupado(btnReenviar, false);
-            avisar('aviso', 'Te hemos enviado otro código.', 'ok');
+            avisar('aviso', T('c.ver.reenviado'), 'ok');
             espera = 60;
             pintarEspera();
           })
@@ -371,11 +410,11 @@
 
       email = $('#email').value.trim().toLowerCase();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        return avisar('aviso', 'Ese correo no es válido.');
+        return avisar('aviso', T('c.e.emailMalo'));
       }
 
       var boton = $('#btn-pedir');
-      ocupado(boton, true, 'Enviando…');
+      ocupado(boton, true, T('c.ver.enviando'));
       PFP.auth
         .pedirRecuperacion(email)
         .then(function () {
@@ -387,7 +426,7 @@
           pedir.style.display = 'none';
           cambiar.style.display = '';
           $('#destino').textContent = email;
-          avisar('aviso', 'Si hay una cuenta con ese correo, ya va el código.', 'ok');
+          avisar('aviso', T('c.rec.enviado'), 'ok');
         })
         .catch(function (e) {
           ocupado(boton, false);
@@ -408,12 +447,12 @@
       var nueva = $('#password').value;
       var repetir = $('#password2').value;
 
-      if (codigo.length !== 6) return avisar('aviso', 'El código tiene seis dígitos.');
-      if (nueva.length < 8) return avisar('aviso', MENSAJES.weak_password);
-      if (nueva !== repetir) return avisar('aviso', 'Las dos contraseñas no coinciden.');
+      if (codigo.length !== 6) return avisar('aviso', T('c.ver.seisDigitos'));
+      if (nueva.length < 8) return avisar('aviso', T('c.e.weak_password'));
+      if (nueva !== repetir) return avisar('aviso', T('c.e.noCoinciden'));
 
       var boton = $('#btn-cambiar');
-      ocupado(boton, true, 'Guardando…');
+      ocupado(boton, true, T('c.rec.guardando'));
       PFP.auth
         .cambiarContrasena(email, codigo, nueva)
         .then(function () {
@@ -451,12 +490,14 @@
     });
   }
 
-  var ESTADO_PLAN = {
-    active: ['ok', 'Activo'],
-    pending_payment: ['espera', 'Esperando tu ingreso'],
-    expired: ['espera', 'Caducado'],
-    rejected: ['mal', 'Pago no confirmado'],
-    cancelled: ['mal', 'Cancelado'],
+  /* Color por estado. El texto sale del diccionario, con la misma clave
+     que el estado que devuelve el servidor. */
+  var COLOR_PLAN = {
+    active: 'ok',
+    pending_payment: 'espera',
+    expired: 'espera',
+    rejected: 'mal',
+    cancelled: 'mal',
   };
 
   function paginaIndex() {
@@ -490,17 +531,17 @@
 
     var filas =
       '<div class="estado">' +
-      '<div class="estado__fila"><span class="estado__clave">Cuenta</span>' +
-      '<span class="estado__valor">Voluntario<small>' + escapar(e.perfil.email) + '</small></span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">Perfil</span>' +
+      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.tipoCuenta') + '</span>' +
+      '<span class="estado__valor">' + T('c.mi.voluntario') + '<small>' + escapar(e.perfil.email) + '</small></span></div>' +
+      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.perfil') + '</span>' +
       '<span class="estado__valor"><span class="marca marca--' + (completo ? 'ok' : 'espera') + '">' +
-      (completo ? 'Completo' : 'Sin terminar') + '</span></span></div>' +
+      (completo ? T('c.mi.completo') : T('c.mi.sinTerminar')) + '</span></span></div>' +
       '</div>';
 
     var accion = completo
-      ? '<p class="field__hint">Tu perfil está listo. Abre la app para ver el mapa y apuntarte a misiones.</p>'
-      : '<p class="field__hint">Falta decirnos dónde puedes ayudar y qué sabes hacer. Son dos minutos.</p>' +
-        '<a class="btn btn--primary" href="voluntario.html">Completar mi perfil</a>';
+      ? '<p class="field__hint">' + T('c.mi.perfilListo') + '</p>'
+      : '<p class="field__hint">' + T('c.mi.faltaPerfil') + '</p>' +
+        '<a class="btn btn--primary" href="voluntario.html">' + T('c.mi.completar') + '</a>';
 
     pinta(filas + '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' + accion + '</div>');
   }
@@ -511,12 +552,12 @@
     if (!org) {
       pinta(
         '<div class="estado"><div class="estado__fila">' +
-          '<span class="estado__clave">Cuenta</span>' +
-          '<span class="estado__valor">Entidad<small>' + escapar(e.perfil.email) + '</small></span>' +
+          '<span class="estado__clave">' + T('c.mi.tipoCuenta') + '</span>' +
+          '<span class="estado__valor">' + T('c.mi.entidad') + '<small>' + escapar(e.perfil.email) + '</small></span>' +
           '</div></div>' +
           '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' +
-          '<p class="field__hint">Todavía no has dado de alta tu organización. Sin ella no podemos verificarte ni activar ningún plan.</p>' +
-          '<a class="btn btn--primary" href="organizacion.html">Dar de alta la organización</a>' +
+          '<p class="field__hint">' + T('c.mi.sinEntidad') + '</p>' +
+          '<a class="btn btn--primary" href="organizacion.html">' + T('c.mi.darAlta') + '</a>' +
           '</div>',
       );
       return;
@@ -524,20 +565,21 @@
 
     var plan = e.plan;
     var marcaVer = org.verificada
-      ? '<span class="marca marca--ok">Verificada</span>'
-      : '<span class="marca marca--espera">En revisión</span>';
+      ? '<span class="marca marca--ok">' + T('c.mi.verificada') + '</span>'
+      : '<span class="marca marca--espera">' + T('c.mi.enRevision') + '</span>';
 
     var marcaPlan = plan
-      ? '<span class="marca marca--' + ESTADO_PLAN[plan.status][0] + '">' + ESTADO_PLAN[plan.status][1] + '</span>'
-      : '<span class="marca marca--espera">Sin plan</span>';
+      ? '<span class="marca marca--' + (COLOR_PLAN[plan.status] || 'espera') + '">' +
+        T('c.plan.' + plan.status) + '</span>'
+      : '<span class="marca marca--espera">' + T('c.mi.sinPlan') + '</span>';
 
     var filas =
       '<div class="estado">' +
-      '<div class="estado__fila"><span class="estado__clave">Entidad</span>' +
+      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.entidad') + '</span>' +
       '<span class="estado__valor">' + escapar(org.nombre) + '<small>' + escapar(e.perfil.email) + '</small></span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">Verificación</span>' +
+      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.verificacion') + '</span>' +
       '<span class="estado__valor">' + marcaVer + '</span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">Plan</span>' +
+      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.plan') + '</span>' +
       '<span class="estado__valor">' + marcaPlan + '</span></div>' +
       '</div>';
 
@@ -545,7 +587,7 @@
 
     if (!org.verificada) {
       acciones.push(
-        '<p class="field__hint">Estamos comprobando que la entidad es real y quién la representa. Suele llevar uno o dos días laborables; te avisamos por correo.</p>',
+        '<p class="field__hint">' + T('c.mi.enRevisionTexto') + '</p>',
       );
     }
 
@@ -554,25 +596,25 @@
        pestaña se queda sin ella. */
     if (plan && plan.status === 'pending_payment') {
       acciones.push(
-        '<div class="dato dato--destacado"><span><span class="dato__clave">Concepto del ingreso</span>' +
+        '<div class="dato dato--destacado"><span><span class="dato__clave">' + T('c.mi.concepto') + '</span>' +
           '<span class="dato__valor">' + escapar(plan.reference) + '</span></span>' +
-          '<button class="dato__copiar" type="button" data-copiar="' + escapar(plan.reference) + '">Copiar</button></div>',
+          '<button class="dato__copiar" type="button" data-copiar="' + escapar(plan.reference) + '">' + T('c.mi.copiar') + '</button></div>',
       );
-      acciones.push('<a class="btn btn--ghost" href="pago.html">Ver los datos del pago</a>');
+      acciones.push('<a class="btn btn--ghost" href="pago.html">' + T('c.mi.verPago') + '</a>');
     } else if (!plan || plan.status !== 'active') {
-      acciones.push('<a class="btn btn--primary" href="planes.html">Elegir un plan</a>');
+      acciones.push('<a class="btn btn--primary" href="planes.html">' + T('c.mi.elegirPlan') + '</a>');
     }
 
-    acciones.push('<a class="btn btn--ghost" href="organizacion.html">Ver y editar los datos</a>');
+    acciones.push('<a class="btn btn--ghost" href="organizacion.html">' + T('c.mi.editar') + '</a>');
 
     pinta(filas + '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' + acciones.join('') + '</div>');
 
     $$('[data-copiar]').forEach(function (b) {
       b.addEventListener('click', function () {
         navigator.clipboard.writeText(b.dataset.copiar).then(function () {
-          b.textContent = 'Copiado';
+          b.textContent = T('c.mi.copiado');
           setTimeout(function () {
-            b.textContent = 'Copiar';
+            b.textContent = T('c.mi.copiar');
           }, 1800);
         });
       });
@@ -589,7 +631,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     if (!PFP.configurado) {
-      avisar('aviso', 'Falta la configuración del servidor. Avisa al equipo.', 'error');
+      avisar('aviso', T('c.e.sinConfig'), 'error');
       return;
     }
 
@@ -607,6 +649,8 @@
 
   /* Lo que necesitan los demás guiones del área de cuenta. */
   window.PFP_UI = {
+    T: T,
+    retraducir: retraducir,
     $: $,
     $$: $$,
     avisar: avisar,

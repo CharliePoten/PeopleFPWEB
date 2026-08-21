@@ -4,73 +4,73 @@
 <meta name="robots" content="noindex, nofollow" />
 <link rel="icon" href="../imagenes/marca/icon.svg" type="image/svg+xml" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../css/app.css" /><link rel="stylesheet" href="../css/home.css" /><link rel="stylesheet" href="../css/detail.css" /><link rel="stylesheet" href="../css/cuenta.css" /></head>
 <body class="home detail-page" data-pagina="organizacion"><a class="skip-link" href="#main">Saltar al contenido</a>
-<header class="header is-solid" id="site-header"><div class="container header__inner"><a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /></a><nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav><button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button><div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><a class="header__cuenta" href="index.html">Mi cuenta</a><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div></div></header>
+<header class="header is-solid" id="site-header"><div class="container header__inner"><a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /></a><nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav><button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button><div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><a class="header__cuenta" data-i18n="nav.account" href="index.html">Mi cuenta</a><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div></div></header>
 <main id="main"><section class="cuenta"><div class="container">
 
 <div class="cuenta__caja cuenta__caja--ancha">
   <div class="cuenta__cabecera">
-    <h1>Dar de alta tu organizaci&oacute;n</h1>
-    <p>Con estos datos comprobamos que la entidad es real antes de activaros.</p>
+    <h1 data-i18n="c.org.t">Dar de alta tu organizaci&oacute;n</h1>
+    <p data-i18n="c.org.sub">Con estos datos comprobamos que la entidad es real antes de activaros.</p>
   </div>
 
   <div class="aviso aviso--error" id="aviso" data-visible="false" role="alert"></div>
 
   <form class="form" id="form-organizacion" style="max-width:none" novalidate>
     <div class="field">
-      <label>&iquest;Qu&eacute; tipo de entidad sois?</label>
+      <label data-i18n="c.org.tipo">&iquest;Qu&eacute; tipo de entidad sois?</label>
       <div class="opciones" id="tipos" role="group" aria-label="Tipo de entidad"></div>
-      <span class="field__hint">Bomberos, polic&iacute;a local y protecci&oacute;n civil entran como administraci&oacute;n p&uacute;blica, a trav&eacute;s de su ayuntamiento.</span>
+      <span class="field__hint" data-i18n="c.org.tipoAyuda">Bomberos, polic&iacute;a local y protecci&oacute;n civil entran como administraci&oacute;n p&uacute;blica, a trav&eacute;s de su ayuntamiento.</span>
     </div>
 
     <div class="field">
-      <label for="razon">Raz&oacute;n social</label>
+      <label for="razon" data-i18n="c.org.razon">Raz&oacute;n social</label>
       <input type="text" id="razon" name="razon" autocomplete="organization" required />
-      <span class="field__hint">El nombre completo tal y como figura en el registro.</span>
+      <span class="field__hint" data-i18n="c.org.razonAyuda">El nombre completo tal y como figura en el registro.</span>
     </div>
 
     <div class="fila">
       <div class="field">
-        <label for="nombre">Nombre p&uacute;blico</label>
+        <label for="nombre" data-i18n="c.org.nombre">Nombre p&uacute;blico</label>
         <input type="text" id="nombre" name="nombre" required />
-        <span class="field__hint">El que ver&aacute;n los voluntarios.</span>
+        <span class="field__hint" data-i18n="c.org.nombreAyuda">El que ver&aacute;n los voluntarios.</span>
       </div>
       <div class="field">
-        <label for="cif">CIF o NIF</label>
+        <label for="cif" data-i18n="c.org.cif">CIF o NIF</label>
         <input type="text" id="cif" name="cif" autocapitalize="characters" autocorrect="off" spellcheck="false" required />
-        <span class="field__hint">Con o sin guiones, da igual.</span>
+        <span class="field__hint" data-i18n="c.org.cifAyuda">Con o sin guiones, da igual.</span>
       </div>
     </div>
 
     <div class="field">
-      <label for="calle">Direcci&oacute;n</label>
+      <label for="calle" data-i18n="c.org.calle">Direcci&oacute;n</label>
       <input type="text" id="calle" name="calle" autocomplete="street-address" required />
     </div>
 
     <div class="fila">
       <div class="field">
-        <label for="ciudad">Ciudad</label>
+        <label for="ciudad" data-i18n="c.vol.ciudad">Ciudad</label>
         <input type="text" id="ciudad" name="ciudad" autocomplete="address-level2" required />
       </div>
       <div class="field">
-        <label for="provincia">Provincia</label>
+        <label for="provincia" data-i18n="c.vol.provincia">Provincia</label>
         <input type="text" id="provincia" name="provincia" autocomplete="address-level1" required />
       </div>
     </div>
 
     <div class="fila">
       <div class="field">
-        <label for="cp">C&oacute;digo postal</label>
+        <label for="cp" data-i18n="c.org.cp">C&oacute;digo postal</label>
         <input type="text" id="cp" name="cp" inputmode="numeric" maxlength="5" autocomplete="postal-code" required />
       </div>
       <div class="field">
-        <label for="telefono">Tel&eacute;fono de contacto</label>
+        <label for="telefono" data-i18n="c.vol.tel">Tel&eacute;fono de contacto</label>
         <input type="tel" id="telefono" name="telefono" autocomplete="tel" required />
       </div>
     </div>
 
     <label class="casilla">
       <input type="checkbox" id="ubicacion" />
-      <span>Usar mi ubicaci&oacute;n actual como sede (opcional)</span>
+      <span data-i18n="c.org.ubicacion">Usar mi ubicaci&oacute;n actual como sede (opcional)</span>
     </label>
     <p class="field__hint" id="estado-ubicacion" style="margin:0"></p>
 
@@ -79,10 +79,10 @@
       <span>Declaro que represento a esta entidad y acepto los <a href="../terminos.html" target="_blank" rel="noopener">t&eacute;rminos</a>.</span>
     </label>
 
-    <button class="btn btn--primary" type="submit" id="btn-crear">Enviar a verificaci&oacute;n</button>
+    <button class="btn btn--primary" type="submit" id="btn-crear" data-i18n="c.org.btn">Enviar a verificaci&oacute;n</button>
   </form>
 </div>
 </div></section></main>
 <footer class="footer"><div class="container"><div class="footer__grid"><div class="footer__brand"><img src="../imagenes/marca/logotipo-transparente.svg" alt="PeopleForPeople" /><p data-i18n="footer.tagline">Tu ayuda. Su esperanza. Nosotros unimos.</p></div><div><h4 data-i18n="footer.platform">Plataforma</h4><ul><li><a href="../index.html#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li><li><a href="../index.html#app" data-i18n="nav.app">La app</a></li><li><a href="../index.html#para-quien" data-i18n="nav.who">Para quién</a></li><li><a href="../index.html#contacto" data-i18n="nav.contact">Contacto</a></li></ul></div><div><h4 data-i18n="footer.resources">Recursos</h4><ul><li><a href="../voluntarios/index.html" data-i18n="who.v_t">Voluntarios</a></li><li><a href="../ongs/index.html" data-i18n="who.o_t">ONG y asociaciones</a></li><li><a href="../comunidades/index.html" data-i18n="who.m_t">Ayuntamientos</a></li><li><a href="../empresas/index.html" data-i18n="who.e_t">Empresas con iniciativa RSC</a></li><li><a href="../documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></div><div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="../aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="../privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="../terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></li></ul></div></div><div class="footer__bottom"><span data-i18n="footer.rights">© 2026 PeopleForPeople. Todos los derechos reservados.</span><span data-i18n="footer.madein">Creado para que ayudar sea más fácil.</span></div></div></footer>
-<script src="../js/i18n.js"></script><script src="../js/home-i18n.js"></script><script src="../js/detail-i18n.js"></script><script src="../js/site.js"></script>
+<script src="../js/i18n.js"></script><script src="../js/cuenta-i18n.js"></script><script src="../js/home-i18n.js"></script><script src="../js/detail-i18n.js"></script><script src="../js/site.js"></script>
 <script src="../js/config.js"></script><script src="../js/supabase.js"></script><script src="../js/cuenta.js"></script><script src="../js/nif.js"></script><script src="../js/cuenta-alta.js"></script></body></html>

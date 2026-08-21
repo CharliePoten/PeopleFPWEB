@@ -22,6 +22,7 @@ window.I18N = {
     'nav.impact': 'Impacto',
     'nav.team': 'Equipo',
     'nav.contact': 'Contacto',
+    'nav.account': 'Mi cuenta',
     'nav.menu': 'Menú',
 
     'hero.kicker': 'Nacido de la DANA de Valencia',
@@ -265,6 +266,7 @@ window.I18N = {
     'nav.impact': 'Wirkung',
     'nav.team': 'Team',
     'nav.contact': 'Kontakt',
+    'nav.account': 'Mein Konto',
     'nav.menu': 'Menü',
 
     'hero.kicker': 'Entstanden aus der DANA in Valencia',

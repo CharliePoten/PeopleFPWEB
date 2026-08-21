@@ -25,9 +25,9 @@
   var DISTANCIAS = [10000, 25000, 50000, 100000];
 
   var MODOS = [
-    ['emergency_only', 'Solo emergencias', 'Te avisamos únicamente cuando ocurra algo grave cerca.'],
-    ['scheduled_only', 'Solo ayuda planificada', 'Acompañamiento, compras, proyectos con fecha.'],
-    ['both', 'Ambas cosas', 'Recibirás los dos tipos de aviso.'],
+    ['emergency_only', 'c.vol.modoEmergencia', 'c.vol.modoEmergenciaSub'],
+    ['scheduled_only', 'c.vol.modoPlan', 'c.vol.modoPlanSub'],
+    ['both', 'c.vol.modoAmbos', 'c.vol.modoAmbosSub'],
   ];
 
   /* =====================================================================
@@ -50,7 +50,8 @@
       b.className = 'opcion';
       b.setAttribute('aria-pressed', String(m[0] === modo));
       b.innerHTML =
-        '<span class="opcion__texto"><strong>' + m[1] + '</strong><span>' + m[2] + '</span></span>';
+        '<span class="opcion__texto"><strong data-i18n="' + m[1] + '">' + UI.T(m[1]) +
+        '</strong><span data-i18n="' + m[2] + '">' + UI.T(m[2]) + '</span></span>';
       b.addEventListener('click', function () {
         modo = m[0];
         $$('#modos .opcion').forEach(function (o) {
@@ -89,7 +90,9 @@
       var titulo = document.createElement('p');
       titulo.className = 'estado__clave';
       titulo.style.margin = '14px 0 8px';
-      titulo.textContent = cat[c] || c;
+      titulo.setAttribute('data-es', (window.PFP_CATEGORIAS.es || {})[c] || c);
+      titulo.setAttribute('data-de', (window.PFP_CATEGORIAS.de || {})[c] || c);
+      titulo.textContent = titulo.getAttribute('data-' + (document.documentElement.lang || 'es'));
       cajaHab.appendChild(titulo);
 
       var grupo = document.createElement('div');
@@ -100,7 +103,11 @@
         b.className = 'pastilla';
         // La acreditación se marca, no se esconde: quien no la tenga debe
         // saber antes de apuntarse que luego habrá que subir un papel.
-        b.textContent = h.es + (h.cred ? ' · acreditación' : '');
+        // Las dos versiones viajan en el elemento: al cambiar de idioma,
+        // `PFP_UI.retraducir()` las intercambia sin recargar la pagina.
+        b.setAttribute('data-es', h.es + (h.cred ? ' \u00b7 ' + window.I18N.es['c.vol.acreditacion'] : ''));
+        b.setAttribute('data-de', h.de + (h.cred ? ' \u00b7 ' + window.I18N.de['c.vol.acreditacion'] : ''));
+        b.textContent = b.getAttribute('data-' + (document.documentElement.lang || 'es'));
         b.setAttribute('aria-pressed', 'false');
         b.addEventListener('click', function () {
           if (elegidas[h.id]) delete elegidas[h.id];
@@ -126,21 +133,21 @@
         return;
       }
       if (!navigator.geolocation) {
-        estadoUbi.textContent = 'Este navegador no puede darnos la ubicación.';
+        estadoUbi.textContent = UI.T('c.u.sinSoporte');
         return;
       }
-      estadoUbi.textContent = 'Pidiendo permiso…';
+      estadoUbi.textContent = UI.T('c.u.pidiendo');
       navigator.geolocation.getCurrentPosition(
         function (pos) {
           punto = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          estadoUbi.textContent = 'Ubicación guardada.';
+          estadoUbi.textContent = UI.T('c.u.guardada');
         },
         function () {
           // Que lo deniegue no invalida el alta: la casilla se desmarca y
           // el resto del formulario sigue siendo válido.
           casillaUbi.checked = false;
           punto = null;
-          estadoUbi.textContent = 'No has dado permiso. Puedes activarlo luego desde la app.';
+          estadoUbi.textContent = UI.T('c.u.denegadaVol');
         },
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
       );
@@ -158,16 +165,16 @@
       var acuerdo = $('#acuerdo').checked;
 
       if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
-        return UI.avisar('aviso', 'Escribe un teléfono de contacto válido.');
+        return UI.avisar('aviso', UI.T('c.vol.errTel'));
       }
-      if (ciudad.length < 2) return UI.avisar('aviso', 'Dinos en qué ciudad estás.');
-      if (provincia.length < 2) return UI.avisar('aviso', 'Dinos la provincia.');
+      if (ciudad.length < 2) return UI.avisar('aviso', UI.T('c.vol.errCiudad'));
+      if (provincia.length < 2) return UI.avisar('aviso', UI.T('c.vol.errProvincia'));
       if (!acuerdo) {
-        return UI.avisar('aviso', 'Hay que aceptar el acuerdo de incorporación para continuar.');
+        return UI.avisar('aviso', UI.T('c.vol.errAcuerdo'));
       }
 
       var boton = $('#btn-guardar');
-      UI.ocupado(boton, true, 'Guardando…');
+      UI.ocupado(boton, true, UI.T('c.rec.guardando'));
 
       var ahora = new Date().toISOString();
       var ids = Object.keys(elegidas);
@@ -236,9 +243,9 @@
      ayuntamiento, y Cruz Roja es una ONG. */
 
   var TIPOS = [
-    ['ngo', 'ONG o asociación', 'Entidad sin ánimo de lucro inscrita en su registro.'],
-    ['municipality', 'Administración pública', 'Ayuntamiento, mancomunidad o diputacion.'],
-    ['company', 'Empresa', 'Programas de responsabilidad social corporativa.'],
+    ['ngo', 'c.org.ngo', 'c.org.ngoSub'],
+    ['municipality', 'c.org.muni', 'c.org.muniSub'],
+    ['company', 'c.org.emp', 'c.org.empSub'],
   ];
 
   function paginaOrganizacion() {
@@ -254,7 +261,8 @@
       b.className = 'opcion';
       b.setAttribute('aria-pressed', String(t[0] === tipo));
       b.innerHTML =
-        '<span class="opcion__texto"><strong>' + t[1] + '</strong><span>' + t[2] + '</span></span>';
+        '<span class="opcion__texto"><strong data-i18n="' + t[1] + '">' + UI.T(t[1]) +
+        '</strong><span data-i18n="' + t[2] + '">' + UI.T(t[2]) + '</span></span>';
       b.addEventListener('click', function () {
         tipo = t[0];
         $$('#tipos .opcion').forEach(function (o) {
@@ -273,19 +281,19 @@
         return;
       }
       if (!navigator.geolocation) {
-        estadoUbi.textContent = 'Este navegador no puede darnos la ubicación.';
+        estadoUbi.textContent = UI.T('c.u.sinSoporte');
         return;
       }
-      estadoUbi.textContent = 'Pidiendo permiso\u2026';
+      estadoUbi.textContent = UI.T('c.u.pidiendo');
       navigator.geolocation.getCurrentPosition(
         function (pos) {
           punto = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          estadoUbi.textContent = 'Ubicación guardada.';
+          estadoUbi.textContent = UI.T('c.u.guardada');
         },
         function () {
           casillaUbi.checked = false;
           punto = null;
-          estadoUbi.textContent = 'No has dado permiso. No pasa nada: es opcional.';
+          estadoUbi.textContent = UI.T('c.u.denegadaOrg');
         },
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
       );
@@ -313,22 +321,22 @@
       var telefono = $('#telefono').value.trim();
       var acepta = $('#acepta').checked;
 
-      if (razon.length < 3) return UI.avisar('aviso', 'Escribe la razón social completa.');
-      if (nombre.length < 2) return UI.avisar('aviso', 'Escribe el nombre con el que os conocen.');
+      if (razon.length < 3) return UI.avisar('aviso', UI.T('c.org.errRazon'));
+      if (nombre.length < 2) return UI.avisar('aviso', UI.T('c.org.errNombre'));
       if (!window.PFP_NIF.valido(cif)) {
-        return UI.avisar('aviso', 'Ese CIF o NIF no cuadra. Revisa las cifras y la letra final.');
+        return UI.avisar('aviso', UI.T('c.org.errCif'));
       }
-      if (calle.length < 3) return UI.avisar('aviso', 'Escribe la dirección.');
-      if (ciudad.length < 2) return UI.avisar('aviso', 'Escribe la ciudad.');
-      if (provincia.length < 2) return UI.avisar('aviso', 'Escribe la provincia.');
-      if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', 'El código postal tiene cinco cifras.');
+      if (calle.length < 3) return UI.avisar('aviso', UI.T('c.org.errCalle'));
+      if (ciudad.length < 2) return UI.avisar('aviso', UI.T('c.org.errCiudad'));
+      if (provincia.length < 2) return UI.avisar('aviso', UI.T('c.org.errProvincia'));
+      if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', UI.T('c.org.errCp'));
       if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
-        return UI.avisar('aviso', 'Escribe un teléfono de contacto válido.');
+        return UI.avisar('aviso', UI.T('c.vol.errTel'));
       }
-      if (!acepta) return UI.avisar('aviso', 'Hay que aceptar los términos para continuar.');
+      if (!acepta) return UI.avisar('aviso', UI.T('c.org.errTerminos'));
 
       var boton = $('#btn-crear');
-      UI.ocupado(boton, true, 'Enviando\u2026');
+      UI.ocupado(boton, true, UI.T('c.org.enviando'));
 
       PFP.db
         .select('profiles', 'select=id,email&limit=1')
@@ -358,7 +366,7 @@
             )
             .then(function (creada) {
               var org = creada && creada[0];
-              if (!org) throw PFP.error('unknown', 'No se ha podido crear la entidad.');
+              if (!org) throw PFP.error('unknown', UI.T('c.org.noCreada'));
 
               // Quien la da de alta queda como responsable. Sin esto la
               // entidad existe y nadie puede administrarla.
