@@ -1,140 +1,133 @@
 /* ==========================================================================
-   Planes y datos de cobro
+   Tramos, precios y enlaces de pago
    --------------------------------------------------------------------------
    GENERADO desde `src/data/plans.ts` y `src/data/payment-details.ts` de la
    app. No se edita a mano.
 
-   Los precios que hay aqui son SOLO para pintarlos. El que se cobra lo
-   pone `start_subscription()` en el servidor a partir del identificador
-   del plan; si el importe viajara desde el navegador, cualquiera
-   contrataria el plan de 1.499 EUR por un centimo. Es la misma regla que
-   en la app, y por eso los dos catalogos salen del mismo sitio.
+   Aqui NO se elige plan. El tamano se declara al dar de alta, alguien del
+   equipo lo confirma al verificar, y la tarifa sale sola del tipo y del
+   tramo. Los precios de este fichero son para pintarlos: el que se cobra lo
+   calcula `start_subscription()` en el servidor.
+
+   Solo mensual, sin permanencia y sin tarifa gratuita. Lo unico libre son
+   las dos primeras publicaciones.
    ========================================================================== */
 
-window.PFP_PLANES = [
-  {
-    "id": "ngo_free",
-    "tipos": [
-      "ngo"
-    ],
-    "precio": 0,
-    "aMedida": false,
-    "nombre": {
-      "es": "ONG · Gratuito",
-      "de": "NGO · Kostenlos"
-    },
-    "detalle": {
-      "es": "Para entidades con menos de 500.000 EUR de facturación anual. Sin límite de voluntarios ni de operaciones.",
-      "de": "Fur Organisationen mit weniger als 500.000 EUR Jahresumsatz. Ohne Begrenzung von Freiwilligen oder Einsatzen."
-    }
+window.PFP_TAMANOS = {
+  "ngo": {
+    "pregunta": "c.pl.askVolunteers",
+    "bandas": [
+      {
+        "size": "small",
+        "upTo": 50,
+        "cents": 1900
+      },
+      {
+        "size": "medium",
+        "upTo": 250,
+        "cents": 4900
+      },
+      {
+        "size": "large",
+        "upTo": null,
+        "cents": 9900
+      }
+    ]
   },
-  {
-    "id": "ngo_per_volunteer",
-    "tipos": [
-      "ngo"
-    ],
-    "precio": 0,
-    "aMedida": true,
-    "nombre": {
-      "es": "ONG · Pago por voluntario",
-      "de": "NGO · Zahlung pro Freiwilligem"
-    },
-    "detalle": {
-      "es": "A partir de 500.000 EUR de facturación. Se paga por voluntario movilizado, por resultado y no por tener la herramienta abierta.",
-      "de": "Ab 500.000 EUR Umsatz. Bezahlt wird pro mobilisiertem Freiwilligen, also nach Ergebnis."
-    }
+  "municipality": {
+    "pregunta": "c.pl.askPopulation",
+    "bandas": [
+      {
+        "size": "small",
+        "upTo": 10000,
+        "cents": 4900
+      },
+      {
+        "size": "medium",
+        "upTo": 50000,
+        "cents": 9900
+      },
+      {
+        "size": "large",
+        "upTo": null,
+        "cents": 19900
+      }
+    ]
   },
-  {
-    "id": "muni_s",
-    "tipos": [
-      "municipality"
-    ],
-    "precio": 29900,
-    "aMedida": false,
-    "nombre": {
-      "es": "Municipio pequeño",
-      "de": "Kleine Gemeinde"
-    },
-    "detalle": {
-      "es": "Hasta 10.000 habitantes.",
-      "de": "Bis 10.000 Einwohner."
-    }
+  "company": {
+    "pregunta": "c.pl.askEmployees",
+    "bandas": [
+      {
+        "size": "small",
+        "upTo": 50,
+        "cents": 1900
+      },
+      {
+        "size": "medium",
+        "upTo": 250,
+        "cents": 4900
+      },
+      {
+        "size": "large",
+        "upTo": null,
+        "cents": 9900
+      }
+    ]
   },
-  {
-    "id": "muni_m",
-    "tipos": [
-      "municipality"
-    ],
-    "precio": 79900,
-    "aMedida": false,
-    "nombre": {
-      "es": "Municipio mediano",
-      "de": "Mittlere Gemeinde"
-    },
-    "detalle": {
-      "es": "De 10.001 a 50.000 habitantes.",
-      "de": "Von 10.001 bis 50.000 Einwohner."
-    }
-  },
-  {
-    "id": "muni_l",
-    "tipos": [
-      "municipality"
-    ],
-    "precio": 149900,
-    "aMedida": false,
-    "nombre": {
-      "es": "Municipio grande",
-      "de": "Grosse Gemeinde"
-    },
-    "detalle": {
-      "es": "De 50.001 a 100.000 habitantes.",
-      "de": "Von 50.001 bis 100.000 Einwohner."
-    }
-  },
-  {
-    "id": "muni_xl",
-    "tipos": [
-      "municipality"
-    ],
-    "precio": 0,
-    "aMedida": true,
-    "nombre": {
-      "es": "Ciudades y diputaciones",
-      "de": "Stadte und Kreise"
-    },
-    "detalle": {
-      "es": "Más de 100.000 habitantes. El presupuesto se ajusta a cada caso.",
-      "de": "Mehr als 100.000 Einwohner. Das Angebot wird angepasst."
-    }
-  },
-  {
-    "id": "company",
-    "tipos": [
-      "company",
-      "emergency_service"
-    ],
-    "precio": 0,
-    "aMedida": true,
-    "nombre": {
-      "es": "Empresa",
-      "de": "Unternehmen"
-    },
-    "detalle": {
-      "es": "Programas de responsabilidad social. El presupuesto se ajusta a cada caso.",
-      "de": "Programme fur soziale Verantwortung. Das Angebot wird angepasst."
-    }
+  "emergency_service": {
+    "pregunta": "c.pl.askEmployees",
+    "bandas": [
+      {
+        "size": "small",
+        "upTo": 50,
+        "cents": 1900
+      },
+      {
+        "size": "medium",
+        "upTo": 250,
+        "cents": 4900
+      },
+      {
+        "size": "large",
+        "upTo": null,
+        "cents": 9900
+      }
+    ]
   }
-];
+};
 
 window.PFP_COBRO = {
   "titular": "People for People",
   "iban": "ES55 1583 0001 1991 0470 0435",
-  "bizum": "+34 699 04 38 62",
   "correo": "peopleforpeopleofficial@gmail.com",
   "stripe": {
-    "muni_s": "https://buy.stripe.com/test_4gM14mbwhfxo4MTgDDdQQ00",
-    "muni_m": "https://buy.stripe.com/test_7sYbJ0fMxfxocfl2MNdQQ01",
-    "muni_l": "https://buy.stripe.com/test_8x23cu9o9etk0wDcnndQQ02"
+    "ngo_small": "https://buy.stripe.com/test_8x2aEW57TfxodjpevvdQQ0c",
+    "ngo_medium": "https://buy.stripe.com/test_9B65kCdEp1GybbhdrrdQQ0b",
+    "ngo_large": "https://buy.stripe.com/test_7sY6oGbwhetkdjp733dQQ09",
+    "municipality_small": "https://buy.stripe.com/test_8x27sK6bX4SK5QX9bbdQQ0a",
+    "municipality_medium": "https://buy.stripe.com/test_4gMbJ0asdgBscfl1IJdQQ08",
+    "municipality_large": "https://buy.stripe.com/test_aFa6oGgQBetkentgDDdQQ06",
+    "company_small": "https://buy.stripe.com/test_7sYeVcdEp5WO1AHdrrdQQ05",
+    "company_medium": "https://buy.stripe.com/test_9B6eVceIt0Cufrx877dQQ04",
+    "company_large": "https://buy.stripe.com/test_4gMbJ0cAldpg2EL5YZdQQ03",
+    "emergency_service_small": "https://buy.stripe.com/test_7sYeVcdEp5WO1AHdrrdQQ05",
+    "emergency_service_medium": "https://buy.stripe.com/test_9B6eVceIt0Cufrx877dQQ04",
+    "emergency_service_large": "https://buy.stripe.com/test_4gMbJ0cAldpg2EL5YZdQQ03"
   }
+};
+
+/** De un numero al tramo. Espejo de `size_tier_for()` en el servidor. */
+window.PFP_TRAMO = function (tipo, numero) {
+  var bandas = (window.PFP_TAMANOS[tipo] || window.PFP_TAMANOS.ngo).bandas;
+  for (var i = 0; i < bandas.length; i++) {
+    if (bandas[i].upTo === null || numero <= bandas[i].upTo) return bandas[i].size;
+  }
+  return 'large';
+};
+
+/** Precio mensual en centimos de un tramo. */
+window.PFP_PRECIO = function (tipo, tramo) {
+  var bandas = (window.PFP_TAMANOS[tipo] || window.PFP_TAMANOS.ngo).bandas;
+  for (var i = 0; i < bandas.length; i++) if (bandas[i].size === tramo) return bandas[i].cents;
+  return null;
 };

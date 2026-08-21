@@ -268,6 +268,7 @@
         $$('#tipos .opcion').forEach(function (o) {
           o.setAttribute('aria-pressed', String(o === b));
         });
+        pintarTamano();
       });
       cajaTipos.appendChild(b);
     });
@@ -299,6 +300,50 @@
       );
     });
 
+    /* --- Tamano de la entidad ---
+       Se pregunta el NUMERO, no el tramo: voluntarios, habitantes o
+       empleados. El tramo lo deriva el servidor. Si lo eligiera el
+       navegador, cualquiera se pondria «pequena» y pagaria 19 € teniendo
+       mil voluntarios.
+
+       La tarifa se calcula mientras se escribe: verla ANTES de enviar evita
+       la sorpresa de descubrirla despues de una verificacion de dos dias. */
+    var campoTamano = $('#tamano');
+    var etiquetaTamano = $('#etiqueta-tamano');
+    var avisoTarifa = $('#tarifa-estimada');
+
+    function pintarTamano() {
+      etiquetaTamano.textContent = UI.T(
+        { ngo: 'c.pl.askVolunteers', municipality: 'c.pl.askPopulation' }[tipo] ||
+          'c.pl.askEmployees',
+      );
+
+      var n = Number(campoTamano.value.replace(/\D/g, '')) || 0;
+      if (!n) {
+        avisoTarifa.textContent = '';
+        avisoTarifa.setAttribute('data-visible', 'false');
+        return;
+      }
+
+      var tramo = window.PFP_TRAMO(tipo, n);
+      var cents = window.PFP_PRECIO(tipo, tramo);
+      var euros = new Intl.NumberFormat(
+        document.documentElement.lang === 'de' ? 'de-DE' : 'es-ES',
+        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 },
+      ).format(cents / 100);
+
+      avisoTarifa.textContent = UI.T('c.pl.estimated')
+        .replace('{{size}}', UI.T('c.pl.size_' + tramo).toLowerCase())
+        .replace('{{price}}', euros);
+      avisoTarifa.setAttribute('data-visible', 'true');
+    }
+
+    campoTamano.addEventListener('input', function () {
+      campoTamano.value = campoTamano.value.replace(/\D/g, '');
+      pintarTamano();
+    });
+    pintarTamano();
+
     /* El CIF se normaliza al salir del campo. Ver como se convierte solo en
        mayusculas y sin guiones confirma que se ha entendido, y quita la
        duda de si habia que escribirlo de otra forma. */
@@ -323,6 +368,8 @@
 
       if (razon.length < 3) return UI.avisar('aviso', UI.T('c.org.errRazon'));
       if (nombre.length < 2) return UI.avisar('aviso', UI.T('c.org.errNombre'));
+      var tamano = Number(campoTamano.value.replace(/\D/g, '')) || 0;
+
       if (!window.PFP_NIF.valido(cif)) {
         return UI.avisar('aviso', UI.T('c.org.errCif'));
       }
@@ -333,6 +380,7 @@
       if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
         return UI.avisar('aviso', UI.T('c.vol.errTel'));
       }
+      if (tamano < 1) return UI.avisar('aviso', UI.T('c.pl.askError'));
       if (!acepta) return UI.avisar('aviso', UI.T('c.org.errTerminos'));
 
       var boton = $('#btn-crear');
@@ -375,6 +423,15 @@
                   organization_id: org.id,
                   profile_id: yo.id,
                   is_admin: true,
+                })
+                .then(function () {
+                  // Despues del alta como responsable: la funcion comprueba
+                  // `is_org_admin`, y hasta que existe la fila de miembro
+                  // nadie lo es todavia.
+                  return PFP.db.rpc('declare_org_size', {
+                    p_org: org.id,
+                    p_metric: tamano,
+                  });
                 })
                 .then(function () {
                   return PFP.db.update('profiles', 'id=eq.' + encodeURIComponent(yo.id), {

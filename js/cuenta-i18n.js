@@ -191,42 +191,20 @@
     'c.pl.primero': 'Primero hay que dar de alta la organización.',
     'c.pl.darla': 'Darla de alta',
     'c.pl.yaHay': 'Ya tenéis un plan activo. Para cambiarlo, escribidnos a',
-    'c.pl.ninguno': 'No hay planes para este tipo de entidad. Escribidnos y lo vemos.',
-    'c.pl.aConvenir': 'A convenir',
-    'c.pl.gratis': 'Gratis',
-    'c.pl.alAno': 'al año',
 
     /* --- Pago --- */
     'c.pg.t': 'Cómo queréis pagar',
     'c.pg.sub': 'No guardamos ningún dato de vuestra tarjeta ni de vuestro banco.',
-    'c.pg.planElegido': 'Plan elegido',
+    'c.pg.planElegido': 'Tarifa asignada',
     'c.pg.contratar': 'Contratar',
     'c.pg.contratando': 'Contratando…',
     'c.pg.otro': 'Elegir otro plan',
-    'c.pg.sinPlan': 'No sabemos qué plan quieres contratar. Vuelve a elegirlo.',
     'c.pg.verPlanes': 'Ver los planes',
-    'c.pg.transfer': 'Transferencia bancaria',
-    'c.pg.transferSub': 'Os damos el IBAN y el concepto.',
-    'c.pg.bizum': 'Bizum',
-    'c.pg.bizumSub': 'Os damos el número y el concepto.',
     'c.pg.tarjeta': 'Tarjeta, Apple Pay o Google Pay',
     'c.pg.tarjetaSub': 'Pago inmediato con recibo al momento.',
-    'c.pg.gratis': 'Plan gratuito',
-    'c.pg.gratisSub': 'No hay nada que pagar.',
-    'c.pg.presupuesto': 'Pedir presupuesto',
-    'c.pg.presupuestoSub': 'Hablamos y os pasamos la factura.',
-    'c.pg.reservado':
-      'Ya está reservado vuestro plan. Haced el ingreso con estos datos; al verlo en el banco lo activamos.',
-    'c.pg.importe': 'Importe',
-    'c.pg.iban': 'IBAN',
-    'c.pg.titular': 'Titular',
-    'c.pg.telBizum': 'Teléfono de Bizum',
     'c.pg.pruebas':
       'Este enlace es de PRUEBA de Stripe: acepta tarjetas de mentira y no cobra nada.',
     'c.pg.pasarela': 'Ir a la pasarela de pago',
-    'c.pg.escribid': 'Escribidnos con esta referencia y os preparamos un presupuesto.',
-    'c.pg.copiad':
-      'Copiad el concepto tal cual: es lo que nos permite saber que el ingreso es vuestro.',
     'c.pg.sinEntidad': 'No hay ninguna entidad dada de alta.',
 
     /* --- Errores comunes --- */
@@ -245,6 +223,37 @@
     'c.e.noCoinciden': 'Las dos contraseñas no coinciden.',
     'c.e.aceptar': 'Hay que aceptar la privacidad y los términos.',
     'c.e.sinConfig': 'Falta la configuración del servidor. Avisa al equipo.',
+
+    /* --- Tarifa por tamano --- */
+    'c.pl.perMonth': '{{price}} al mes',
+    'c.pl.monthlyHint': 'Se cobra cada mes. Podéis daros de baja cuando queráis.',
+    'c.pl.size_small': 'Pequeña',
+    'c.pl.size_medium': 'Mediana',
+    'c.pl.size_large': 'Grande',
+    'c.pl.band_org_small': 'Hasta 50 personas',
+    'c.pl.band_org_medium': 'De 51 a 250 personas',
+    'c.pl.band_org_large': 'Más de 250 personas',
+    'c.pl.band_muni_small': 'Hasta 10.000 habitantes',
+    'c.pl.band_muni_medium': 'De 10.001 a 50.000 habitantes',
+    'c.pl.band_muni_large': 'Más de 50.000 habitantes',
+    'c.pl.askVolunteers': '¿Cuántas personas voluntarias activas gestionáis?',
+    'c.pl.askEmployees': '¿Cuántas personas empleadas tiene la empresa?',
+    'c.pl.askPopulation': '¿Cuántos habitantes tiene el municipio?',
+    'c.pl.askHint': 'Lo comprobamos al verificar la entidad. De este número sale vuestra tarifa.',
+    'c.pl.askError': 'Escribe cuántas personas o habitantes sois.',
+    'c.pl.estimated': 'Os corresponde la tarifa {{size}}: {{price}} al mes.',
+    'c.pl.sizePendingTitle': 'Estamos comprobando vuestro tamaño',
+    'c.pl.sizePendingBody':
+      'Nos disteis el dato al daros de alta y lo estamos verificando. En cuanto esté, aquí veréis vuestra tarifa.',
+    'c.pl.sizeMissingBody':
+      'Todavía no nos habéis dicho de qué tamaño sois. Sin ese dato no podemos saber qué tarifa os corresponde.',
+    'c.pg.factura': 'Pagar por factura',
+    'c.pg.facturaSub': 'Para administraciones públicas que no pueden pagar con tarjeta.',
+    'c.pg.facturaBody':
+      'Os enviamos la factura con esta referencia. Al cobrarla activamos el plan.',
+    'c.pg.cardWaiting':
+      'Al terminar el pago activamos vuestro plan. El cobro se repite cada mes hasta que os deis de baja.',
+    'c.pg.sinTarifa': 'Todavía no hay tarifa asignada. Vuelve cuando esté confirmado el tamaño.',
 
     /* --- Ubicación --- */
     'c.u.pidiendo': 'Pidiendo permiso…',
@@ -425,41 +434,19 @@
     'c.pl.primero': 'Zuerst muss die Organisation angelegt werden.',
     'c.pl.darla': 'Jetzt anlegen',
     'c.pl.yaHay': 'Ihr habt bereits einen aktiven Tarif. Zum Wechseln schreibt uns an',
-    'c.pl.ninguno': 'Für diese Art von Organisation gibt es keine Tarife. Schreibt uns.',
-    'c.pl.aConvenir': 'Nach Absprache',
-    'c.pl.gratis': 'Kostenlos',
-    'c.pl.alAno': 'pro Jahr',
 
     'c.pg.t': 'Wie möchtet ihr zahlen?',
     'c.pg.sub': 'Wir speichern keine Karten- oder Bankdaten.',
-    'c.pg.planElegido': 'Gewählter Tarif',
+    'c.pg.planElegido': 'Zugewiesener Tarif',
     'c.pg.contratar': 'Buchen',
     'c.pg.contratando': 'Wird gebucht…',
     'c.pg.otro': 'Anderen Tarif wählen',
-    'c.pg.sinPlan': 'Wir wissen nicht, welchen Tarif ihr buchen wollt. Wählt ihn bitte erneut.',
     'c.pg.verPlanes': 'Tarife ansehen',
-    'c.pg.transfer': 'Überweisung',
-    'c.pg.transferSub': 'Wir geben euch IBAN und Verwendungszweck.',
-    'c.pg.bizum': 'Bizum',
-    'c.pg.bizumSub': 'Wir geben euch die Nummer und den Verwendungszweck.',
     'c.pg.tarjeta': 'Karte, Apple Pay oder Google Pay',
     'c.pg.tarjetaSub': 'Sofortige Zahlung mit Beleg.',
-    'c.pg.gratis': 'Kostenloser Tarif',
-    'c.pg.gratisSub': 'Es gibt nichts zu zahlen.',
-    'c.pg.presupuesto': 'Angebot anfordern',
-    'c.pg.presupuestoSub': 'Wir sprechen und schicken euch die Rechnung.',
-    'c.pg.reservado':
-      'Euer Tarif ist reserviert. Überweist mit diesen Daten; sobald wir die Zahlung sehen, schalten wir ihn frei.',
-    'c.pg.importe': 'Betrag',
-    'c.pg.iban': 'IBAN',
-    'c.pg.titular': 'Kontoinhaber',
-    'c.pg.telBizum': 'Bizum-Nummer',
     'c.pg.pruebas':
       'Dies ist ein Stripe-TESTLINK: Er akzeptiert nur Testkarten und bucht nichts ab.',
     'c.pg.pasarela': 'Zur Zahlungsseite',
-    'c.pg.escribid': 'Schreibt uns mit dieser Referenz, dann erstellen wir ein Angebot.',
-    'c.pg.copiad':
-      'Kopiert den Verwendungszweck genau so: nur so erkennen wir, dass die Zahlung von euch ist.',
     'c.pg.sinEntidad': 'Es ist keine Organisation angelegt.',
 
     'c.e.invalid_credentials': 'E-Mail oder Passwort stimmen nicht.',
@@ -477,6 +464,38 @@
     'c.e.noCoinciden': 'Die beiden Passwörter stimmen nicht überein.',
     'c.e.aceptar': 'Datenschutz und Bedingungen müssen akzeptiert werden.',
     'c.e.sinConfig': 'Die Serverkonfiguration fehlt. Sag dem Team Bescheid.',
+
+    /* --- Tarif nach Groesse --- */
+    'c.pl.perMonth': '{{price}} pro Monat',
+    'c.pl.monthlyHint': 'Wird jeden Monat abgebucht. Ihr könnt jederzeit kündigen.',
+    'c.pl.size_small': 'Klein',
+    'c.pl.size_medium': 'Mittel',
+    'c.pl.size_large': 'Groß',
+    'c.pl.band_org_small': 'Bis 50 Personen',
+    'c.pl.band_org_medium': 'Von 51 bis 250 Personen',
+    'c.pl.band_org_large': 'Mehr als 250 Personen',
+    'c.pl.band_muni_small': 'Bis 10.000 Einwohner',
+    'c.pl.band_muni_medium': 'Von 10.001 bis 50.000 Einwohner',
+    'c.pl.band_muni_large': 'Mehr als 50.000 Einwohner',
+    'c.pl.askVolunteers': 'Wie viele aktive Freiwillige betreut ihr?',
+    'c.pl.askEmployees': 'Wie viele Mitarbeitende hat das Unternehmen?',
+    'c.pl.askPopulation': 'Wie viele Einwohner hat die Kommune?',
+    'c.pl.askHint':
+      'Wir prüfen das bei der Verifizierung. Aus dieser Zahl ergibt sich euer Tarif.',
+    'c.pl.askError': 'Gib an, wie viele Personen oder Einwohner es sind.',
+    'c.pl.estimated': 'Für euch gilt der Tarif {{size}}: {{price}} pro Monat.',
+    'c.pl.sizePendingTitle': 'Wir prüfen eure Größe',
+    'c.pl.sizePendingBody':
+      'Ihr habt uns die Zahl bei der Anmeldung genannt und wir prüfen sie. Sobald das erledigt ist, seht ihr hier euren Tarif.',
+    'c.pl.sizeMissingBody':
+      'Ihr habt uns eure Größe noch nicht genannt. Ohne diese Angabe können wir den Tarif nicht bestimmen.',
+    'c.pg.factura': 'Per Rechnung zahlen',
+    'c.pg.facturaSub': 'Für öffentliche Verwaltungen, die nicht mit Karte zahlen können.',
+    'c.pg.facturaBody':
+      'Wir schicken euch die Rechnung mit dieser Referenz. Sobald sie bezahlt ist, schalten wir den Tarif frei.',
+    'c.pg.cardWaiting':
+      'Nach Abschluss der Zahlung schalten wir euren Tarif frei. Die Abbuchung wiederholt sich monatlich, bis ihr kündigt.',
+    'c.pg.sinTarifa': 'Es ist noch kein Tarif zugewiesen. Komm zurück, sobald die Größe bestätigt ist.',
 
     'c.u.pidiendo': 'Berechtigung wird angefragt…',
     'c.u.guardada': 'Standort gespeichert.',

@@ -158,7 +158,8 @@
         return PFP.db
           .select(
             'organization_members',
-            'select=organization_id,organizations!inner(display_name,kind,verified_at)' +
+            'select=organization_id,organizations!inner(' +
+              'display_name,kind,verified_at,size_metric,size_tier,size_confirmed_at)' +
               '&profile_id=eq.' +
               encodeURIComponent(perfil.id) +
               '&limit=1',
@@ -175,6 +176,12 @@
               nombre: m.organizations.display_name,
               tipo: m.organizations.kind,
               verificada: m.organizations.verified_at !== null,
+              tamanoNumero: m.organizations.size_metric,
+              // El tramo solo cuenta cuando alguien lo ha confirmado: hasta
+              // entonces es lo que dijo la entidad, y sobre eso no se cobra.
+              tramo: m.organizations.size_confirmed_at ? m.organizations.size_tier : null,
+              tramoDeclarado: m.organizations.size_tier,
+              tramoConfirmado: m.organizations.size_confirmed_at !== null,
             };
 
             return PFP.db
