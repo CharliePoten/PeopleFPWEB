@@ -111,6 +111,17 @@
     // de saber que bastaba con volver a entrar.
     if (estado === 401 || estado === 403) return PfpError('sin_sesion', msg);
 
+    // Clave repetida. El caso que se da de verdad es el CIF: la columna
+    // `organizations.tax_id` es UNIQUE, asi que intentar dar de alta dos
+    // veces la misma entidad acaba aqui. Sin esto salia «algo ha fallado»,
+    // que no dice ni que el problema es el CIF ni que la entidad ya existe.
+    if (estado === 409 || (cuerpo && cuerpo.code === '23505')) {
+      if (/tax_id/i.test((cuerpo && cuerpo.details) || msg)) {
+        return PfpError('cif_repetido', msg);
+      }
+      return PfpError('duplicado', msg);
+    }
+
     if (estado === 0) return PfpError('network', msg);
     return PfpError('unknown', msg || ('HTTP ' + estado));
   }

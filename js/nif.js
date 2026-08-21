@@ -35,7 +35,18 @@
    * vuelva a teclear sin el guion no aporta nada.
    */
   function normalizar(valor) {
-    return String(valor || '').replace(/[\s./-]/g, '').toUpperCase();
+    var id = String(valor || '').replace(/[\s./-]/g, '').toUpperCase();
+
+    // El cero de delante de un DNI. Mucha gente escribe 1234567Z en vez de
+    // 01234567Z: el cero se cae al copiarlo y en la tarjeta apenas se lee
+    // como parte del numero. Rechazarlo por eso seria pedantear con algo
+    // que el propio documento no deja claro.
+    //
+    // Solo afecta a la forma «siete cifras y una letra»: un CIF empieza por
+    // letra y un NIE por X, Y o Z, asi que ninguno de los dos entra aqui.
+    if (/^[0-9]{7}[A-Z]$/.test(id)) id = '0' + id;
+
+    return id;
   }
 
   function esNif(id) {

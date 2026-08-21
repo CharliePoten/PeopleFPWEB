@@ -33,7 +33,8 @@
      el codigo del error, que es igual en la web y en la app. */
   var CODIGOS = [
     'invalid_credentials', 'email_taken', 'weak_password', 'email_not_confirmed',
-    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'unknown',
+    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'cif_repetido',
+    'duplicado', 'unknown',
   ];
 
   function explicar(e) {

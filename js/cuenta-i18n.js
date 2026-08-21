@@ -216,6 +216,9 @@
     'c.e.rate_limited': 'Has pedido demasiados correos seguidos. Espera un minuto.',
     'c.e.network': 'Sin conexión con el servidor. Revisa tu red e inténtalo otra vez.',
     'c.e.sin_sesion': 'Tu sesión ha caducado. Entra de nuevo.',
+    'c.e.cif_repetido':
+      'Ya hay una entidad registrada con ese CIF. Si es la vuestra, pide acceso a quien la dio de alta.',
+    'c.e.duplicado': 'Ese dato ya está registrado.',
     'c.e.unknown': 'Algo ha fallado. Inténtalo de nuevo.',
     'c.e.faltaEmail': 'Escribe tu correo y tu contraseña.',
     'c.e.emailMalo': 'Ese correo no es válido.',
@@ -457,6 +460,9 @@
     'c.e.rate_limited': 'Du hast zu viele E-Mails hintereinander angefordert. Warte eine Minute.',
     'c.e.network': 'Keine Verbindung zum Server. Prüfe dein Netz und versuch es erneut.',
     'c.e.sin_sesion': 'Deine Sitzung ist abgelaufen. Melde dich erneut an.',
+    'c.e.cif_repetido':
+      'Es gibt bereits eine Organisation mit dieser Steuernummer. Wenn es eure ist, bitte die Person um Zugang, die sie angelegt hat.',
+    'c.e.duplicado': 'Dieser Wert ist bereits registriert.',
     'c.e.unknown': 'Etwas ist schiefgelaufen. Versuch es noch einmal.',
     'c.e.faltaEmail': 'Gib deine E-Mail und dein Passwort ein.',
     'c.e.emailMalo': 'Diese E-Mail-Adresse ist nicht gültig.',
