@@ -1,48 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
-  <rect width="390" height="844" fill="#F7F8FA"/>
-  <rect width="390" height="42" fill="#FFFFFF"/>
-  <text x="24" y="27" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#14171C">9:41</text>
-  <rect x="165" y="10" width="60" height="20" rx="10" fill="#0B0D10"/>
-  <circle cx="340" cy="20" r="5" fill="#002557"/><rect x="351" y="15" width="18" height="10" rx="3" fill="#002557"/>
-  <rect y="42" width="390" height="86" fill="#FFFFFF"/>
-  <text x="24" y="78" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1.2" fill="#6F7987">PEOPLEFORPEOPLE</text>
-  <text x="24" y="111" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#14171C">Mis misiones</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844" font-family="Helvetica, Arial, sans-serif">
+  <rect width="390" height="844" fill="#F4F6FA"/>
+  <rect width="390" height="132" fill="#fff"/>
+  <text x="24" y="25" fill="#0A2A5E" font-size="13" font-weight="700">9:41</text>
+  <circle cx="340" cy="20" r="5" fill="#0A2A5E"/>
+  <rect x="352" y="14" width="22" height="12" rx="3" fill="#0A2A5E"/>
+  <text x="24" y="78" fill="#8A94A6" font-size="11" font-weight="700" letter-spacing="1">PEOPLEFORPEOPLE</text>
+  <text x="24" y="110" fill="#0A2A5E" font-size="24" font-weight="700">Mis misiones</text>
 
-  <g transform="translate(24 148)">
-    <rect width="104" height="38" rx="19" fill="#002557"/><text x="52" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Mis misiones</text>
-    <rect x="112" width="88" height="38" rx="19" fill="#FFFFFF" stroke="#DFE3EA"/><text x="156" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#4D5663">Cerca de mí</text>
-    <rect x="208" width="76" height="38" rx="19" fill="#FFFFFF" stroke="#DFE3EA"/><text x="246" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#4D5663">Historial</text>
+  <!-- chips -->
+  <rect x="24" y="148" width="104" height="38" rx="19" fill="#0A2A5E"/>
+  <text x="76" y="172" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">Mis misiones</text>
+  <rect x="138" y="148" width="84" height="38" rx="19" fill="#fff" stroke="#E1E6EF"/>
+  <text x="180" y="172" fill="#0A2A5E" font-size="13" font-weight="700" text-anchor="middle">Cerca de mí</text>
+  <rect x="232" y="148" width="78" height="38" rx="19" fill="#fff" stroke="#E1E6EF"/>
+  <text x="271" y="172" fill="#0A2A5E" font-size="13" font-weight="700" text-anchor="middle">Historial</text>
+
+  <!-- card 1 -->
+  <rect x="22" y="210" width="6" height="228" rx="3" fill="#E8443A"/>
+  <rect x="28" y="210" width="334" height="228" rx="14" fill="#fff" stroke="#EDF1F7"/>
+  <rect x="44" y="232" width="54" height="22" rx="11" fill="#FDEBC8"/>
+  <text x="71" y="247" fill="#8A5A00" font-size="10" font-weight="700" text-anchor="middle">ALTA</text>
+  <text x="342" y="247" fill="#0A2A5E" font-size="10" font-weight="700" text-anchor="end">ACEPTADA</text>
+  <text x="44" y="287" fill="#0A2A5E" font-size="17" font-weight="700">Reparto de agua y alimentos</text>
+  <text x="44" y="312" fill="#5B6879" font-size="12">Cruz Roja · Polideportivo municipal</text>
+  <circle cx="50" cy="336" r="4" fill="#F5A623"/>
+  <text x="62" y="340" fill="#5B6879" font-size="12">Hoy, 17:30 · a 1,3 km</text>
+  <circle cx="50" cy="360" r="4" fill="#0A2A5E"/>
+  <text x="62" y="364" fill="#5B6879" font-size="12">6 de 8 plazas cubiertas</text>
+  <rect x="44" y="388" width="144" height="36" rx="10" fill="#F5A623"/>
+  <text x="116" y="411" fill="#0A2A5E" font-size="13" font-weight="700" text-anchor="middle">Cómo llegar</text>
+  <rect x="200" y="388" width="142" height="36" rx="10" fill="#fff" stroke="#D8DFEA"/>
+  <text x="271" y="411" fill="#0A2A5E" font-size="13" font-weight="700" text-anchor="middle">Abrir el chat</text>
+
+  <!-- card 2 -->
+  <rect x="22" y="456" width="6" height="192" rx="3" fill="#E0A400"/>
+  <rect x="28" y="456" width="334" height="192" rx="14" fill="#fff" stroke="#EDF1F7"/>
+  <rect x="44" y="478" width="62" height="22" rx="11" fill="#FDEBC8"/>
+  <text x="75" y="493" fill="#8A5A00" font-size="10" font-weight="700" text-anchor="middle">MEDIA</text>
+  <text x="44" y="533" fill="#0A2A5E" font-size="17" font-weight="700">Acompañamiento médico</text>
+  <text x="44" y="558" fill="#5B6879" font-size="12">Asociación Vecinal · Centro de salud</text>
+  <circle cx="50" cy="581" r="4" fill="#F5A623"/>
+  <text x="62" y="585" fill="#5B6879" font-size="12">Mañana, 10:30 · a 420 m</text>
+  <rect x="44" y="604" width="298" height="34" rx="10" fill="#E6EDF7"/>
+  <text x="193" y="626" fill="#0A2A5E" font-size="13" font-weight="700" text-anchor="middle">Ver detalles de la misión</text>
+
+  <!-- tab bar -->
+  <line x1="0" y1="756" x2="390" y2="756" stroke="#E1E6EF"/>
+  <g fill="#C3CAD6">
+    <circle cx="39" cy="786" r="11"/><circle cx="116" cy="786" r="11"/>
+    <circle cx="272" cy="786" r="11"/><circle cx="351" cy="786" r="11"/>
   </g>
-
-  <g transform="translate(24 211)">
-    <rect width="342" height="229" rx="16" fill="#FFFFFF" stroke="#DFE3EA"/>
-    <rect width="5" height="229" rx="3" fill="#E8590C"/>
-    <rect x="20" y="20" width="54" height="24" rx="12" fill="#FFE8CC"/><text x="47" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#BF4508">ALTA</text>
-    <text x="318" y="36" text-anchor="end" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#002557">ACEPTADA</text>
-    <text x="20" y="76" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#14171C">Reparto de agua y alimentos</text>
-    <text x="20" y="101" font-family="Arial,sans-serif" font-size="13" fill="#4D5663">Cruz Roja · Polideportivo municipal</text>
-    <circle cx="28" cy="128" r="4" fill="#FCAF17"/><text x="40" y="133" font-family="Arial,sans-serif" font-size="12" fill="#6F7987">Hoy, 17:30 · a 1,3 km</text>
-    <circle cx="28" cy="151" r="4" fill="#0B417C"/><text x="40" y="156" font-family="Arial,sans-serif" font-size="12" fill="#6F7987">6 de 8 plazas cubiertas</text>
-    <rect x="20" y="177" width="145" height="36" rx="9" fill="#FCAF17"/><text x="92.5" y="200" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#002557">Cómo llegar</text>
-    <rect x="175" y="177" width="143" height="36" rx="9" fill="#FFFFFF" stroke="#C5CBD6"/><text x="246.5" y="200" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#002557">Abrir el chat</text>
-  </g>
-
-  <g transform="translate(24 456)">
-    <rect width="342" height="194" rx="16" fill="#FFFFFF" stroke="#DFE3EA"/>
-    <rect width="5" height="194" rx="3" fill="#E09405"/>
-    <rect x="20" y="20" width="62" height="24" rx="12" fill="#FEEFC3"/><text x="51" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#8C5902">MEDIA</text>
-    <text x="20" y="76" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#14171C">Acompañamiento médico</text>
-    <text x="20" y="101" font-family="Arial,sans-serif" font-size="13" fill="#4D5663">Asociación Vecinal · Centro de salud</text>
-    <circle cx="28" cy="128" r="4" fill="#FCAF17"/><text x="40" y="133" font-family="Arial,sans-serif" font-size="12" fill="#6F7987">Mañana, 10:30 · a 420 m</text>
-    <rect x="20" y="147" width="298" height="32" rx="8" fill="#E8EEF6"/><text x="169" y="168" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#002557">Ver detalles de la misión</text>
-  </g>
-
-  <rect y="758" width="390" height="86" fill="#FFFFFF" stroke="#DFE3EA"/>
-  <g font-family="Arial,sans-serif" font-size="10" text-anchor="middle">
-    <circle cx="39" cy="786" r="9" fill="#C5CBD6"/><text x="39" y="815" fill="#6F7987">Mapa</text>
-    <circle cx="117" cy="786" r="9" fill="#C5CBD6"/><text x="117" y="815" fill="#6F7987">Entidades</text>
-    <circle cx="195" cy="786" r="11" fill="#002557"/><path d="M190 786h10M190 782h10M190 790h7" stroke="#fff" stroke-width="1.5"/><text x="195" y="815" font-weight="700" fill="#002557">Misiones</text>
-    <circle cx="273" cy="786" r="9" fill="#C5CBD6"/><text x="273" y="815" fill="#6F7987">Chat</text>
-    <circle cx="351" cy="786" r="9" fill="#C5CBD6"/><text x="351" y="815" fill="#6F7987">Perfil</text>
+  <circle cx="194" cy="786" r="11" fill="#0A2A5E"/>
+  <g font-size="10" text-anchor="middle" fill="#8A94A6">
+    <text x="39" y="815">Mapa</text><text x="116" y="815">Entidades</text>
+    <text x="194" y="815" fill="#0A2A5E" font-weight="700">Misiones</text>
+    <text x="272" y="815">Chat</text><text x="351" y="815">Perfil</text>
   </g>
 </svg>
