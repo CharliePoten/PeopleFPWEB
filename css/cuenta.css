@@ -213,32 +213,4 @@
 .dato__copiar { flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--border); border-radius: 9px; background: #fff; cursor: pointer; font-size: 0.86rem; font-weight: 600; color: var(--navy-600); }
 .dato__copiar:hover { background: var(--navy-50, #E8EEF6); }
 
-/* --------------------------------------------------------------------------
-   Enlace de cuenta en la cabecera
-   -------------------------------------------------------------------------- */
-
-.header__cuenta {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.header__cuenta:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
-.header.is-solid .header__cuenta,
-.detail-page .header__cuenta { border-color: var(--border); color: var(--navy-600); }
-.header.is-solid .header__cuenta:hover,
-.detail-page .header__cuenta:hover { background: var(--navy-50, #E8EEF6); }
-
-@media (max-width: 560px) {
-  /* En móvil la cabecera ya va justa con el idioma y el menú. */
-  .header__cuenta { display: none; }
-}
-
 .cargando { padding: var(--s-lg) 0; color: var(--text-mute); text-align: center; }

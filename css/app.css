@@ -290,6 +290,43 @@ p  { margin: 0 0 var(--s-base); }
 .grid--3 { grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
 .grid--4 { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
 
+/* --------------------------------------------------------------------------
+   Enlace a la cuenta, en la cabecera
+   --------------------------------------------------------------------------
+   Vive aqui y no en `cuenta.css` porque el enlace esta en las 21 paginas del
+   sitio y esa hoja solo la cargan las diez de /cuenta: fuera de ellas el
+   boton salia sin estilo, como un enlace suelto apretado entre el idioma y
+   el menu.
+   -------------------------------------------------------------------------- */
+
+.header__cuenta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.header__cuenta:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+/* Sobre cabecera clara —al bajar, y en las paginas de detalle— el blanco
+   sobre blanco no se ve. */
+.header.is-solid .header__cuenta,
+.detail-page .header__cuenta { border-color: var(--border); color: var(--navy-600); }
+.header.is-solid .header__cuenta:hover,
+.detail-page .header__cuenta:hover { background: var(--navy-50, #E8EEF6); }
+
+@media (max-width: 760px) {
+  /* En movil la cabecera ya va justa con el idioma y el menu: el enlace
+     entra en el menu desplegable, donde ademas se lee mucho mejor. */
+  .header__cuenta { display: none; }
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
