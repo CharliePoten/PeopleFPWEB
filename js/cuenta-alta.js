@@ -100,7 +100,7 @@
         b.className = 'pastilla';
         // La acreditación se marca, no se esconde: quien no la tenga debe
         // saber antes de apuntarse que luego habrá que subir un papel.
-        b.textContent = h.es + (h.cred ? ' ·  acreditación' : '');
+        b.textContent = h.es + (h.cred ? ' · acreditación' : '');
         b.setAttribute('aria-pressed', 'false');
         b.addEventListener('click', function () {
           if (elegidas[h.id]) delete elegidas[h.id];
@@ -236,8 +236,8 @@
      ayuntamiento, y Cruz Roja es una ONG. */
 
   var TIPOS = [
-    ['ngo', 'ONG o asociacion', 'Entidad sin animo de lucro inscrita en su registro.'],
-    ['municipality', 'Administracion publica', 'Ayuntamiento, mancomunidad o diputacion.'],
+    ['ngo', 'ONG o asociación', 'Entidad sin ánimo de lucro inscrita en su registro.'],
+    ['municipality', 'Administración pública', 'Ayuntamiento, mancomunidad o diputacion.'],
     ['company', 'Empresa', 'Programas de responsabilidad social corporativa.'],
   ];
 
@@ -273,14 +273,14 @@
         return;
       }
       if (!navigator.geolocation) {
-        estadoUbi.textContent = 'Este navegador no puede darnos la ubicacion.';
+        estadoUbi.textContent = 'Este navegador no puede darnos la ubicación.';
         return;
       }
       estadoUbi.textContent = 'Pidiendo permiso\u2026';
       navigator.geolocation.getCurrentPosition(
         function (pos) {
           punto = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          estadoUbi.textContent = 'Ubicacion guardada.';
+          estadoUbi.textContent = 'Ubicación guardada.';
         },
         function () {
           casillaUbi.checked = false;
@@ -313,19 +313,19 @@
       var telefono = $('#telefono').value.trim();
       var acepta = $('#acepta').checked;
 
-      if (razon.length < 3) return UI.avisar('aviso', 'Escribe la razon social completa.');
+      if (razon.length < 3) return UI.avisar('aviso', 'Escribe la razón social completa.');
       if (nombre.length < 2) return UI.avisar('aviso', 'Escribe el nombre con el que os conocen.');
       if (!window.PFP_NIF.valido(cif)) {
         return UI.avisar('aviso', 'Ese CIF o NIF no cuadra. Revisa las cifras y la letra final.');
       }
-      if (calle.length < 3) return UI.avisar('aviso', 'Escribe la direccion.');
+      if (calle.length < 3) return UI.avisar('aviso', 'Escribe la dirección.');
       if (ciudad.length < 2) return UI.avisar('aviso', 'Escribe la ciudad.');
       if (provincia.length < 2) return UI.avisar('aviso', 'Escribe la provincia.');
-      if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', 'El codigo postal tiene cinco cifras.');
+      if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', 'El código postal tiene cinco cifras.');
       if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
-        return UI.avisar('aviso', 'Escribe un telefono de contacto valido.');
+        return UI.avisar('aviso', 'Escribe un teléfono de contacto válido.');
       }
-      if (!acepta) return UI.avisar('aviso', 'Hay que aceptar los terminos para continuar.');
+      if (!acepta) return UI.avisar('aviso', 'Hay que aceptar los términos para continuar.');
 
       var boton = $('#btn-crear');
       UI.ocupado(boton, true, 'Enviando\u2026');

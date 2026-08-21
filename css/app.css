@@ -172,6 +172,19 @@ p  { margin: 0 0 var(--s-base); }
 }
 .btn:active { transform: translateY(1px); }
 
+/* Un boton deshabilitado tiene que parecerlo.
+   Faltaba la regla: `disabled` impedia el clic pero el boton seguia en
+   ambar a plena opacidad y con cursor de mano, asi que se veia pulsable y
+   no pasaba nada al pulsarlo. El del pago, que espera a que elijas forma
+   de cobro, era el caso claro. */
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn:disabled:active { transform: none; }
+
 .btn--primary { background: var(--amber-500); color: var(--navy-800); }
 .btn--primary:hover { background: var(--amber-600); color: var(--navy-900); }
 

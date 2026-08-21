@@ -498,8 +498,8 @@
       '</div>';
 
     var accion = completo
-      ? '<p class="field__hint">Tu perfil esta listo. Abre la app para ver el mapa y apuntarte a misiones.</p>'
-      : '<p class="field__hint">Falta decirnos donde puedes ayudar y que sabes hacer. Son dos minutos.</p>' +
+      ? '<p class="field__hint">Tu perfil está listo. Abre la app para ver el mapa y apuntarte a misiones.</p>'
+      : '<p class="field__hint">Falta decirnos dónde puedes ayudar y qué sabes hacer. Son dos minutos.</p>' +
         '<a class="btn btn--primary" href="voluntario.html">Completar mi perfil</a>';
 
     pinta(filas + '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' + accion + '</div>');
@@ -515,8 +515,8 @@
           '<span class="estado__valor">Entidad<small>' + escapar(e.perfil.email) + '</small></span>' +
           '</div></div>' +
           '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' +
-          '<p class="field__hint">Todavia no has dado de alta tu organizacion. Sin ella no podemos verificarte ni activar ningun plan.</p>' +
-          '<a class="btn btn--primary" href="organizacion.html">Dar de alta la organizacion</a>' +
+          '<p class="field__hint">Todavía no has dado de alta tu organización. Sin ella no podemos verificarte ni activar ningún plan.</p>' +
+          '<a class="btn btn--primary" href="organizacion.html">Dar de alta la organización</a>' +
           '</div>',
       );
       return;
@@ -525,7 +525,7 @@
     var plan = e.plan;
     var marcaVer = org.verificada
       ? '<span class="marca marca--ok">Verificada</span>'
-      : '<span class="marca marca--espera">En revision</span>';
+      : '<span class="marca marca--espera">En revisión</span>';
 
     var marcaPlan = plan
       ? '<span class="marca marca--' + ESTADO_PLAN[plan.status][0] + '">' + ESTADO_PLAN[plan.status][1] + '</span>'
@@ -535,7 +535,7 @@
       '<div class="estado">' +
       '<div class="estado__fila"><span class="estado__clave">Entidad</span>' +
       '<span class="estado__valor">' + escapar(org.nombre) + '<small>' + escapar(e.perfil.email) + '</small></span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">Verificacion</span>' +
+      '<div class="estado__fila"><span class="estado__clave">Verificación</span>' +
       '<span class="estado__valor">' + marcaVer + '</span></div>' +
       '<div class="estado__fila"><span class="estado__clave">Plan</span>' +
       '<span class="estado__valor">' + marcaPlan + '</span></div>' +
@@ -545,7 +545,7 @@
 
     if (!org.verificada) {
       acciones.push(
-        '<p class="field__hint">Estamos comprobando que la entidad es real y quien la representa. Suele llevar uno o dos dias laborables; te avisamos por correo.</p>',
+        '<p class="field__hint">Estamos comprobando que la entidad es real y quién la representa. Suele llevar uno o dos días laborables; te avisamos por correo.</p>',
       );
     }
 
