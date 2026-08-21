@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Área de cuenta
+   --------------------------------------------------------------------------
+   Solo lo que no existía ya. El sistema de formularios de `app.css`
+   —`.form`, `.field`, `.form-status`— y los botones se reutilizan tal cual:
+   duplicarlos aquí habría dejado dos sitios donde tocar cada vez que
+   cambie el color de un borde.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Marco
+   -------------------------------------------------------------------------- */
+
+.cuenta {
+  min-height: 70vh;
+  padding: clamp(40px, 7vw, 88px) 0 88px;
+  background: var(--bg-sunken);
+}
+
+.cuenta__caja {
+  width: min(100% - 2 * var(--s-lg), 30rem);
+  margin-inline: auto;
+  padding: clamp(24px, 4vw, 40px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #fff;
+}
+
+/* Los formularios largos —alta de voluntario, alta de entidad— necesitan
+   más ancho: con 30rem, «Provincia» y «Código postal» no caben en una fila
+   y la ficha queda en una columna interminable. */
+.cuenta__caja--ancha { width: min(100% - 2 * var(--s-lg), 46rem); }
+
+.cuenta__cabecera { margin-bottom: var(--s-lg); }
+.cuenta__cabecera h1 { margin-bottom: 8px; font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+.cuenta__cabecera p { margin: 0; color: var(--text-soft); }
+
+.cuenta__pie {
+  margin-top: var(--s-lg);
+  padding-top: var(--s-base);
+  border-top: 1px solid var(--border);
+  font-size: 0.94rem;
+  color: var(--text-soft);
+}
+.cuenta__pie a { font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   Avisos
+   -------------------------------------------------------------------------- */
+
+.aviso {
+  display: none;
+  margin-bottom: var(--s-base);
+  padding: 14px 16px;
+  border-radius: 12px;
+  border-left: 3px solid transparent;
+  font-size: 0.95rem;
+}
+.aviso[data-visible='true'] { display: block; }
+.aviso--error { border-left-color: var(--red-600); background: var(--red-50, #FEF2F2); color: var(--red-700, #B91C1C); }
+.aviso--ok    { border-left-color: var(--green-600); background: var(--green-50, #F0FDF4); color: var(--green-700, #15803D); }
+.aviso--espera{ border-left-color: var(--amber-500); background: var(--amber-50); color: #7A5A05; }
+
+/* --------------------------------------------------------------------------
+   Código de seis dígitos
+   --------------------------------------------------------------------------
+   Ancho y separado: se teclea mirando el móvil y comparando con el correo,
+   y con la tipografía normal es fácil confundir un 6 con un 8. */
+.campo-codigo {
+  font-size: 1.7rem !important;
+  font-weight: 700;
+  letter-spacing: 0.6em;
+  text-align: center;
+  text-indent: 0.6em; /* compensa el hueco que el tracking deja a la derecha */
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Elegir entre voluntario y entidad
+   -------------------------------------------------------------------------- */
+
+.opciones { display: grid; gap: 12px; }
+
+.opcion {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.opcion:hover { border-color: var(--navy-300, #5F87B5); }
+.opcion[aria-pressed='true'],
+.opcion[data-elegida='true'] {
+  border-color: var(--navy-600);
+  border-width: 2px;
+  padding: 15px;
+  background: var(--navy-50, #E8EEF6);
+}
+.opcion__texto strong { display: block; margin-bottom: 2px; color: var(--navy-600); }
+.opcion__texto span { font-size: 0.9rem; color: var(--text-soft); }
+
+/* --------------------------------------------------------------------------
+   Pasos
+   -------------------------------------------------------------------------- */
+
+.pasos { display: flex; gap: 6px; margin-bottom: var(--s-base); }
+.pasos__barra {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--n-200, #E5E9EF);
+}
+.pasos__barra[data-hecho='true'] { background: var(--amber-500); }
+.pasos__texto { margin: 0 0 var(--s-lg); font-size: 0.86rem; color: var(--text-mute); }
+
+/* Dos campos por fila cuando hay sitio. */
+.fila { display: grid; gap: var(--s-base); grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) { .fila { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------------------
+   Casillas y grupos de elección
+   -------------------------------------------------------------------------- */
+
+.casilla { display: flex; gap: 10px; align-items: flex-start; font-size: 0.94rem; }
+.casilla input { width: 20px; height: 20px; margin-top: 1px; flex: 0 0 auto; accent-color: var(--navy-600); }
+.casilla span { color: var(--text-soft); }
+
+.pastillas { display: flex; flex-wrap: wrap; gap: 8px; }
+.pastilla {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.pastilla[aria-pressed='true'] {
+  border-color: var(--navy-600);
+  background: var(--navy-600);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Estado de la cuenta
+   -------------------------------------------------------------------------- */
+
+.estado { display: grid; gap: 14px; }
+.estado__fila {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.estado__fila:last-child { border-bottom: 0; padding-bottom: 0; }
+.estado__clave { font-size: 0.86rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-mute); }
+.estado__valor { text-align: right; font-weight: 600; color: var(--navy-600); }
+.estado__valor small { display: block; font-weight: 400; color: var(--text-soft); }
+
+.marca { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+.marca--ok     { background: var(--green-50, #F0FDF4); color: var(--green-700, #15803D); }
+.marca--espera { background: var(--amber-50); color: #7A5A05; }
+.marca--mal    { background: var(--red-50, #FEF2F2); color: var(--red-700, #B91C1C); }
+
+/* --------------------------------------------------------------------------
+   Planes y pago
+   -------------------------------------------------------------------------- */
+
+.plan {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+.plan[aria-pressed='true'] { border-color: var(--navy-600); border-width: 2px; padding: 17px; background: var(--navy-50, #E8EEF6); }
+.plan__cabeza { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; }
+.plan__nombre { font-weight: 700; color: var(--navy-600); }
+.plan__precio { font-weight: 700; white-space: nowrap; }
+.plan__detalle { margin: 6px 0 0; font-size: 0.9rem; color: var(--text-soft); }
+
+/* Dato que hay que copiar al banco. Monoespaciado: un IBAN en tipografía
+   proporcional se copia mal a mano y la referencia se lee peor. */
+.dato {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-sunken);
+}
+.dato--destacado { border-color: var(--navy-600); background: var(--navy-50, #E8EEF6); }
+.dato__clave { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-mute); }
+.dato__valor { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1.02rem; font-weight: 600; color: var(--navy-700); word-break: break-all; }
+.dato__copiar { flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--border); border-radius: 9px; background: #fff; cursor: pointer; font-size: 0.86rem; font-weight: 600; color: var(--navy-600); }
+.dato__copiar:hover { background: var(--navy-50, #E8EEF6); }
+
+/* --------------------------------------------------------------------------
+   Enlace de cuenta en la cabecera
+   -------------------------------------------------------------------------- */
+
+.header__cuenta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.header__cuenta:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.header.is-solid .header__cuenta,
+.detail-page .header__cuenta { border-color: var(--border); color: var(--navy-600); }
+.header.is-solid .header__cuenta:hover,
+.detail-page .header__cuenta:hover { background: var(--navy-50, #E8EEF6); }
+
+@media (max-width: 560px) {
+  /* En móvil la cabecera ya va justa con el idioma y el menú. */
+  .header__cuenta { display: none; }
+}
+
+.cargando { padding: var(--s-lg) 0; color: var(--text-mute); text-align: center; }
