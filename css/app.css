@@ -218,11 +218,24 @@ p  { margin: 0 0 var(--s-base); }
 .header__inner { display: flex; align-items: center; gap: var(--s-lg); height: 100%; }
 
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+
 .brand__mark { height: 30px; width: auto; }
+/* El nombre escrito, al lado del icono.
+   --------------------------------------------------------------------------
+   Va como TEXTO y no como imagen porque no existe un fichero con solo el
+   lettering: los tres `logotipo-*.svg` son el conjunto completo y llevan el
+   icono dentro, asi que ponerlos junto al icono lo enseñaria dos veces.
+
+   La clase ya existia —la usan las dos paginas que vienen del sitio
+   anterior— asi que se reutiliza en vez de crear otra al lado. */
 .brand__name {
   font-weight: 700; font-size: 1.02rem; color: var(--navy-600);
   letter-spacing: -0.02em; white-space: nowrap;
 }
+
+/* Por debajo de 480 px el icono ya identifica la marca de sobra, y el
+   nombre le quitaria sitio al selector de idioma. */
+@media (max-width: 480px) { .brand__name { display: none; } }
 
 .nav { margin-left: auto; }
 .nav__list { display: flex; align-items: center; gap: var(--s-lg); list-style: none; margin: 0; padding: 0; }

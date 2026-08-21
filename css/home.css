@@ -62,10 +62,34 @@
 .home .nav[data-open="true"] { transform: none; visibility: visible; transition-delay: 0s; }
 .home .nav__head { display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--amber-300); font-size: .8rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; }
 .home .nav__close { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: transparent; color: #fff; font: inherit; font-size: 1.8rem; line-height: 1; cursor: pointer; }
-.home .nav__list { display: grid; gap: 0; margin: auto 0; padding: 24px 0; }
-.home .nav__link { display: grid; grid-template-columns: 38px 1fr; align-items: baseline; gap: 12px; padding: 18px 0; color: #fff; border-bottom: 1px solid rgba(255,255,255,.14); text-decoration: none; }
-.home .nav__link span { color: var(--amber-300); font-size: .72rem; letter-spacing: .08em; }
-.home .nav__link strong { font-size: clamp(1.45rem, 4vw, 2.15rem); font-weight: 500; transition: transform .2s ease, color .2s ease; }
+.home .nav__list { display: grid; gap: 0; margin: auto 0; padding: 18px 0; }
+.home .nav__link { display: grid; grid-template-columns: 32px 1fr; align-items: baseline; gap: 12px; padding: 13px 0; color: #fff; border-bottom: 1px solid rgba(255,255,255,.14); text-decoration: none; }
+.home .nav__link span { color: var(--amber-300); font-size: .7rem; letter-spacing: .08em; }
+
+/* Los titulos del menu, mas contenidos.
+   --------------------------------------------------------------------------
+   Estaban en clamp(1.45rem, 4vw, 2.15rem): cuatro entradas llenaban la
+   pantalla y no cabia nada mas. Con las secciones de ONG, ayuntamientos y
+   empresas dentro son ocho enlaces, y a ese tamano no entraban ni de lejos.
+   Bajarlos ademas hace que el menu se lea como un indice del sitio y no como
+   un cartel. */
+.home .nav__link strong { font-size: clamp(1.1rem, 2.8vw, 1.45rem); font-weight: 500; transition: transform .2s ease, color .2s ease; }
+
+/* Las paginas de cada perfil, colgando de «Para quien».
+   Van sin numero y algo mas pequenas: son ramas de una entrada, no
+   apartados del mismo nivel, y numerarlas romperia la cuenta. */
+.home .nav__sub { display: grid; gap: 0; margin: 0 0 0 44px; padding: 0; list-style: none; }
+.home .nav__sublink {
+  display: block;
+  padding: 9px 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: .98rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  transition: transform .2s ease, color .2s ease;
+}
+.home .nav__sub li:last-child .nav__sublink { border-bottom: 0; }
+.home .nav__sublink:hover { color: var(--amber-300); transform: translateX(6px); }
 .home .nav__link:hover, .home .nav__link[aria-current="page"] { color: var(--amber-300); border-bottom-color: rgba(255,255,255,.14); }
 .home .nav__link:hover strong { transform: translateX(8px); }
 .home .nav__tagline { margin: 0; color: rgba(255,255,255,.56); font-size: .92rem; }
