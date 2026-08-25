@@ -161,6 +161,7 @@
       var telefono = $('#telefono').value.trim();
       var ciudad = $('#ciudad').value.trim();
       var provincia = $('#provincia').value.trim();
+      var web = ($('#web') && $('#web').value.trim()) || '';
       var vehiculo = $('#vehiculo').checked;
       var acuerdo = $('#acuerdo').checked;
 
@@ -347,6 +348,24 @@
     /* El CIF se normaliza al salir del campo. Ver como se convierte solo en
        mayusculas y sin guiones confirma que se ha entendido, y quita la
        duda de si habia que escribirlo de otra forma. */
+    /* --- Provincias ---
+       Lista cerrada. Escrita a mano entraban «Alicante», «alicante» y
+       «Alacant» como tres provincias distintas, y luego no se puede ni
+       filtrar ni fiarse del dato al verificar. */
+    var selProvincia = $('#provincia');
+    if (selProvincia && !selProvincia.options.length) {
+      var vacia = document.createElement('option');
+      vacia.value = '';
+      vacia.textContent = UI.T('c.org.provinciaElige');
+      selProvincia.appendChild(vacia);
+      (window.PFP_PROVINCIAS || []).forEach(function (nombre) {
+        var o = document.createElement('option');
+        o.value = nombre;
+        o.textContent = nombre;
+        selProvincia.appendChild(o);
+      });
+    }
+
     var campoCif = $('#cif');
     campoCif.addEventListener('blur', function () {
       if (campoCif.value.trim()) campoCif.value = window.PFP_NIF.normalizar(campoCif.value);
@@ -375,7 +394,7 @@
       }
       if (calle.length < 3) return UI.avisar('aviso', UI.T('c.org.errCalle'));
       if (ciudad.length < 2) return UI.avisar('aviso', UI.T('c.org.errCiudad'));
-      if (provincia.length < 2) return UI.avisar('aviso', UI.T('c.org.errProvincia'));
+      if (!provincia) return UI.avisar('aviso', UI.T('c.org.errProvincia'));
       if (!/^[0-9]{5}$/.test(cp)) return UI.avisar('aviso', UI.T('c.org.errCp'));
       if (!/^[+0-9 ()-]{9,20}$/.test(telefono)) {
         return UI.avisar('aviso', UI.T('c.vol.errTel'));
@@ -408,6 +427,7 @@
                 location: punto ? 'SRID=4326;POINT(' + punto.lng + ' ' + punto.lat + ')' : null,
                 contact_email: yo.email,
                 contact_phone: telefono,
+                website: web || null,
                 created_by: yo.id,
               },
               true

@@ -157,6 +157,11 @@
     'c.org.cifAyuda': 'Con o sin guiones, da igual.',
     'c.org.calle': 'Dirección',
     'c.org.cp': 'Código postal',
+    'c.org.provincia': 'Provincia',
+    'c.org.provinciaElige': 'Elige una provincia',
+    'c.org.web': 'Sitio web (opcional)',
+    'c.org.webAyuda':
+      'Nos sirve para comprobar que la entidad existe. Si no tenéis web, vale vuestro perfil de redes.',
     'c.org.ubicacion': 'Usar mi ubicación actual como sede (opcional)',
     'c.org.declaro1': 'Declaro que represento a esta entidad y acepto los',
     'c.org.declaro2': 'términos',
@@ -404,6 +409,11 @@
     'c.org.cifAyuda': 'Mit oder ohne Bindestriche, egal.',
     'c.org.calle': 'Adresse',
     'c.org.cp': 'Postleitzahl',
+    'c.org.provincia': 'Provinz',
+    'c.org.provinciaElige': 'Provinz wählen',
+    'c.org.web': 'Website (optional)',
+    'c.org.webAyuda':
+      'Damit prüfen wir, ob die Organisation existiert. Ohne Website reicht euer Social-Media-Profil.',
     'c.org.ubicacion': 'Meinen aktuellen Standort als Sitz verwenden (optional)',
     'c.org.declaro1': 'Ich erkläre, dass ich diese Organisation vertrete, und akzeptiere die',
     'c.org.declaro2': 'Nutzungsbedingungen',

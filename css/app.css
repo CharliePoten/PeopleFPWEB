@@ -578,6 +578,22 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
   padding: 12px var(--s-base);
   width: 100%;
 }
+/* El desplegable, a la misma altura que los campos de al lado.
+   Un `select` calcula su alto a partir de la linea del texto y salia un
+   pixel mas bajo que el `input` vecino; en una fila de dos, ese pixel se ve
+   como un desnivel. */
+.field select {
+  min-height: 52px;
+  appearance: none;
+  -webkit-appearance: none;
+  /* Flecha propia: la nativa cambia de forma en cada navegador y ninguna
+     encaja con el resto del formulario. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7787' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--s-base) center;
+  padding-right: calc(var(--s-base) * 2 + 12px);
+}
+
 .field input:focus, .field textarea:focus, .field select:focus {
   border-color: var(--navy-500); outline: none;
   box-shadow: 0 0 0 3px var(--navy-50);
