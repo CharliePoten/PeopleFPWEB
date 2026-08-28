@@ -1,0 +1,581 @@
+/* ==========================================================================
+   Mensajería
+   --------------------------------------------------------------------------
+   Dos paneles en escritorio —la lista a la izquierda, la conversación a la
+   derecha— y uno solo en móvil, donde abrir una conversación tapa la lista y
+   la flecha de volver la trae de vuelta. Es la disposición de WhatsApp Web y
+   de Telegram, y no por parecerse: en una pantalla ancha, perder la lista
+   cada vez que abres un mensaje obliga a volver atrás para leer el
+   siguiente, y quien coordina una emergencia lee veinte seguidos.
+
+   Toda la altura se calcula desde la del hueco, no desde la del contenido:
+   una lista de mensajes que crece hacia abajo empujando la página es
+   exactamente lo que hace que el campo de escribir se escape de la pantalla.
+   Por eso `height` fija en el contenedor y `overflow` en las dos columnas.
+
+   Los colores salen de los mismos tokens que el resto del sitio. No hay
+   ningún verde de WhatsApp aquí: los mensajes propios van en el azul de la
+   marca.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Marco general
+   -------------------------------------------------------------------------- */
+
+.chat {
+  /* El alto de la ventana menos la cabecera, menos un respiro. En móvil
+     `100dvh` importa de verdad: con `vh`, la barra del navegador tapa el
+     campo de escribir justo cuando aparece el teclado. */
+  height: calc(100dvh - var(--header-h) - 2 * var(--s-base));
+  min-height: 26rem;
+  margin: var(--s-base) auto;
+  width: min(100% - 2 * var(--s-base), var(--maxw));
+  display: grid;
+  grid-template-columns: minmax(17rem, 22rem) 1fr;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+/* --------------------------------------------------------------------------
+   Columna izquierda: la lista
+   -------------------------------------------------------------------------- */
+
+.chat__lista {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-sunken);
+}
+
+.chat__listaCab {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  padding: var(--s-md) var(--s-base);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.chat__listaCab h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Botón redondo de «nuevo mensaje». */
+.chat__nuevo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.chat__nuevo:hover { background: var(--navy-500); }
+.chat__nuevo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.chat__buscar {
+  padding: var(--s-sm) var(--s-base);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.chat__buscar input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--bg-sunken);
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+.chat__buscar input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: var(--surface);
+}
+
+/* Tres pestañas para separar personas de grupos sin romper el orden por
+   reciente. La alternativa —cabeceras de sección— obligaría a ordenar
+   primero por tipo, y entonces un mensaje de hace un minuto quedaría por
+   debajo de uno de la semana pasada. */
+.chat__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 var(--s-base) var(--s-sm);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.chat__tabs button {
+  flex: 1;
+  padding: 7px 4px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-mute);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.chat__tabs button[aria-selected='true'] { background: var(--navy-50); color: var(--brand); }
+.chat__tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.chat__hilos {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat__grupo {
+  padding: var(--s-md) var(--s-base) var(--s-xs);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.chat__hilo {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  width: 100%;
+  padding: 11px var(--s-base);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.chat__hilo:hover { background: var(--n-100); }
+.chat__hilo[aria-current='true'] {
+  background: var(--navy-50);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+.chat__hilo:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* Avatar: la foto si la hay, y si no las iniciales sobre un color estable
+   por persona. Un círculo gris con una letra es más reconocible en una lista
+   de veinte que veinte círculos grises iguales. */
+.chat__av {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--navy-200);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  overflow: hidden;
+  user-select: none;
+}
+.chat__av img { width: 100%; height: 100%; object-fit: cover; }
+.chat__av--grupo { background: var(--amber-600); }
+
+.chat__hiloCuerpo { flex: 1; min-width: 0; }
+
+.chat__hiloTop {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-sm);
+}
+.chat__hiloNombre {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--text);
+}
+.chat__hiloHora {
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  color: var(--text-mute);
+}
+
+.chat__hiloPrev {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  margin-top: 2px;
+}
+.chat__hiloTexto {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.86rem;
+  color: var(--text-soft);
+}
+.chat__hilo[data-sinleer='true'] .chat__hiloTexto {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.chat__badge {
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+.chat__vacio {
+  padding: var(--s-2xl) var(--s-lg);
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 0.92rem;
+}
+
+/* --------------------------------------------------------------------------
+   Columna derecha: la conversación
+   -------------------------------------------------------------------------- */
+
+.chat__panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--bg-sunken);
+}
+
+.chat__cab {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  padding: var(--s-sm) var(--s-base);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.chat__cabTitulo { flex: 1; min-width: 0; }
+.chat__cabTitulo strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+.chat__cabTitulo span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-mute);
+}
+
+/* La flecha de volver solo existe en móvil, donde la lista está tapada. */
+.chat__volver {
+  display: none;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--brand);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chat__mensajes {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-base);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scroll-behavior: smooth;
+}
+
+/* Separador de día. El texto va sobre una pastilla y no suelto para que se
+   lea igual encima de un mensaje largo. */
+.chat__dia {
+  align-self: center;
+  margin: var(--s-base) 0 var(--s-sm);
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  background: var(--n-200);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.chat__msg {
+  max-width: min(78%, 34rem);
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.94rem;
+  line-height: 1.45;
+  /* Un enlace pegado o una palabra larguísima no pueden ensanchar la
+     burbuja hasta romper la columna. */
+  overflow-wrap: anywhere;
+  align-self: flex-start;
+  animation: chat-entra 0.18s ease-out;
+}
+
+@keyframes chat-entra {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat__msg { animation: none; }
+  .chat__mensajes { scroll-behavior: auto; }
+}
+
+.chat__msg--mio {
+  align-self: flex-end;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+/* Mensajes seguidos de la misma persona: se pegan y solo el primero lleva
+   nombre. Repetir «María» ocho veces convierte una conversación en un
+   listado. */
+.chat__msg--sigue { border-top-left-radius: 5px; }
+.chat__msg--mio.chat__msg--sigue { border-top-left-radius: 14px; border-top-right-radius: 5px; }
+.chat__msg--primero { margin-top: var(--s-sm); }
+
+.chat__autor {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--navy-400);
+}
+
+.chat__pie {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 0.68rem;
+  color: var(--text-mute);
+}
+.chat__msg--mio .chat__pie { color: var(--navy-100); }
+
+/* El estado de envío: reloj mientras va, marca cuando el servidor lo ha
+   guardado, aspa si no pudo. Sin esto, un mensaje que no sale se queda
+   igual que uno que sí, y la persona lo da por enviado. */
+.chat__estado--error { color: var(--amber-300); font-weight: 700; }
+
+.chat__cargarMas {
+  align-self: center;
+  margin-bottom: var(--s-sm);
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  cursor: pointer;
+}
+
+/* Botón flotante para volver al final. Aparece solo cuando estás leyendo
+   hacia arriba: si la conversación se autodesplazara siempre, leer algo de
+   ayer sería imposible en un grupo activo. */
+.chat__abajo {
+  position: absolute;
+  right: var(--s-base);
+  bottom: 5.5rem;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-raised);
+}
+.chat__abajo[hidden] { display: none; }
+.chat__abajo span {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.chat__panelInterior { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+
+/* --------------------------------------------------------------------------
+   Campo de escribir
+   -------------------------------------------------------------------------- */
+
+.chat__escribir {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-sm);
+  padding: var(--s-sm) var(--s-base);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.chat__escribir textarea {
+  flex: 1;
+  /* Crece con el texto hasta un tope; a partir de ahí, barra propia. Una
+     caja que crece sin límite se come la conversación entera. */
+  min-height: 42px;
+  max-height: 9rem;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  background: var(--bg-sunken);
+  font: inherit;
+  font-size: 0.94rem;
+  line-height: 1.4;
+  color: var(--text);
+  resize: none;
+  overflow-y: auto;
+}
+.chat__escribir textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: var(--surface);
+}
+
+.chat__enviar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+.chat__enviar:disabled { opacity: 0.45; cursor: default; }
+.chat__enviar:not(:disabled):hover { background: var(--navy-500); }
+.chat__enviar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chat__enviar svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* Aviso de solo lectura, cuando la conversación existe pero no se puede
+   escribir en ella. */
+.chat__soloLectura {
+  padding: var(--s-md) var(--s-base);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.86rem;
+  color: var(--text-mute);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Estado sin conversación abierta
+   -------------------------------------------------------------------------- */
+
+.chat__nada {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--s-sm);
+  padding: var(--s-xl);
+  text-align: center;
+  color: var(--text-mute);
+}
+.chat__nada img { width: 64px; height: 64px; opacity: 0.35; }
+
+/* --------------------------------------------------------------------------
+   Diálogo de nueva conversación
+   -------------------------------------------------------------------------- */
+
+.chat__dlg {
+  width: min(100% - 2 * var(--s-base), 26rem);
+  max-height: min(80dvh, 34rem);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--text);
+}
+.chat__dlg::backdrop { background: rgba(0, 14, 35, 0.45); }
+.chat__dlgCab {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  padding: var(--s-base);
+  border-bottom: 1px solid var(--border);
+}
+.chat__dlgCab h2 { flex: 1; margin: 0; font-size: 1.05rem; }
+.chat__dlgCerrar {
+  border: 0;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-soft);
+  cursor: pointer;
+}
+.chat__dlgLista { max-height: 22rem; overflow-y: auto; }
+.chat__dlgVacio { padding: var(--s-xl) var(--s-base); text-align: center; color: var(--text-mute); }
+
+/* --------------------------------------------------------------------------
+   Móvil: un panel cada vez
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .chat {
+    grid-template-columns: 1fr;
+    height: calc(100dvh - var(--header-h));
+    margin: 0;
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
+  .chat__lista { border-right: 0; }
+  .chat__volver { display: block; }
+
+  /* `data-vista` en el contenedor decide cuál de los dos se ve. Se hace con
+     un atributo y no ocultando con JavaScript para que el navegador conserve
+     el desplazamiento de cada panel al ir y volver. */
+  .chat[data-vista='lista'] .chat__panel { display: none; }
+  .chat[data-vista='conversacion'] .chat__lista { display: none; }
+}
+
+/* En pantallas anchas nunca se oculta nada: el atributo no manda. */
+@media (min-width: 861px) {
+  .chat[data-vista] .chat__lista,
+  .chat[data-vista] .chat__panel { display: flex; }
+}

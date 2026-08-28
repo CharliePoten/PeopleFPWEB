@@ -41,6 +41,22 @@
       if (key in d) el.setAttribute('alt', d[key]);
     });
 
+    /* Y lo que no es contenido pero sí se lee: el texto de sugerencia de un
+       campo, el del globo de ayuda y el nombre accesible de un botón que
+       solo tiene un icono. Traducir el `alt` y dejar sin traducir el
+       `aria-label` deja a quien usa lector de pantalla navegando la mitad
+       del sitio en español. */
+    var ATRIBUTOS = { placeholder: 'placeholder', title: 'title', aria: 'aria-label' };
+    Object.keys(ATRIBUTOS).forEach(function (sufijo) {
+      document.querySelectorAll('[data-i18n-' + sufijo + ']').forEach(function (el) {
+        var key = el.getAttribute('data-i18n-' + sufijo);
+        if (key in d) el.setAttribute(ATRIBUTOS[sufijo], d[key]);
+        else if (window.console) {
+          console.warn('[i18n] falta la clave "' + key + '" en "' + lang + '"');
+        }
+      });
+    });
+
     document.querySelectorAll('.lang [data-lang]').forEach(function (btn) {
       btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === lang));
     });

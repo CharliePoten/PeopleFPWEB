@@ -33,12 +33,16 @@
      el codigo del error, que es igual en la web y en la app. */
   var CODIGOS = [
     'invalid_credentials', 'email_taken', 'weak_password', 'email_not_confirmed',
-    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'cif_repetido',
-    'duplicado', 'unknown',
+    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'sin_permiso',
+    'cif_repetido', 'duplicado', 'unknown',
   ];
 
   function explicar(e) {
     var c = e && e.codigo;
+    // Cuando el servidor ha explicado POR QUE dice que no, se enseña su
+    // texto: lo escribimos nosotros en la base de datos y dice mucho mas
+    // que un «no tienes permiso» generico.
+    if (c === 'sin_permiso' && e.detalle) return e.detalle;
     if (c && CODIGOS.indexOf(c) !== -1) return T('c.e.' + c);
     return (e && e.message) || T('c.e.unknown');
   }
@@ -527,6 +531,12 @@
 
         if (e.perfil.role === 'organization' || e.organizacion) pintarEntidad(e);
         else pintarVoluntario(e);
+
+        // Detrás de lo demás, y no dentro de cada pintado: la entrada a
+        // mensajes es la misma para un voluntario y para una entidad, y
+        // repetirla en los dos sitios es garantizar que un día se cambie
+        // solo en uno.
+        pintarEntradaMensajes();
       })
       .catch(function (err) {
         if (err.codigo === 'sin_sesion') return ir('entrar.html');
@@ -627,6 +637,40 @@
         });
       });
     });
+  }
+
+  /**
+   * Enlace a los mensajes, con lo que haya sin leer.
+   *
+   * El numerito se pide aparte y se añade cuando llega: esperar a que el
+   * servidor conteste para enseñar el enlace dejaría la pantalla a medias
+   * por un dato que es un adorno. Si la consulta falla, el enlace sigue ahí
+   * y sin numerito, que es exactamente lo que debe pasar.
+   */
+  function pintarEntradaMensajes() {
+    var caja = $('#panel');
+    if (!caja) return;
+
+    var bloque = document.createElement('div');
+    bloque.style.cssText = 'margin-top:var(--s-lg);display:grid;gap:12px';
+    bloque.innerHTML =
+      '<a class="btn btn--ghost" href="mensajes.html" id="entrada-mensajes">' +
+      escapar(T('c.chat.entrada')) +
+      '</a>' +
+      '<p class="field__hint">' + escapar(T('c.chat.entradaHint')) + '</p>';
+    caja.appendChild(bloque);
+
+    PFP.db
+      .rpc('my_unread')
+      .then(function (filas) {
+        var total = (filas || []).reduce(function (n, f) { return n + (f.unread || 0); }, 0);
+        if (!total) return;
+        var enlace = $('#entrada-mensajes');
+        if (enlace) enlace.textContent = T('c.chat.entrada') + ' (' + (total > 99 ? '99+' : total) + ')';
+      })
+      .catch(function () {
+        /* Sin numerito. No es motivo para no poder entrar a los mensajes. */
+      });
   }
 
   var PAGINAS = {

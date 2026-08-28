@@ -109,7 +109,23 @@
     // redactan distinto. Sin esto, a quien se le caducaba la sesion a
     // mitad de un formulario le salia «algo ha fallado» y no tenia forma
     // de saber que bastaba con volver a entrar.
-    if (estado === 401 || estado === 403) return PfpError('sin_sesion', msg);
+    if (estado === 401) return PfpError('sin_sesion', msg);
+
+    // Un 403 NO es una sesion caducada: es el servidor diciendo que no.
+    // PostgREST devuelve 403 con `42501` cuando una politica rechaza la
+    // operacion, y tambien cuando una funcion nuestra lanza
+    // `insufficient_privilege` — «solo puedes escribir a personas con las
+    // que compartes una entidad», por ejemplo. Confundirlo con una sesion
+    // caducada manda a la gente a volver a entrar para arreglar algo que
+    // no se arregla entrando, y de paso tira el mensaje util que ya venia
+    // escrito desde la base de datos.
+    if (estado === 403) {
+      var e = PfpError('sin_permiso', msg);
+      // El texto del servidor manda cuando lo hay: lo escribimos nosotros
+      // en la migracion y dice exactamente que ha pasado.
+      e.detalle = msg || '';
+      return e;
+    }
 
     // Clave repetida. El caso que se da de verdad es el CIF: la columna
     // `organizations.tax_id` es UNIQUE, asi que intentar dar de alta dos
@@ -207,13 +223,30 @@
     return refrescoEnCurso;
   }
 
-  /** Petición autenticada. Falla con `sin_sesion` si no hay testigo. */
+  /**
+   * Petición autenticada. Falla con `sin_sesion` si no hay testigo.
+   *
+   * Y si el servidor contesta 401, la sesión guardada se BORRA antes de
+   * propagar el error. Sin eso, un testigo que el servidor ya no acepta
+   * —contraseña cambiada desde otro sitio, sesión revocada, secreto
+   * rotado— seguía figurando como válido aquí porque su fecha de caducidad
+   * local no había llegado. Y entonces pasaba esto:
+   *
+   *   `index.html` ve sesión → pide datos → 401 → manda a `entrar.html`
+   *   `entrar.html` ve sesión → manda a `index.html` → y vuelta a empezar
+   *
+   * Un bucle entre las dos páginas, llamando al servidor en cada vuelta y
+   * sin forma de salir salvo borrando los datos del navegador a mano.
+   */
   function pedirAuth(ruta, opciones) {
     return token().then(function (t) {
       if (!t) throw PfpError('sin_sesion', 'La sesión ha caducado.');
       opciones = opciones || {};
       opciones.token = t;
-      return pedir(ruta, opciones);
+      return pedir(ruta, opciones).catch(function (e) {
+        if (e && e.codigo === 'sin_sesion') guardarSesion(null);
+        throw e;
+      });
     });
   }
 
