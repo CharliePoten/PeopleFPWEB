@@ -474,6 +474,8 @@
     'c.e.sin_sesion': 'Tu sesión ha caducado. Entra de nuevo.',
     'c.e.sin_permiso': 'No tienes permiso para hacer eso.',
     'c.e.motivo': 'El servidor no ha aceptado el cambio. Recarga la página y vuelve a intentarlo.',
+    'c.e.cargaParcial': 'No se ha podido cargar todo. Lo que ves puede estar incompleto: recarga la página.',
+    'c.e.noCargado': 'No se ha podido cargar esta parte. Recarga la página.',
     'c.e.cif_repetido':
       'Ya hay una entidad registrada con ese CIF. Si es la vuestra, pide acceso a quien la dio de alta.',
     'c.e.duplicado': 'Ese dato ya está registrado.',
@@ -976,6 +978,8 @@
     'c.e.sin_sesion': 'Deine Sitzung ist abgelaufen. Melde dich erneut an.',
     'c.e.sin_permiso': 'Dazu hast du keine Berechtigung.',
     'c.e.motivo': 'Der Server hat die Änderung nicht angenommen. Lade die Seite neu und versuch es erneut.',
+    'c.e.cargaParcial': 'Es konnte nicht alles geladen werden. Was du siehst, kann unvollständig sein — lade die Seite neu.',
+    'c.e.noCargado': 'Dieser Teil konnte nicht geladen werden. Lade die Seite neu.',
     'c.e.cif_repetido':
       'Es gibt bereits eine Organisation mit dieser Steuernummer. Wenn es eure ist, bitte die Person um Zugang, die sie angelegt hat.',
     'c.e.duplicado': 'Dieser Wert ist bereits registriert.',

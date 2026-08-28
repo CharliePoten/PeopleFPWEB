@@ -73,6 +73,29 @@
     if (UI.retraducir) UI.retraducir();
   }
 
+  /* --- Lo que no llega se dice --- */
+
+  var falloDeCarga = false;
+
+  /**
+   * Envuelve una consulta que la pantalla puede sobrevivir sin ella.
+   *
+   * Devuelve una lista vacia para que el pintado siga, pero deja constancia:
+   * al final se avisa. La diferencia entre «no tienes horas» y «no he podido
+   * preguntar por tus horas» importa mucho cuando de eso sale un
+   * certificado.
+   */
+  function opcional(promesa) {
+    return promesa.catch(function (err) {
+      if (!err || err.codigo !== 'sin_sesion') falloDeCarga = true;
+      return [];
+    });
+  }
+
+  function avisarSiFaltaAlgo() {
+    if (falloDeCarga && UI.avisar) UI.avisar('aviso', T('c.e.cargaParcial'), 'error');
+  }
+
   /* =====================================================================
      ENTIDAD
      ===================================================================== */
@@ -262,9 +285,9 @@
     /* Las tres se piden a la vez: son independientes y encadenarlas
        triplicaria la espera sin ganar nada. */
     return Promise.all([
-      PFP.db.rpc('org_dashboard', { p_org: org.id }).catch(function () { return []; }),
-      PFP.db.rpc('org_upcoming_missions', { p_org: org.id, p_limit: 5 }).catch(function () { return []; }),
-      PFP.db.rpc('my_emergency').catch(function () { return []; }),
+      opcional(PFP.db.rpc('org_dashboard', { p_org: org.id })),
+      opcional(PFP.db.rpc('org_upcoming_missions', { p_org: org.id, p_limit: 5 })),
+      opcional(PFP.db.rpc('my_emergency')),
     ]).then(function (r) {
       var d = (r[0] && r[0][0]) || null;
       var misiones = r[1] || [];
@@ -293,6 +316,7 @@
       if (d) html += pintarProximas(misiones);
 
       pinta(html);
+      avisarSiFaltaAlgo();
 
       var boton = document.querySelector('[data-copiar]');
       if (boton) {
@@ -351,8 +375,8 @@
     }
 
     return Promise.all([
-      PFP.db.rpc('my_upcoming').catch(function () { return []; }),
-      PFP.db.rpc('my_activity').catch(function () { return []; }),
+      opcional(PFP.db.rpc('my_upcoming')),
+      opcional(PFP.db.rpc('my_activity')),
     ]).then(function (r) {
       var proximas = r[0] || [];
       var a = (r[1] && r[1][0]) || null;
@@ -370,6 +394,7 @@
       }
 
       pinta(html);
+      avisarSiFaltaAlgo();
     });
   }
 

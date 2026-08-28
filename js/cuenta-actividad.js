@@ -72,6 +72,42 @@
     };
   })();
 
+  /* --- Lo que no llega se dice --- */
+
+  var falloDeCarga = false;
+  var falloDe = {};
+
+  /**
+   * Envuelve una consulta que la pantalla puede sobrevivir sin ella.
+   *
+   * Devuelve una lista vacia para que el pintado siga, pero deja constancia:
+   * al final se avisa. La diferencia entre «no tienes horas» y «no he podido
+   * preguntar por tus horas» importa mucho cuando de eso sale un
+   * certificado.
+   */
+  function opcional(promesa, nombre) {
+    return promesa.catch(function (err) {
+      if (!err || err.codigo !== 'sin_sesion') {
+        falloDeCarga = true;
+        falloDe[nombre] = true;
+      }
+      return [];
+    });
+  }
+
+  /** El hueco de una seccion que no se ha podido traer. */
+  function seccionCaida(titulo) {
+    return (
+      '<div class="tarjeta">' +
+      '<div class="tarjeta__cab"><h2>' + esc(T(titulo)) + '</h2></div>' +
+      '<div class="tarjeta__vacio">' + esc(T('c.e.noCargado')) + '</div></div>'
+    );
+  }
+
+  function avisarSiFaltaAlgo() {
+    if (falloDeCarga && UI.avisar) UI.avisar('aviso', T('c.e.cargaParcial'), 'error');
+  }
+
   /* =====================================================================
      PIEZAS
      ===================================================================== */
@@ -334,13 +370,14 @@
     var titulo = $('#panel');
 
     return Promise.all([
-      PFP.db.rpc('my_upcoming').catch(function () { return []; }),
-      PFP.db.rpc('my_activity').catch(function () { return []; }),
-      PFP.db.rpc('my_hours').catch(function () { return []; }),
-      PFP.db.rpc('my_skills').catch(function () { return []; }),
-      PFP.db
-        .select('availability_windows', 'select=weekday,start_time,end_time&order=weekday')
-        .catch(function () { return []; }),
+      opcional(PFP.db.rpc('my_upcoming'), 'proxima'),
+      opcional(PFP.db.rpc('my_activity'), 'resumen'),
+      opcional(PFP.db.rpc('my_hours'), 'historial'),
+      opcional(PFP.db.rpc('my_skills'), 'habilidades'),
+      opcional(
+        PFP.db.select('availability_windows', 'select=weekday,start_time,end_time&order=weekday'),
+        'disponibilidad',
+      ),
     ]).then(function (r) {
       var siguiente = (r[0] || [])[0] || null;
       var a = (r[1] || [])[0] || null;
@@ -348,7 +385,7 @@
       var habilidades = r[3] || [];
       var ventanas = r[4] || [];
 
-      var html = proxima(siguiente);
+      var html = falloDe.proxima ? seccionCaida('c.a.proxima') : proxima(siguiente);
 
       if (a) {
         html +=
@@ -360,12 +397,19 @@
           '</div>';
       }
 
-      html += papeles(a, habilidades);
-      html += disponibilidad(ventanas);
-      html += historial(horas);
+      /* Los papeles solo se pintan si el resumen llego. `my_activity` es
+         una consulta agregada: siempre devuelve una fila, asi que una lista
+         vacia solo puede ser un fallo, y con ella pintariamos «Sin seguro»
+         a quien lo tiene al dia. */
+      if (a) html += papeles(a, habilidades);
+      html += falloDe.disponibilidad
+        ? seccionCaida('c.a.disponibilidad')
+        : disponibilidad(ventanas);
+      html += falloDe.historial ? seccionCaida('c.a.historial') : historial(horas);
 
       titulo.innerHTML = html;
       if (UI.retraducir) UI.retraducir();
+      avisarSiFaltaAlgo();
 
       var imprimir = $('#btn-imprimir');
       if (imprimir) {
