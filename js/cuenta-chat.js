@@ -53,7 +53,9 @@
   var mensajes = [];        // mensajes de la abierta, de más viejo a más nuevo
   var reloj = null;
   var filtro = '';
-  var pestana = 'todos';   // todos | personas | grupos
+  var pestana = 'todos';   // todos | personas | grupos | solicitudes
+  var solicitudes = { recibidas: [], enviadas: [] };
+  var solicitudAbierta = null;
   var pegadoAbajo = true;   // ¿está el usuario mirando el final?
   var hayMas = true;        // ¿queda historia por cargar hacia arriba?
   var cargando = false;
@@ -173,6 +175,10 @@
       });
     }
 
+    // Las solicitudes van en la misma tanda: son otra cosa que puede haber
+    // llegado desde la ultima vez, y pedirlas aparte seria otro viaje.
+    cargarSolicitudes().then(function () { if (pestana === 'solicitudes') pintarLista(); });
+
     return Promise.all([
       tolerante('my_peer_threads'),
       tolerante('my_conversations'),
@@ -236,6 +242,69 @@
   }
 
   /**
+   * Solicitudes de contacto, en las dos direcciones.
+   *
+   * Las columnas son EXACTAMENTE las que pide la app, con el nombre de la
+   * clave ajena puesto a mano: `message_requests` apunta a `profiles` por
+   * dos sitios —quien pregunta y quien recibe— y sin decir por cuál,
+   * PostgREST no devuelve nada.
+   */
+  var COLS_SOLICITUD =
+    'id,from_profile,to_profile,help_request_id,mission_id,body,status,created_at,' +
+    'autor:public_profiles!message_requests_from_profile_fkey(full_name,photo_url),' +
+    'destino:public_profiles!message_requests_to_profile_fkey(full_name,photo_url),' +
+    'help_requests(title),missions(title)';
+
+  function cargarSolicitudes() {
+    if (!yo) return Promise.resolve();
+
+    return PFP.db
+      .select(
+        'message_requests',
+        'select=' + encodeURIComponent(COLS_SOLICITUD) +
+          '&status=eq.pending&order=created_at.desc',
+      )
+      .then(function (filas) {
+        var recibidas = [];
+        var enviadas = [];
+
+        (filas || []).forEach(function (r) {
+          var item = {
+            id: r.id,
+            de: r.from_profile,
+            para: r.to_profile,
+            nombre: (r.from_profile === yo ? r.destino : r.autor || {}).full_name || T('c.chat.alguien'),
+            foto: ((r.from_profile === yo ? r.destino : r.autor) || {}).photo_url || null,
+            asunto: (r.help_requests && r.help_requests.title) ||
+                    (r.missions && r.missions.title) || '',
+            cuerpo: r.body,
+            fecha: r.created_at,
+          };
+          // La política de lectura deja ver también las propias; se separan
+          // aquí en vez de pedirlas dos veces.
+          if (r.to_profile === yo) recibidas.push(item);
+          else if (r.from_profile === yo) enviadas.push(item);
+        });
+
+        solicitudes = { recibidas: recibidas, enviadas: enviadas };
+        pintarPestanas();
+      })
+      .catch(function (e) {
+        if (e && e.codigo === 'sin_sesion') throw e;
+        // Que fallen las solicitudes no puede dejar sin mensajes a nadie.
+      });
+  }
+
+  /** El numerito de la pestaña de solicitudes: solo las que esperan respuesta. */
+  function pintarPestanas() {
+    var b = $('.chat__tabs [data-tab="solicitudes"]');
+    if (!b) return;
+    var n = solicitudes.recibidas.length;
+    b.textContent = T('c.chat.fSolicitudes') + (n ? ' (' + n + ')' : '');
+    b.setAttribute('data-pendientes', n ? 'true' : 'false');
+  }
+
+  /**
    * Cuántos sin leer en total, en el título de la pestaña.
    *
    * Es lo que hace que se vea que ha llegado algo con la pestaña de fondo,
@@ -268,6 +337,15 @@
   function pintarLista() {
     var caja = $('#chat-hilos');
     if (!caja) return;
+
+    // El buscador filtra conversaciones; en solicitudes no tiene nada que
+    // filtrar. Se decide aqui y no en el clic de la pestaña porque tambien
+    // se cambia de pestaña por codigo —al aceptar una solicitud— y alli se
+    // quedaba escondido para siempre.
+    var buscador = $('.chat__buscar');
+    if (buscador) buscador.hidden = pestana === 'solicitudes';
+
+    if (pestana === 'solicitudes') return pintarSolicitudes(caja);
 
     var q = filtro.trim().toLowerCase();
     var visibles = hilos.filter(function (h) {
@@ -319,6 +397,160 @@
     caja.innerHTML = html;
   }
 
+  function filaSolicitud(sol, enviada) {
+    return (
+      '<button class="chat__hilo" type="button" role="option"' +
+      ' data-solicitud="' + esc(sol.id) + '"' +
+      ' aria-current="' + (sol.id === solicitudAbierta ? 'true' : 'false') + '">' +
+      (sol.foto
+        ? '<span class="chat__av"><img src="' + esc(sol.foto) + '" alt="" loading="lazy" /></span>'
+        : '<span class="chat__av" aria-hidden="true">' + esc(iniciales(sol.nombre)) + '</span>') +
+      '<span class="chat__hiloCuerpo">' +
+      '<span class="chat__hiloTop">' +
+      '<span class="chat__hiloNombre">' + esc(sol.nombre) + '</span>' +
+      '<span class="chat__hiloHora">' + esc(horaCorta(sol.fecha)) + '</span>' +
+      '</span>' +
+      '<span class="chat__hiloPrev">' +
+      '<span class="chat__hiloTexto">' +
+      (enviada ? esc(T('c.chat.solEnviadaPref')) + ' ' : '') + esc(sol.cuerpo) +
+      '</span>' +
+      (enviada ? '' : '<span class="chat__badge">1</span>') +
+      '</span></span></button>'
+    );
+  }
+
+  function pintarSolicitudes(caja) {
+    var r = solicitudes.recibidas;
+    var e = solicitudes.enviadas;
+
+    if (r.length === 0 && e.length === 0) {
+      caja.innerHTML = '<p class="chat__vacio">' + esc(T('c.chat.sinSolicitudes')) + '</p>';
+      return;
+    }
+
+    var html = '';
+    if (r.length) {
+      html += '<p class="chat__grupo">' + esc(T('c.chat.solRecibidas')) + '</p>';
+      r.forEach(function (s) { html += filaSolicitud(s, false); });
+    }
+    if (e.length) {
+      html += '<p class="chat__grupo">' + esc(T('c.chat.solEnviadas')) + '</p>';
+      e.forEach(function (s) { html += filaSolicitud(s, true); });
+    }
+    caja.innerHTML = html;
+  }
+
+  /** Busca una solicitud por id en cualquiera de las dos listas. */
+  function buscarSolicitud(id) {
+    var todas = solicitudes.recibidas.concat(solicitudes.enviadas);
+    for (var i = 0; i < todas.length; i++) if (todas[i].id === id) return todas[i];
+    return null;
+  }
+
+  /**
+   * La ficha de una solicitud, en el panel de la derecha.
+   *
+   * No es una conversación: no hay campo de escribir. Hasta que se acepta no
+   * existe canal, y enseñar un cajetín que no envía nada sería mentir.
+   */
+  function abrirSolicitud(id) {
+    var sol = buscarSolicitud(id);
+    if (!sol) return;
+
+    solicitudAbierta = id;
+    abierta = null;
+    var recibida = sol.para === yo;
+
+    $('#chat').setAttribute('data-vista', 'conversacion');
+    $('#chat-nada').hidden = true;
+    $('#chat-conv').hidden = false;
+    $('#chat-cab-nombre').textContent = sol.nombre;
+    $('#chat-cab-sub').textContent = recibida
+      ? T('c.chat.solRecibidaSub')
+      : T('c.chat.solEnviadaSub');
+
+    var caja = $('#chat-mensajes');
+    caja.innerHTML =
+      (sol.asunto
+        ? '<p class="chat__dia">' + esc(T('c.chat.solSobre').replace('{asunto}', sol.asunto)) + '</p>'
+        : '') +
+      '<div class="chat__msg' + (recibida ? '' : ' chat__msg--mio') + ' chat__msg--primero">' +
+      esc(sol.cuerpo).replace(/\n/g, '<br />') +
+      '<span class="chat__pie">' + esc(hora(sol.fecha)) + '</span></div>' +
+      (recibida
+        ? '<div class="chat__solAcciones">' +
+          '<button class="chat__solBtn chat__solBtn--si" type="button" data-aceptar="' + esc(sol.id) + '">' +
+          esc(T('c.chat.solAceptar')) + '</button>' +
+          '<button class="chat__solBtn" type="button" data-rechazar="' + esc(sol.id) + '">' +
+          esc(T('c.chat.solRechazar')) + '</button>' +
+          '<p class="chat__solNota">' + esc(T('c.chat.solNota')) + '</p>' +
+          '</div>'
+        : '<p class="chat__solNota">' + esc(T('c.chat.solEsperando')) + '</p>');
+
+    // Sin campo de escribir: todavia no hay conversacion.
+    $('.chat__escribir').hidden = true;
+    pintarLista();
+  }
+
+  /** Acepta: el servidor abre la conversacion y mete dentro el mensaje. */
+  function aceptarSolicitud(id) {
+    var b = $('[data-aceptar="' + id + '"]');
+    if (b) { b.disabled = true; b.textContent = T('c.espera'); }
+
+    PFP.db
+      .rpc('accept_message_request', { request_id: id })
+      .then(function () {
+        solicitudAbierta = null;
+        $('.chat__escribir').hidden = false;
+        // La conversacion nueva ya existe: se recarga todo y se cambia a la
+        // pestaña donde ahora vive.
+        return Promise.all([cargarSolicitudes(), cargarHilos()]).then(function () {
+          pestana = 'todos';
+          $$('.chat__tabs button').forEach(function (o) {
+            o.setAttribute('aria-selected', String(o.dataset.tab === 'todos'));
+          });
+          pintarLista();
+          cerrarPanel();
+        });
+      })
+      .catch(function (e) {
+        if (b) { b.disabled = false; b.textContent = T('c.chat.solAceptar'); }
+        UI.avisar('aviso', UI.explicar(e));
+      });
+  }
+
+  function rechazarSolicitud(id) {
+    var b = $('[data-rechazar="' + id + '"]');
+    if (b) { b.disabled = true; b.textContent = T('c.espera'); }
+
+    PFP.db
+      .update('message_requests', 'id=eq.' + encodeURIComponent(id), {
+        status: 'declined',
+        resolved_at: new Date().toISOString(),
+      })
+      .then(function () {
+        solicitudAbierta = null;
+        return cargarSolicitudes().then(function () {
+          pintarLista();
+          cerrarPanel();
+        });
+      })
+      .catch(function (e) {
+        if (b) { b.disabled = false; b.textContent = T('c.chat.solRechazar'); }
+        UI.avisar('aviso', UI.explicar(e));
+      });
+  }
+
+  /** Deja el panel derecho como al entrar. */
+  function cerrarPanel() {
+    abierta = null;
+    solicitudAbierta = null;
+    $('#chat-conv').hidden = true;
+    $('#chat-nada').hidden = false;
+    $('.chat__escribir').hidden = false;
+    $('#chat').setAttribute('data-vista', 'lista');
+  }
+
   /* ---------------------------------------------------------------------
      Abrir una conversación
      --------------------------------------------------------------------- */
@@ -330,6 +562,10 @@
 
   function abrir(id) {
     abierta = id;
+    solicitudAbierta = null;
+    // Puede venir de una solicitud, que lo esconde.
+    var escribir = $('.chat__escribir');
+    if (escribir) escribir.hidden = false;
     mensajes = [];
     hayMas = true;
     pegadoAbajo = true;
@@ -371,7 +607,7 @@
       });
     } else {
       var q =
-        'select=id,sender_id,kind,body,sent_at,public_profiles!inner(full_name)' +
+        'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +
         '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
         '&order=sent_at.desc&limit=' + PAGINA;
       if (p.columna === 'organization_id') {
@@ -646,7 +882,7 @@
       peticion = PFP.db.rpc('peer_messages', { p_other: p.otro, p_before: null, p_limit: PAGINA });
     } else {
       var q =
-        'select=id,sender_id,kind,body,sent_at,public_profiles!inner(full_name)' +
+        'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +
         '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
         '&sent_at=gt.' + encodeURIComponent(ultimo) +
         '&order=sent_at.asc&limit=' + PAGINA;
@@ -811,7 +1047,18 @@
 
     $('#chat-hilos').addEventListener('click', function (ev) {
       var b = ev.target.closest('.chat__hilo');
-      if (b && b.dataset.id) abrir(b.dataset.id);
+      if (!b) return;
+      if (b.dataset.solicitud) abrirSolicitud(b.dataset.solicitud);
+      else if (b.dataset.id) abrir(b.dataset.id);
+    });
+
+    // Aceptar y rechazar viven dentro del panel de mensajes, que se repinta
+    // entero: por eso el oyente va en el contenedor y no en cada botón.
+    $('#chat-mensajes').addEventListener('click', function (ev) {
+      var si = ev.target.closest('[data-aceptar]');
+      if (si) return aceptarSolicitud(si.dataset.aceptar);
+      var no = ev.target.closest('[data-rechazar]');
+      if (no) return rechazarSolicitud(no.dataset.rechazar);
     });
 
     $('#chat-buscar').addEventListener('input', function (ev) {

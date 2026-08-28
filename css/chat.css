@@ -579,3 +579,68 @@
   .chat[data-vista] .chat__lista,
   .chat[data-vista] .chat__panel { display: flex; }
 }
+
+/* --------------------------------------------------------------------------
+   Solicitudes de contacto
+   --------------------------------------------------------------------------
+   Una solicitud no es una conversación: es una pregunta que hay que aceptar
+   o rechazar antes de que exista canal. Por eso su ficha no lleva campo de
+   escribir, sino dos botones — y el de aceptar es el que destaca, porque
+   aceptar es lo normal y rechazar la excepción.
+   -------------------------------------------------------------------------- */
+
+/* Un punto en la pestaña cuando hay alguna esperando. El número va en el
+   texto; el punto es para verlo sin leer. */
+.chat__tabs button[data-pendientes='true'] { position: relative; }
+.chat__tabs button[data-pendientes='true']::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber-500);
+}
+
+.chat__solAcciones {
+  display: grid;
+  gap: var(--s-sm);
+  margin-top: var(--s-lg);
+  padding-top: var(--s-base);
+  border-top: 1px solid var(--border);
+}
+
+.chat__solBtn {
+  padding: 11px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+.chat__solBtn:hover { background: var(--n-100); }
+.chat__solBtn:disabled { opacity: 0.55; cursor: default; }
+.chat__solBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.chat__solBtn--si {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+.chat__solBtn--si:hover { background: var(--navy-500); }
+
+.chat__solNota {
+  margin: var(--s-xs) 0 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--text-mute);
+  text-align: center;
+}
+
+/* El campo de escribir se esconde en la ficha de una solicitud. */
+.chat__escribir[hidden] { display: none; }
