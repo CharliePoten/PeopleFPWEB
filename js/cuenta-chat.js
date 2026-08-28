@@ -1139,8 +1139,11 @@
     });
 
     $('#chat-volver').addEventListener('click', function () {
-      $('#chat').setAttribute('data-vista', 'lista');
-      abierta = null;
+      // `cerrarPanel()` y no solo cambiar de vista: hay que devolver el panel
+      // derecho a como estaba al entrar. Si no, queda la conversacion abierta
+      // por debajo sin ninguna elegida, y al pasar a una pantalla ancha —o al
+      // girar el movil— aparece vacia en vez del «elige una conversacion».
+      cerrarPanel();
       pintarLista();
     });
 

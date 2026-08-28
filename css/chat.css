@@ -265,6 +265,20 @@
   background: var(--bg-sunken);
 }
 
+/* --------------------------------------------------------------------------
+   `hidden` esconde de verdad
+   --------------------------------------------------------------------------
+   Varias cajas del chat fijan su `display` (grid, flex) desde una clase, y
+   eso empata en especificidad con el `[hidden] { display: none }` del
+   navegador — que pierde el empate por venir de la hoja de usuario. Sin esta
+   regla, esconder algo con `hidden` no lo escondia: al abrir una
+   conversacion se quedaba encima el «elige una conversacion» y la cabecera
+   con el titulo caia debajo, fuera de su sitio.
+
+   Se pone una sola vez para todo el chat, y no clase por clase: una lista se
+   queda corta en cuanto se añade otra caja que se esconda. */
+.chat [hidden] { display: none; }
+
 .chat__cab {
   display: flex;
   align-items: center;
@@ -419,7 +433,6 @@
   cursor: pointer;
   box-shadow: var(--shadow-raised);
 }
-.chat__abajo[hidden] { display: none; }
 .chat__abajo span {
   position: absolute;
   top: -6px;
@@ -643,7 +656,6 @@
 }
 
 /* El campo de escribir se esconde en la ficha de una solicitud. */
-.chat__escribir[hidden] { display: none; }
 
 /* Soporte y asistente: ni una persona ni un grupo, asi que ni foto ni
    iniciales. Un simbolo sobre el azul de marca los distingue de un vistazo. */

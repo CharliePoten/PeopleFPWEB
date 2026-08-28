@@ -275,6 +275,10 @@
    * cargado y se dedica solo a lo suyo: nadie vuelve a pedir el perfil.
    */
   function montar() {
+    // Se va a recargar con los guiones buenos: pintar ahora solo enseñaria
+    // media pantalla mal durante un instante.
+    if (PFP.recargando) return new Promise(function () {});
+
     var ui = UI();
     if (!ui.exigirSesion || !ui.exigirSesion()) return Promise.reject(PFP.error('sin_sesion'));
 

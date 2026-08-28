@@ -482,6 +482,67 @@
      ===================================================================== */
 
 
+  /* ---------------------------------------------------------------------
+     Guiones viejos con HTML nuevo
+     --------------------------------------------------------------------- */
+
+  /* Una sola vez por pestaña: si el refresco tampoco arregla nada, mejor una
+     pantalla fea que un bucle de recargas. */
+  var CLAVE_REFRESCO = 'pfp.refrescoCache';
+
+  /**
+   * ¿El diccionario que ha llegado es tan nuevo como esta página?
+   *
+   * Lo decide el propio HTML: cada `data-i18n` es una clave que esta página
+   * necesita, y el HTML siempre es el nuevo cuando el navegador ha guardado
+   * los guiones de antes. Si falta alguna, el diccionario se ha quedado
+   * atrás.
+   */
+  function diccionarioAlDia() {
+    var d = (window.I18N && window.I18N.es) || {};
+    var claves = $$('[data-i18n]');
+    if (!claves.length) return true;
+
+    for (var i = 0; i < claves.length; i++) {
+      if (!(claves[i].getAttribute('data-i18n') in d)) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Pide otra vez lo que la página carga, saltándose la caché, y recarga.
+   *
+   * `cache: 'reload'` no solo se salta lo guardado: lo SUSTITUYE, así que al
+   * recargar el navegador ya encuentra la versión buena. Se hace con todo
+   * —guiones y hojas de estilo— porque si el diccionario se ha quedado
+   * viejo, lo demás también.
+   */
+  function refrescarYRecargar() {
+    try {
+      if (sessionStorage.getItem(CLAVE_REFRESCO)) return false;
+      sessionStorage.setItem(CLAVE_REFRESCO, '1');
+    } catch (e) {
+      return false;
+    }
+
+    var rutas = $$('script[src]')
+      .map(function (s) { return s.getAttribute('src'); })
+      .concat($$('link[rel="stylesheet"]').map(function (l) { return l.getAttribute('href'); }))
+      .filter(function (r) { return r && r.charAt(0) !== 'h'; });
+
+    PFP.recargando = true;
+
+    Promise.all(
+      rutas.map(function (r) {
+        return fetch(r, { cache: 'reload' }).catch(function () {});
+      }),
+    ).then(function () {
+      window.location.reload();
+    });
+
+    return true;
+  }
+
   /* =====================================================================
      PIEZAS COMPARTIDAS
      =====================================================================
@@ -523,6 +584,15 @@
     if (!PFP.configurado) {
       avisar('aviso', T('c.e.sinConfig'), 'error');
       return;
+    }
+
+    /* Antes que nada: si los guiones que han llegado son mas viejos que
+       esta pagina, se refrescan y se recarga. Pintar con un diccionario a
+       medias enseña las claves en crudo. */
+    if (!diccionarioAlDia()) {
+      if (refrescarYRecargar()) return;
+    } else {
+      try { sessionStorage.removeItem(CLAVE_REFRESCO); } catch (e) {}
     }
 
     var pagina = document.body.dataset.pagina;
