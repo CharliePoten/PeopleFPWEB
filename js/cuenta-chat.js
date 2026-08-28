@@ -140,6 +140,12 @@
   function partes(id) {
     var t = String(id || '').split(':');
     if (t[0] === 'peer') return { clase: 'peer', otro: t[1] };
+    // Soporte y asistente cuelgan de su dueño y su clase, no de una misión
+    // ni de una entidad. Los dos comparten columna, por eso hace falta
+    // filtrar tambien por `thread_kind`: sin eso saldrian mezclados.
+    if (t[0] === 'support' || t[0] === 'assistant') {
+      return { clase: 'directo', clase2: t[0], duenyo: t[1] };
+    }
     if (t[0] === 'mission') return { clase: 'grupo', columna: 'mission_id', ref: t[1] };
     if (t[0] === 'help') return { clase: 'grupo', columna: 'help_request_id', ref: t[1] };
     if (t[0] === 'org') {
@@ -183,6 +189,7 @@
       tolerante('my_peer_threads'),
       tolerante('my_conversations'),
       tolerante('my_unread'),
+      tolerante('my_direct_threads'),
     ]).then(function (r) {
       var personas = r[0] || [];
       var grupos = r[1] || [];
@@ -204,6 +211,22 @@
           previoMio: p.last_sender === yo,
           fecha: p.last_message_at,
           sinLeer: p.unread || 0,
+        });
+      });
+
+      // Soporte y asistente. El titulo se pone aqui y no se usa el que
+      // manda el servidor: aquel viene fijo en castellano, y en aleman
+      // quedaria a medias.
+      (r[3] || []).forEach(function (d) {
+        var esAsistente = d.kind === 'assistant';
+        lista.push({
+          id: d.id,
+          clase: 'directo',
+          nombre: T(esAsistente ? 'c.chat.asistente' : 'c.chat.soporte'),
+          subtitulo: T(esAsistente ? 'c.chat.asistenteSub' : 'c.chat.soporteSub'),
+          previo: null,
+          fecha: d.last_message_at,
+          sinLeer: sinLeer[d.id] || 0,
         });
       });
 
@@ -324,6 +347,10 @@
      --------------------------------------------------------------------- */
 
   function avatarHTML(h) {
+    if (h.clase === 'directo') {
+      return '<span class="chat__av chat__av--directo" aria-hidden="true">' +
+        (h.id.indexOf('assistant:') === 0 ? '✦' : '?') + '</span>';
+    }
     if (h.clase === 'grupo') {
       return '<span class="chat__av chat__av--grupo" aria-hidden="true">' +
         esc(iniciales(h.nombre)) + '</span>';
@@ -350,7 +377,9 @@
     var q = filtro.trim().toLowerCase();
     var visibles = hilos.filter(function (h) {
       if (pestana === 'personas' && h.clase !== 'peer') return false;
-      if (pestana === 'grupos' && h.clase !== 'grupo') return false;
+      // Soporte y asistente no son una persona con la que hablas: son un
+      // canal. Van con los grupos, que es donde se buscan.
+      if (pestana === 'grupos' && h.clase === 'peer') return false;
       if (!q) return true;
       return (h.nombre + ' ' + (h.subtitulo || '')).toLowerCase().indexOf(q) !== -1;
     });
@@ -605,6 +634,14 @@
         p_before: antes,
         p_limit: PAGINA,
       });
+    } else if (p.clase === 'directo') {
+      var qd =
+        'select=id,sender_id,kind,body,sent_at' +
+        '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
+        '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
+        '&order=sent_at.desc&limit=' + PAGINA;
+      if (antes) qd += '&sent_at=lt.' + encodeURIComponent(antes);
+      peticion = PFP.db.select('messages', qd);
     } else {
       var q =
         'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +
@@ -777,6 +814,22 @@
     var envio;
     if (p.clase === 'peer') {
       envio = PFP.db.rpc('send_peer_message', { p_other: p.otro, p_body: texto });
+    } else if (p.clase === 'directo') {
+      envio = PFP.db
+        .insert(
+          'messages',
+          { thread_owner: p.duenyo, thread_kind: p.clase2, body: texto, kind: 'text' },
+          true,
+        )
+        .then(function (r) {
+          // Al asistente hay que despertarlo: es quien contesta. Si falla, el
+          // mensaje ya esta guardado y se puede reintentar; por eso el error
+          // no tumba el envio.
+          if (p.clase2 === 'assistant') {
+            PFP.fn.invoke('assistant', {}).catch(function () {});
+          }
+          return r;
+        });
     } else {
       var fila = { body: texto, kind: 'text' };
       fila[p.columna] = p.ref;
@@ -880,6 +933,15 @@
       // La función devuelve hacia atrás desde una fecha; para lo nuevo se
       // pide la última página y se descarta lo que ya se tiene.
       peticion = PFP.db.rpc('peer_messages', { p_other: p.otro, p_before: null, p_limit: PAGINA });
+    } else if (p.clase === 'directo') {
+      peticion = PFP.db.select(
+        'messages',
+        'select=id,sender_id,kind,body,sent_at' +
+          '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
+          '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
+          '&sent_at=gt.' + encodeURIComponent(ultimo) +
+          '&order=sent_at.asc&limit=' + PAGINA,
+      );
     } else {
       var q =
         'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +

@@ -432,10 +432,31 @@
     },
   };
 
+  /* ---------------------------------------------------------------------
+     Funciones del servidor (Edge Functions)
+     --------------------------------------------------------------------- */
+
+  var fn = {
+    /**
+     * Invoca una Edge Function con la sesion de quien esta dentro.
+     *
+     * Va por `/functions/v1/` y no por `/rest/v1/`, que es otro servicio con
+     * otra ruta. Lo usa el asistente: sin esto, escribirle desde la web
+     * guardaria el mensaje y no contestaria nadie.
+     */
+    invoke: function (nombre, cuerpo) {
+      return pedirAuth('/functions/v1/' + nombre, {
+        metodo: 'POST',
+        cuerpo: cuerpo || {},
+      });
+    },
+  };
+
   window.PFP = {
     configurado: !!(URL_BASE && ANON),
     auth: auth,
     db: db,
+    fn: fn,
     error: PfpError,
   };
 })();

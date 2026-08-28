@@ -644,3 +644,7 @@
 
 /* El campo de escribir se esconde en la ficha de una solicitud. */
 .chat__escribir[hidden] { display: none; }
+
+/* Soporte y asistente: ni una persona ni un grupo, asi que ni foto ni
+   iniciales. Un simbolo sobre el azul de marca los distingue de un vistazo. */
+.chat__av--directo { background: var(--navy-500); font-size: 1.05rem; }
