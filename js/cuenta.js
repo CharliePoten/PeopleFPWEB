@@ -33,7 +33,7 @@
      el codigo del error, que es igual en la web y en la app. */
   var CODIGOS = [
     'invalid_credentials', 'email_taken', 'weak_password', 'email_not_confirmed',
-    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'sin_permiso',
+    'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'sin_permiso', 'motivo',
     'cif_repetido', 'duplicado', 'unknown',
   ];
 
@@ -42,7 +42,7 @@
     // Cuando el servidor ha explicado POR QUE dice que no, se enseña su
     // texto: lo escribimos nosotros en la base de datos y dice mucho mas
     // que un «no tienes permiso» generico.
-    if (c === 'sin_permiso' && e.detalle) return e.detalle;
+    if ((c === 'sin_permiso' || c === 'motivo') && e.detalle) return e.detalle;
     if (c && CODIGOS.indexOf(c) !== -1) return T('c.e.' + c);
     return (e && e.message) || T('c.e.unknown');
   }
@@ -155,7 +155,7 @@
    */
   function cargarEstado() {
     return PFP.db
-      .select('profiles', 'select=id,email,full_name,role,onboarding_complete&limit=1')
+      .select('profiles', 'select=id,email,full_name,photo_url,role,onboarding_complete&limit=1')
       .then(function (filas) {
         var perfil = filas && filas[0];
         if (!perfil) throw PFP.error('sin_sesion');
@@ -483,22 +483,22 @@
 
 
   /* =====================================================================
-     MI CUENTA
+     PIEZAS COMPARTIDAS
      =====================================================================
-     Es el centro del area. Segun quien entre y por donde vaya, enseña lo
-     que toca y lleva al siguiente paso: un voluntario sin perfil completo
-     al alta, una entidad sin organizacion al formulario, una con
-     organizacion sin plan a los planes, y una que ya pago a esperar la
-     verificacion. */
+     El panel de /cuenta se fue a la consola (`consola.js` y los guiones de
+     cada pantalla). Lo que queda aqui es lo que usan varias: escapar texto
+     ajeno antes de meterlo en el HTML, y el color de cada estado de plan. */
 
-  function pinta(html) {
-    var caja = $('#panel');
-    if (caja) caja.innerHTML = html;
-  }
-
+  /**
+   * Escapa lo que va a ir dentro de HTML.
+   *
+   * Incluida la comilla simple: no todo lo que se pinta va entre comillas
+   * dobles, y un nombre con apóstrofo —O’Donnell, D’Angelo— dentro de un
+   * atributo escrito con comilla simple lo cerraría antes de tiempo.
+   */
   function escapar(t) {
-    return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    return String(t == null ? '' : t).replace(/[&<>"\']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
@@ -512,173 +512,11 @@
     cancelled: 'mal',
   };
 
-  function paginaIndex() {
-    if (!exigirSesion()) return;
-
-    var salir = $('#btn-salir');
-    if (salir) {
-      salir.addEventListener('click', function () {
-        PFP.auth.signOut().then(function () {
-          ir('../index.html');
-        });
-      });
-    }
-
-    cargarEstado()
-      .then(function (e) {
-        var nombre = $('#saludo');
-        if (nombre) nombre.textContent = (e.perfil.full_name || '').split(' ')[0] || 'Hola';
-
-        if (e.perfil.role === 'organization' || e.organizacion) pintarEntidad(e);
-        else pintarVoluntario(e);
-
-        // Detrás de lo demás, y no dentro de cada pintado: la entrada a
-        // mensajes es la misma para un voluntario y para una entidad, y
-        // repetirla en los dos sitios es garantizar que un día se cambie
-        // solo en uno.
-        pintarEntradaMensajes();
-      })
-      .catch(function (err) {
-        if (err.codigo === 'sin_sesion') return ir('entrar.html');
-        pinta('<p class="cargando">' + escapar(explicar(err)) + '</p>');
-      });
-  }
-
-  function pintarVoluntario(e) {
-    var completo = e.perfil.onboarding_complete;
-
-    var filas =
-      '<div class="estado">' +
-      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.tipoCuenta') + '</span>' +
-      '<span class="estado__valor">' + T('c.mi.voluntario') + '<small>' + escapar(e.perfil.email) + '</small></span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.perfil') + '</span>' +
-      '<span class="estado__valor"><span class="marca marca--' + (completo ? 'ok' : 'espera') + '">' +
-      (completo ? T('c.mi.completo') : T('c.mi.sinTerminar')) + '</span></span></div>' +
-      '</div>';
-
-    var accion = completo
-      ? '<p class="field__hint">' + T('c.mi.perfilListo') + '</p>'
-      : '<p class="field__hint">' + T('c.mi.faltaPerfil') + '</p>' +
-        '<a class="btn btn--primary" href="voluntario.html">' + T('c.mi.completar') + '</a>';
-
-    pinta(filas + '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' + accion + '</div>');
-  }
-
-  function pintarEntidad(e) {
-    var org = e.organizacion;
-
-    if (!org) {
-      pinta(
-        '<div class="estado"><div class="estado__fila">' +
-          '<span class="estado__clave">' + T('c.mi.tipoCuenta') + '</span>' +
-          '<span class="estado__valor">' + T('c.mi.entidad') + '<small>' + escapar(e.perfil.email) + '</small></span>' +
-          '</div></div>' +
-          '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' +
-          '<p class="field__hint">' + T('c.mi.sinEntidad') + '</p>' +
-          '<a class="btn btn--primary" href="organizacion.html">' + T('c.mi.darAlta') + '</a>' +
-          '</div>',
-      );
-      return;
-    }
-
-    var plan = e.plan;
-    var marcaVer = org.verificada
-      ? '<span class="marca marca--ok">' + T('c.mi.verificada') + '</span>'
-      : '<span class="marca marca--espera">' + T('c.mi.enRevision') + '</span>';
-
-    var marcaPlan = plan
-      ? '<span class="marca marca--' + (COLOR_PLAN[plan.status] || 'espera') + '">' +
-        T('c.plan.' + plan.status) + '</span>'
-      : '<span class="marca marca--espera">' + T('c.mi.sinPlan') + '</span>';
-
-    var filas =
-      '<div class="estado">' +
-      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.entidad') + '</span>' +
-      '<span class="estado__valor">' + escapar(org.nombre) + '<small>' + escapar(e.perfil.email) + '</small></span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.verificacion') + '</span>' +
-      '<span class="estado__valor">' + marcaVer + '</span></div>' +
-      '<div class="estado__fila"><span class="estado__clave">' + T('c.mi.plan') + '</span>' +
-      '<span class="estado__valor">' + marcaPlan + '</span></div>' +
-      '</div>';
-
-    var acciones = [];
-
-    if (!org.verificada) {
-      acciones.push(
-        '<p class="field__hint">' + T('c.mi.enRevisionTexto') + '</p>',
-      );
-    }
-
-    /* La referencia del ingreso se enseña aqui y no solo al contratar: es lo
-       unico que permite casar un pago con quien lo hizo, y quien cierra la
-       pestaña se queda sin ella. */
-    if (plan && plan.status === 'pending_payment') {
-      acciones.push(
-        '<div class="dato dato--destacado"><span><span class="dato__clave">' + T('c.mi.concepto') + '</span>' +
-          '<span class="dato__valor">' + escapar(plan.reference) + '</span></span>' +
-          '<button class="dato__copiar" type="button" data-copiar="' + escapar(plan.reference) + '">' + T('c.mi.copiar') + '</button></div>',
-      );
-      acciones.push('<a class="btn btn--ghost" href="pago.html">' + T('c.mi.verPago') + '</a>');
-    } else if (!plan || plan.status !== 'active') {
-      acciones.push('<a class="btn btn--primary" href="planes.html">' + T('c.mi.elegirPlan') + '</a>');
-    }
-
-    acciones.push('<a class="btn btn--ghost" href="organizacion.html">' + T('c.mi.editar') + '</a>');
-
-    pinta(filas + '<div style="margin-top:var(--s-lg);display:grid;gap:12px">' + acciones.join('') + '</div>');
-
-    $$('[data-copiar]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        navigator.clipboard.writeText(b.dataset.copiar).then(function () {
-          b.textContent = T('c.mi.copiado');
-          setTimeout(function () {
-            b.textContent = T('c.mi.copiar');
-          }, 1800);
-        });
-      });
-    });
-  }
-
-  /**
-   * Enlace a los mensajes, con lo que haya sin leer.
-   *
-   * El numerito se pide aparte y se añade cuando llega: esperar a que el
-   * servidor conteste para enseñar el enlace dejaría la pantalla a medias
-   * por un dato que es un adorno. Si la consulta falla, el enlace sigue ahí
-   * y sin numerito, que es exactamente lo que debe pasar.
-   */
-  function pintarEntradaMensajes() {
-    var caja = $('#panel');
-    if (!caja) return;
-
-    var bloque = document.createElement('div');
-    bloque.style.cssText = 'margin-top:var(--s-lg);display:grid;gap:12px';
-    bloque.innerHTML =
-      '<a class="btn btn--ghost" href="mensajes.html" id="entrada-mensajes">' +
-      escapar(T('c.chat.entrada')) +
-      '</a>' +
-      '<p class="field__hint">' + escapar(T('c.chat.entradaHint')) + '</p>';
-    caja.appendChild(bloque);
-
-    PFP.db
-      .rpc('my_unread')
-      .then(function (filas) {
-        var total = (filas || []).reduce(function (n, f) { return n + (f.unread || 0); }, 0);
-        if (!total) return;
-        var enlace = $('#entrada-mensajes');
-        if (enlace) enlace.textContent = T('c.chat.entrada') + ' (' + (total > 99 ? '99+' : total) + ')';
-      })
-      .catch(function () {
-        /* Sin numerito. No es motivo para no poder entrar a los mensajes. */
-      });
-  }
-
   var PAGINAS = {
     entrar: paginaEntrar,
     registro: paginaRegistro,
     verificar: paginaVerificar,
     recuperar: paginaRecuperar,
-    index: paginaIndex,
   };
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -712,5 +550,7 @@
     ir: ir,
     exigirSesion: exigirSesion,
     cargarEstado: cargarEstado,
+    escapar: escapar,
+    COLOR_PLAN: COLOR_PLAN,
   };
 })();

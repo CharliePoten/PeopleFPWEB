@@ -88,6 +88,13 @@
     return /rate limit|too many requests|security purposes|after \d+ seconds/i.test(texto);
   }
 
+  /* Los SQLSTATE con los que rechazan nuestras funciones, y solo esos.
+
+     P0001  `raise exception` sin errcode explicito
+     23514  check_violation      — «eso ya lo resolvio alguien»
+     P0002  no_data_found        — «eso ya no existe» */
+  var MOTIVOS_NUESTROS = { P0001: 1, 23514: 1, P0002: 1 };
+
   function traducirError(estado, cuerpo) {
     var msg = (cuerpo && (cuerpo.error_description || cuerpo.msg || cuerpo.message)) || '';
 
@@ -99,7 +106,11 @@
     if (/invalid login credentials|invalid grant/i.test(msg)) {
       return PfpError('invalid_credentials', msg);
     }
-    if (/token has expired|invalid token|otp_expired|expired/i.test(msg)) {
+    /* Codigos de un solo uso caducados. Sin el `expired` a secas: un 401 de
+       PostgREST dice «JWT expired» y casaba con el, asi que a quien se le
+       caducaba la sesion mientras trabajaba se le decia que su CODIGO no era
+       correcto y que pidiera otro. No habia ningun codigo por medio. */
+    if (/token has expired|has expired|invalid token|otp_expired/i.test(msg)) {
       return PfpError('invalid_code', msg);
     }
     if (/password should be|password.*at least|weak/i.test(msg)) return PfpError('weak_password', msg);
@@ -125,6 +136,21 @@
       // en la migracion y dice exactamente que ha pasado.
       e.detalle = msg || '';
       return e;
+    }
+
+    // Un motivo escrito a mano en una funcion de la base.
+    //
+    // Nuestras funciones rechazan con una frase en castellano y el SQLSTATE
+    // que les corresponde. PostgREST lo devuelve tal cual, pero fuera del
+    // 403 caia en `unknown` y esa frase —que se escribio precisamente para
+    // que la leyera una persona— acababa en «algo ha fallado».
+    //
+    // Solo los codigos que lanzamos NOSOTROS: un fallo interno de la base no
+    // tiene por que enseñarle su texto a nadie.
+    if (cuerpo && msg && MOTIVOS_NUESTROS[cuerpo.code]) {
+      var m = PfpError('motivo', msg);
+      m.detalle = msg;
+      return m;
     }
 
     // Clave repetida. El caso que se da de verdad es el CIF: la columna

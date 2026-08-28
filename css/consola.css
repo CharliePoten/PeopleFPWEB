@@ -1,0 +1,723 @@
+/* ==========================================================================
+   La consola de cuenta
+   --------------------------------------------------------------------------
+   El area de cuenta era una tarjeta de 30rem centrada. Servia mientras solo
+   hubiera que decir «tu entidad esta verificada»; no sirve para una tabla de
+   doscientas personas ni para una cola de partes de horas.
+
+   Esto es el marco que lo sustituye: menu lateral fijo a la izquierda,
+   contenido a la derecha. Ni un color, ni un radio ni un espaciado nuevos —
+   todo sale de los tokens de `app.css`, que es lo que hace que la consola se
+   siga pareciendo al resto de la web y a la app.
+
+   Lo que ya existia en `cuenta.css` —`.marca`, `.estado`, `.dato`,
+   `.pastilla`, `.aviso`— se reutiliza tal cual y no se repite aqui.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Marco
+   -------------------------------------------------------------------------- */
+
+.consola {
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-xl);
+  width: min(100% - 2 * var(--s-lg), 1320px);
+  margin-inline: auto;
+  padding: var(--s-xl) 0 var(--s-3xl);
+}
+
+/* El area de cuenta necesita mas ancho que el resto del sitio: `--maxw` son
+   1140px, pensados para texto, y la tabla de voluntariado tiene siete
+   columnas. Se ensancha SOLO aqui. */
+.consola-marco {
+  min-height: 70vh;
+  background: var(--bg-sunken);
+}
+
+/* --------------------------------------------------------------------------
+   Menu lateral
+   -------------------------------------------------------------------------- */
+
+.lateral {
+  position: sticky;
+  /* Bajo la cabecera fija, con aire. */
+  top: calc(var(--header-h) + var(--s-base));
+  align-self: start;
+  padding: var(--s-base);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.lateral__ficha {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 var(--s-sm) var(--s-base);
+  margin-bottom: var(--s-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+.lateral__nombre {
+  min-width: 0;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--navy-600);
+}
+/* Un nombre de entidad largo —«Asociacion de Vecinos de...»— no puede
+   empujar el menu ni salirse de la tarjeta. */
+.lateral__nombre span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lateral__nombre small {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-mute);
+}
+
+.lateral__grupo { margin-bottom: var(--s-base); }
+.lateral__grupo:last-of-type { margin-bottom: 0; }
+
+.lateral__titulo {
+  margin: 0 0 var(--s-sm);
+  padding-inline: var(--s-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.lateral__lista { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+
+.lateral__enlace {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px var(--s-sm);
+  border-radius: var(--r-md);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.lateral__enlace:hover { background: var(--n-50); color: var(--navy-600); }
+
+/* El mismo activo que la lista de conversaciones del chat: fondo suave y
+   una barra a la izquierda. Dos patrones distintos para «donde estoy» en el
+   mismo producto seria ruido. */
+.lateral__enlace[aria-current='page'] {
+  background: var(--navy-50);
+  box-shadow: inset 3px 0 0 var(--brand);
+  color: var(--navy-600);
+}
+
+.lateral__icono { flex: 0 0 auto; width: 18px; height: 18px; opacity: 0.85; }
+.lateral__enlace[aria-current='page'] .lateral__icono { opacity: 1; }
+
+.lateral__texto { flex: 1 1 auto; min-width: 0; }
+
+/* Cuantas cosas esperan detras de ese enlace. */
+.lateral__cuenta {
+  flex: 0 0 auto;
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--amber-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--navy-800);
+}
+.lateral__cuenta[hidden] { display: none; }
+
+.lateral__pie {
+  margin-top: var(--s-base);
+  padding-top: var(--s-base);
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: var(--s-xs);
+}
+
+/* --------------------------------------------------------------------------
+   Cabecera de pantalla
+   -------------------------------------------------------------------------- */
+
+.pantalla__cab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-base);
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--s-lg);
+}
+.pantalla__cab h1 {
+  margin: 0 0 4px;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.2;
+}
+.pantalla__cab p { margin: 0; color: var(--text-soft); }
+.pantalla__acciones { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+
+/* --------------------------------------------------------------------------
+   Aviso de emergencia
+   --------------------------------------------------------------------------
+   En navy y no en rojo: en rojo esta todo lo que ha salido mal, y una
+   emergencia activa no es un error de la pantalla, es el motivo por el que
+   alguien la ha abierto. */
+
+.emergencia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: center;
+  margin-bottom: var(--s-lg);
+  padding: var(--s-base) var(--s-lg);
+  border-radius: var(--r-lg);
+  background: var(--navy-600);
+  color: #fff;
+}
+.emergencia__punto {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber-500);
+}
+.emergencia strong { font-weight: 700; }
+/* Por clase y no `.emergencia span`: el punto de la izquierda tambien es un
+   span, y esa regla —mas especifica— lo estiraba en una barra. */
+.emergencia__texto { flex: 1 1 260px; font-size: 0.94rem; color: var(--navy-100); }
+.emergencia .btn { flex: 0 0 auto; }
+
+/* --------------------------------------------------------------------------
+   Cifras
+   -------------------------------------------------------------------------- */
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--s-base);
+  margin-bottom: var(--s-lg);
+}
+
+.cifra {
+  padding: var(--s-base) var(--s-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.cifra__clave {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.cifra__valor {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--navy-600);
+  /* Las cifras de una fila tienen que alinearse entre si. */
+  font-variant-numeric: tabular-nums;
+}
+.cifra__valor small { font-size: 0.9rem; font-weight: 600; color: var(--text-mute); }
+.cifra__pie { display: block; margin-top: 4px; font-size: 0.84rem; color: var(--text-soft); }
+
+/* --------------------------------------------------------------------------
+   Tarjetas
+   -------------------------------------------------------------------------- */
+
+.tarjeta {
+  margin-bottom: var(--s-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+.tarjeta:last-child { margin-bottom: 0; }
+
+.tarjeta__cab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-base) var(--s-lg);
+  border-bottom: 1px solid var(--border);
+}
+.tarjeta__cab h2 { margin: 0; font-size: 1.05rem; }
+.tarjeta__cab p { margin: 2px 0 0; font-size: 0.88rem; color: var(--text-soft); }
+.tarjeta__cuerpo { padding: var(--s-lg); }
+.tarjeta__cuerpo--liso { padding: 0; }
+
+.tarjeta__vacio {
+  padding: var(--s-2xl) var(--s-lg);
+  text-align: center;
+  color: var(--text-mute);
+}
+.tarjeta__vacio strong { display: block; margin-bottom: 6px; color: var(--text-soft); }
+
+.enlace-mas {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--navy-500);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.enlace-mas:hover { text-decoration: underline; }
+
+/* --------------------------------------------------------------------------
+   La cola: lo que espera respuesta
+   --------------------------------------------------------------------------
+   Es lo primero del panel a proposito. Quien coordina no entra a mirar
+   cifras: entra a resolver. */
+
+.cola { list-style: none; margin: 0; padding: 0; }
+
+.cola__fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: center;
+  padding: var(--s-base) var(--s-lg);
+  border-bottom: 1px solid var(--border);
+}
+.cola__fila:last-child { border-bottom: 0; }
+
+.cola__marca {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-md);
+  background: var(--navy-50);
+  font-size: 1rem;
+}
+.cola__marca--urgente { background: var(--amber-50); }
+
+.cola__texto { flex: 1 1 220px; min-width: 0; }
+.cola__texto strong { display: block; font-size: 0.96rem; color: var(--navy-700); }
+.cola__texto span { font-size: 0.86rem; color: var(--text-soft); }
+
+.cola__acciones { flex: 0 0 auto; display: flex; gap: var(--s-sm); }
+
+/* --------------------------------------------------------------------------
+   Tabla de datos
+   --------------------------------------------------------------------------
+   Con desplazamiento horizontal PROPIO. Siete columnas no caben en un movil
+   y la alternativa —que la pagina entera se desplace de lado— rompe el resto
+   del sitio. */
+
+.tabla-marco { overflow-x: auto; }
+
+.tabla {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+/* 12px a los lados y no 16: son siete columnas, y esos cuatro pixeles por
+   lado son cincuenta y seis en total —justo lo que sobraba en un portatil
+   de 1280 para que «Escribir» no saliera cortado. */
+.tabla th,
+.tabla td {
+  padding: 12px var(--s-md);
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+.tabla th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--n-50);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  white-space: nowrap;
+}
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover { background: var(--n-50); }
+.tabla tbody tr[data-marcada='true'] { background: var(--navy-50); }
+.tabla__num { text-align: right; font-variant-numeric: tabular-nums; }
+.tabla__estrecha { width: 44px; }
+.tabla input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--navy-600); cursor: pointer; }
+
+/* Persona: foto, nombre y correo en una celda. */
+.persona { display: flex; gap: 10px; align-items: center; min-width: 0; }
+/* Con tope: un correo largo —«coordinacion@asociacionvecinal...»— hacia
+   que la columna de nombres se llevara un tercio de la tabla. */
+.persona__texto { min-width: 0; max-width: 210px; }
+.persona__texto strong,
+.persona__texto small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.persona__texto strong { font-weight: 600; color: var(--navy-700); }
+.persona__texto small { font-size: 0.8rem; color: var(--text-mute); }
+
+.avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--navy-100);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--navy-600);
+  overflow: hidden;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar--grande { width: 44px; height: 44px; font-size: 1rem; }
+
+/* Etiquetas de habilidad dentro de una celda. El ancho maximo es lo que
+   impide que una persona con seis habilidades empuje media tabla fuera. */
+.etiquetas { display: flex; flex-wrap: wrap; gap: 4px; max-width: 230px; }
+.etiqueta {
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--n-100);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+.etiqueta--acreditada { background: var(--navy-50); color: var(--navy-600); }
+
+/* --------------------------------------------------------------------------
+   Validación de horas
+   -------------------------------------------------------------------------- */
+
+/* La segunda línea de una celda: la hora del fichaje, el día de la misión,
+   cuánto lleva esperando. Se repite en varias columnas y no puede ir con
+   estilos sueltos en el HTML que genera el guion. */
+.tabla td small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-mute);
+}
+
+/* La fila que se está editando se queda marcada mientras dura el
+   formulario: si no, con el formulario abierto debajo no se sabe de quién
+   son las horas que se están cambiando. */
+.tabla tbody tr[data-editando='true'] {
+  background: var(--navy-50);
+}
+.tabla tbody tr[data-editando='true'] td { border-bottom-color: transparent; }
+
+.parte-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: flex-end;
+  padding: var(--s-md) 0 var(--s-base);
+}
+
+.parte-form label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.parte-form label span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.parte-form input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: #fff;
+  font: inherit;
+  font-size: 0.94rem;
+}
+
+.parte-form__horas { flex: 0 0 110px; }
+.parte-form__horas input { font-variant-numeric: tabular-nums; }
+.parte-form__motivo { flex: 1 1 260px; }
+.parte-form__acciones { display: flex; gap: var(--s-sm); }
+
+.parte-form__error {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--red-600);
+}
+.parte-form__error[hidden] { display: none; }
+
+/* Un turno de más de dieciséis horas seguidas es casi siempre un fichaje que
+   se quedó abierto. Se marca para que se mire, no para que no se pueda
+   tocar: a veces una jornada larga es real y se ajusta a mano. */
+.horas-raras {
+  color: var(--red-600);
+  border-bottom: 2px dotted var(--red-600);
+  cursor: help;
+}
+
+/* --------------------------------------------------------------------------
+   Filtros y acciones en lote
+   -------------------------------------------------------------------------- */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  padding: var(--s-md) var(--s-lg);
+  border-bottom: 1px solid var(--border);
+  background: var(--n-50);
+}
+.filtros__buscar { flex: 1 1 220px; min-width: 0; }
+.filtros__buscar input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+}
+/* Los desplegables de la consola, estén en la barra de filtros o sueltos
+   en la cabecera de una pantalla. */
+.filtros input[type='date'] {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.filtros select,
+.pantalla__acciones select {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+}
+
+/* Aparece solo cuando hay algo marcado, y en navy: es una accion que afecta
+   a varias personas a la vez y tiene que verse que se ha entrado en otro
+   modo. */
+.lote {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: center;
+  padding: var(--s-md) var(--s-lg);
+  border-bottom: 1px solid var(--border);
+  background: var(--navy-600);
+  color: #fff;
+}
+.lote[hidden] { display: none; }
+.lote strong { font-size: 0.94rem; }
+.lote__hueco { flex: 1 1 auto; }
+
+/* --------------------------------------------------------------------------
+   Barra de ocupacion
+   -------------------------------------------------------------------------- */
+
+.ocupacion { display: flex; gap: 10px; align-items: center; }
+.ocupacion__barra {
+  flex: 1 1 auto;
+  min-width: 60px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--n-200);
+  overflow: hidden;
+}
+.ocupacion__relleno { display: block; height: 100%; border-radius: 3px; background: var(--green-600); }
+/* Una mision a medio cubrir no es un fallo, es algo que hay que atender. */
+.ocupacion__relleno[data-corta='true'] { background: var(--amber-500); }
+.ocupacion__cifra { flex: 0 0 auto; font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-soft); }
+
+/* --------------------------------------------------------------------------
+   Ficha de la proxima mision (lado voluntariado)
+   -------------------------------------------------------------------------- */
+
+.proxima {
+  margin-bottom: var(--s-lg);
+  padding: var(--s-lg);
+  border-radius: var(--r-lg);
+  background: var(--navy-600);
+  color: #fff;
+}
+.proxima__clave {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber-500);
+}
+.proxima h2 { margin: 0 0 var(--s-sm); font-size: 1.35rem; color: #fff; }
+.proxima__datos { display: grid; gap: 4px; margin-bottom: var(--s-base); font-size: 0.94rem; color: var(--navy-100); }
+.proxima__acciones { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+
+/* Sobre navy, el fantasma por defecto —borde gris, texto oscuro— no se lee. */
+.proxima .btn--ghost {
+  border-color: var(--navy-300);
+  background: transparent;
+  color: #fff;
+}
+.proxima .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* --------------------------------------------------------------------------
+   Rejilla de disponibilidad
+   -------------------------------------------------------------------------- */
+
+.disponibilidad {
+  display: grid;
+  grid-template-columns: auto repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  font-size: 0.8rem;
+}
+.disponibilidad__dia { text-align: center; font-weight: 700; color: var(--text-mute); }
+.disponibilidad__franja { display: grid; place-items: center; padding-right: var(--s-sm); font-weight: 600; color: var(--text-mute); }
+.disponibilidad__celda {
+  aspect-ratio: 1 / 1;
+  min-height: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.disponibilidad__celda:hover { border-color: var(--navy-300); }
+.disponibilidad__celda[aria-pressed='true'] { border-color: var(--navy-600); background: var(--navy-500); }
+
+/* --------------------------------------------------------------------------
+   Lista de dos columnas: clave a la izquierda, estado a la derecha
+   -------------------------------------------------------------------------- */
+
+.lista-estado { list-style: none; margin: 0; padding: 0; }
+.lista-estado li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-md);
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--s-lg);
+  border-bottom: 1px solid var(--border);
+}
+.lista-estado li:last-child { border-bottom: 0; }
+.lista-estado strong { font-weight: 600; color: var(--navy-700); }
+.lista-estado small { display: block; font-size: 0.84rem; font-weight: 400; color: var(--text-soft); }
+
+/* --------------------------------------------------------------------------
+   Movil y tableta
+   --------------------------------------------------------------------------
+   El lateral deja de ser una columna y pasa a ser una tira horizontal
+   deslizable sobre el contenido. Un cajon con boton de hamburguesa habria
+   escondido la navegacion detras de un toque mas justo en el sitio donde se
+   cambia de pantalla todo el rato. */
+
+@media (max-width: 1023px) {
+  .consola {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-base);
+    padding-top: var(--s-base);
+  }
+
+  .lateral {
+    position: static;
+    padding: var(--s-md);
+  }
+
+  .lateral__ficha { padding-bottom: var(--s-md); }
+
+  /* Los grupos se pierden en horizontal: sin titulos y todo en una tira. */
+  .lateral__titulo { display: none; }
+  .lateral__grupo { margin-bottom: 0; }
+
+  .lateral__navegacion {
+    display: flex;
+    gap: var(--s-sm);
+    overflow-x: auto;
+    /* Que el foco del teclado no quede cortado contra el borde. */
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
+  .lateral__lista { display: flex; gap: 4px; }
+
+  .lateral__enlace {
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+    padding: 8px 14px;
+    font-size: 0.88rem;
+  }
+  .lateral__enlace[aria-current='page'] {
+    border-color: var(--navy-600);
+    background: var(--navy-600);
+    box-shadow: none;
+    color: #fff;
+  }
+  .lateral__enlace[aria-current='page'] .lateral__cuenta {
+    background: var(--amber-500);
+    color: var(--navy-800);
+  }
+  .lateral__icono { display: none; }
+
+  .lateral__pie { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+  .lateral__pie .btn { flex: 1 1 auto; }
+}
+
+@media (max-width: 640px) {
+  .consola { width: min(100% - 2 * var(--s-base), 1320px); }
+  .cifra { padding: var(--s-md) var(--s-base); }
+  .cifra__valor { font-size: 1.55rem; }
+  .tarjeta__cab,
+  .tarjeta__cuerpo,
+  .cola__fila,
+  .filtros,
+  .lote,
+  .lista-estado li { padding-inline: var(--s-base); }
+  .cola__acciones { flex: 1 1 100%; }
+  .cola__acciones .btn { flex: 1 1 auto; }
+}
+
+/* Impresion: la memoria de actividad se imprime y se adjunta a una
+   justificacion de subvencion. Sin menu, sin botones y sin fondos. */
+@media print {
+  .header,
+  .footer,
+  .lateral,
+  .pantalla__acciones,
+  .filtros,
+  .lote,
+  .cola__acciones { display: none !important; }
+  .consola { display: block; width: 100%; padding: 0; }
+  .consola-marco { background: #fff; }
+  .tarjeta { break-inside: avoid; border-color: var(--n-300); }
+  .tabla { min-width: 0; }
+}
