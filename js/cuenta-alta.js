@@ -86,6 +86,101 @@
     return h ? h[idioma] || h.es : id;
   }
 
+  /* ---------------------------------------------------------------------
+     Documentos
+     ---------------------------------------------------------------------
+     El bucket es privado: nada se abre por una URL fija. Cada vez que
+     alguien pulsa «abrir» se pide una URL firmada que caduca en una hora
+     —lo que dura mirar un papel, no lo que dura un enlace reenviado.
+
+     Los limites se comprueban ANTES de subir. El servidor los aplica igual,
+     pero enterarse de que un PDF de veinte megas no vale despues de
+     esperar la subida entera es una forma tonta de gastarle a alguien los
+     datos del movil. */
+
+  var BUCKET_DOCS = 'documents';
+  var TAM_MAX = 10 * 1024 * 1024;
+
+  var MIMES_OK = [
+    'application/pdf', 'image/jpeg', 'image/png', 'image/heic',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ];
+
+  var TIPOS_DOC = ['cv', 'credential', 'other'];
+
+  function tarjetaDocumentos(d) {
+    var docs = d.documentos || [];
+
+    var lista = docs.length
+      ? '<ul class="lista-estado">' +
+        docs.map(function (x) {
+          var apunte = [
+            UI.T(TEXTO_DOC[x.kind] || 'c.perfil.docOtro'),
+            x.skill_id ? nombreHabilidad(x.skill_id) : '',
+            fechaSola(x.created_at),
+          ].filter(Boolean).join(' · ');
+
+          return (
+            '<li><span><strong>' + esc(x.title) + '</strong><small>' + esc(apunte) + '</small></span>' +
+            '<span class="cola__acciones">' +
+            (x.shared_with_orgs
+              ? '<span class="marca marca--ok">' + esc(UI.T('c.perfil.compartido')) + '</span>'
+              : '<span class="etiqueta">' + esc(UI.T('c.perfil.soloTuyo')) + '</span>') +
+            /* Sin ruta no hay archivo que abrir. No deberia pasar, pero si
+               pasa es mejor no ofrecer un boton que va a fallar. */
+            (x.storage_path
+              ? '<button class="btn btn--ghost btn--small" type="button" data-abrir="' + esc(x.id) + '">' +
+                esc(UI.T('c.perfil.abrir')) + '</button>'
+              : '') +
+            '<button class="btn btn--ghost btn--small" type="button" data-borrar-doc="' + esc(x.id) + '">' +
+            esc(UI.T('c.perfil.borrar')) + '</button>' +
+            '</span></li>'
+          );
+        }).join('') + '</ul>'
+      : '<div class="tarjeta__vacio">' + esc(UI.T('c.perfil.sinDocs')) + '</div>';
+
+    /* Las habilidades que tiene puestas: una acreditacion tiene que decir
+       QUE acredita, y solo puede acreditar algo que estes declarando. */
+    var suyas = (d.habilidades || []).map(function (h) {
+      return '<option value="' + esc(h.skill_id) + '">' + esc(nombreHabilidad(h.skill_id)) + '</option>';
+    }).join('');
+
+    var formulario =
+      '<div class="parte-form" id="doc-form" hidden>' +
+      '<label class="parte-form__motivo"><span>' + esc(UI.T('c.perfil.archivo')) + '</span>' +
+      '<input type="file" id="doc-archivo" accept="' + MIMES_OK.join(',') + '" /></label>' +
+      '<label class="parte-form__motivo"><span>' + esc(UI.T('c.perfil.titulo')) + '</span>' +
+      '<input type="text" id="doc-titulo" autocomplete="off" /></label>' +
+      '<label><span>' + esc(UI.T('c.perfil.tipo')) + '</span>' +
+      '<select id="doc-tipo">' +
+      TIPOS_DOC.map(function (t) {
+        return '<option value="' + t + '">' + esc(UI.T(TEXTO_DOC[t])) + '</option>';
+      }).join('') +
+      '</select></label>' +
+      '<label id="doc-hab-caja" hidden><span>' + esc(UI.T('c.a.habilidades')) + '</span>' +
+      '<select id="doc-hab">' + suyas + '</select></label>' +
+      '<label class="casilla" style="flex:1 1 100%"><input type="checkbox" id="doc-compartir" />' +
+      '<span>' + esc(UI.T('c.perfil.compartirSub')) + '</span></label>' +
+      '<span class="parte-form__acciones">' +
+      '<button class="btn btn--primary btn--small" type="button" id="doc-guardar">' +
+      esc(UI.T('c.a.guardar')) + '</button>' +
+      '<button class="btn btn--ghost btn--small" type="button" id="doc-cancelar">' +
+      esc(UI.T('c.a.cancelar')) + '</button></span>' +
+      '<p class="parte-form__error" id="doc-error" hidden></p>' +
+      '</div>';
+
+    return (
+      '<div class="tarjeta"><div class="tarjeta__cab"><div><h2>' + esc(UI.T('c.perfil.docs')) + '</h2>' +
+      '<p>' + esc(UI.T('c.perfil.docsSub')) + '</p></div>' +
+      '<button class="btn btn--primary btn--small" type="button" id="doc-nuevo">' +
+      esc(UI.T('c.perfil.subir')) + '</button></div>' +
+      lista +
+      '<div class="tarjeta__cuerpo">' + formulario + '</div>' +
+      '</div>'
+    );
+  }
+
   function pintarFicha(d) {
     var perfil = d.perfil;
     var idioma = document.documentElement.lang === 'de' ? 'de' : 'es';
@@ -127,31 +222,7 @@
         : '<div class="tarjeta__vacio">' + esc(UI.T('c.a.sinHabilidades')) + '</div>') +
       '</div>';
 
-    /* --- Documentos ---
-       Se listan, no se abren: la web todavia no habla con el almacen de
-       archivos, y un enlace que no descarga nada es peor que decirlo. */
-    var docs = d.documentos || [];
-    html +=
-      '<div class="tarjeta"><div class="tarjeta__cab"><h2>' + esc(UI.T('c.perfil.docs')) + '</h2>' +
-      '<p>' + esc(UI.T('c.perfil.docsSub')) + '</p></div>' +
-      (docs.length
-        ? '<ul class="lista-estado">' +
-          docs.map(function (x) {
-            var apunte = [
-              UI.T(TEXTO_DOC[x.kind] || 'c.perfil.docOtro'),
-              x.skill_id ? nombreHabilidad(x.skill_id) : '',
-              fechaSola(x.created_at),
-            ].filter(Boolean).join(' · ');
-            return (
-              '<li><span><strong>' + esc(x.title) + '</strong><small>' + esc(apunte) + '</small></span>' +
-              (x.shared_with_orgs
-                ? '<span class="marca marca--ok">' + esc(UI.T('c.perfil.compartido')) + '</span>'
-                : '<span class="etiqueta">' + esc(UI.T('c.perfil.soloTuyo')) + '</span>') +
-              '</li>'
-            );
-          }).join('') + '</ul>'
-        : '<div class="tarjeta__vacio">' + esc(UI.T('c.perfil.sinDocs')) + '</div>') +
-      '</div>';
+    html += tarjetaDocumentos(d);
 
     /* --- Lo que aceptaste, con su fecha --- */
     html += tarjeta('c.perfil.consent', [
@@ -164,6 +235,184 @@
 
     $('#ficha').innerHTML = html;
     if (UI.retraducir) UI.retraducir();
+    engancharDocumentos(d);
+  }
+
+  /* ---------------------------------------------------------------------
+     Documentos: abrir, subir y borrar
+     --------------------------------------------------------------------- */
+
+  function errorDoc(texto) {
+    var e = $('#doc-error');
+    if (!e) return;
+    e.textContent = texto || '';
+    e.hidden = !texto;
+  }
+
+  /** Un nombre de archivo que no traiga sorpresas dentro de una ruta. */
+  function nombreSeguro(nombre) {
+    return String(nombre || 'documento')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9._-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 80) || 'documento';
+  }
+
+  function abrirDocumento(doc, boton) {
+    UI.limpiarAvisos();
+    UI.ocupado(boton, true);
+
+    PFP.almacen
+      .firmar(BUCKET_DOCS, doc.storage_path, 3600)
+      .then(function (url) {
+        UI.ocupado(boton, false);
+        /* Pestaña nueva y sin `opener`: el enlace lleva un testigo de
+           acceso, y no conviene que la pagina destino pueda tocar esta. */
+        window.open(url, '_blank', 'noopener');
+      })
+      .catch(function (err) {
+        UI.ocupado(boton, false);
+        UI.avisar('aviso', UI.explicar(err), 'error');
+      });
+  }
+
+  function borrarDocumento(doc, datos, boton) {
+    UI.limpiarAvisos();
+    UI.ocupado(boton, true);
+
+    /* Primero el archivo y luego la ficha. Al reves, un fallo a mitad
+       dejaria una fila apuntando a algo que ya no existe; asi lo que puede
+       quedar suelto es un archivo sin ficha, que no se le enseña a nadie. */
+    PFP.almacen
+      .borrar(BUCKET_DOCS, doc.storage_path)
+      .then(function () {
+        return PFP.db.delete('profile_documents', 'id=eq.' + encodeURIComponent(doc.id));
+      })
+      .then(function () {
+        return recargarDocumentos(datos);
+      })
+      .catch(function (err) {
+        UI.ocupado(boton, false);
+        UI.avisar('aviso', UI.explicar(err), 'error');
+      });
+  }
+
+  function recargarDocumentos(datos) {
+    return PFP.db
+      .select(
+        'profile_documents',
+        'select=id,kind,title,storage_path,skill_id,shared_with_orgs,created_at&order=created_at.desc',
+      )
+      .then(function (docs) {
+        datos.documentos = docs || [];
+        pintarFicha(datos);
+      });
+  }
+
+  function subirDocumento(datos, boton) {
+    errorDoc('');
+
+    var entrada = $('#doc-archivo');
+    var archivo = entrada && entrada.files && entrada.files[0];
+    if (!archivo) return errorDoc(UI.T('c.perfil.errArchivo'));
+
+    if (archivo.size > TAM_MAX) return errorDoc(UI.T('c.perfil.errTam'));
+    if (MIMES_OK.indexOf(archivo.type) === -1) return errorDoc(UI.T('c.perfil.errTipo'));
+
+    var titulo = ($('#doc-titulo').value || '').trim() || archivo.name;
+    var tipo = $('#doc-tipo').value;
+    var habilidad = tipo === 'credential' ? $('#doc-hab').value || null : null;
+    var compartir = $('#doc-compartir').checked;
+
+    if (tipo === 'credential' && !habilidad) return errorDoc(UI.T('c.perfil.errHabilidad'));
+
+    /* La ruta EMPIEZA por el identificador de quien sube: es lo que mira la
+       politica del almacen para decidir de quien es la carpeta. */
+    var ruta = datos.perfil.id + '/' + Date.now() + '-' + nombreSeguro(archivo.name);
+
+    UI.ocupado(boton, true);
+
+    PFP.almacen
+      .subir(BUCKET_DOCS, ruta, archivo, archivo.type)
+      .then(function () {
+        return PFP.db.insert('profile_documents', {
+          profile_id: datos.perfil.id,
+          kind: tipo,
+          title: titulo,
+          storage_path: ruta,
+          mime_type: archivo.type,
+          size_bytes: archivo.size,
+          skill_id: habilidad,
+          shared_with_orgs: compartir,
+        });
+      })
+      .then(function () {
+        return recargarDocumentos(datos);
+      })
+      .then(function () {
+        UI.avisar('aviso', UI.T('c.perfil.subido'), 'ok');
+      })
+      .catch(function (err) {
+        UI.ocupado(boton, false);
+        errorDoc(UI.explicar(err));
+      });
+  }
+
+  function engancharDocumentos(datos) {
+    var porId = {};
+    (datos.documentos || []).forEach(function (x) { porId[x.id] = x; });
+
+    $$('[data-abrir]').forEach(function (b) {
+      b.addEventListener('click', function () { abrirDocumento(porId[b.dataset.abrir], b); });
+    });
+
+    $$('[data-borrar-doc]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var doc = porId[b.dataset.borrarDoc];
+        /* Se pregunta: borrar un documento no tiene vuelta atras, y el
+           archivo se va del almacen. */
+        if (!window.confirm(UI.T('c.perfil.confirmarBorrar').replace('{t}', doc.title))) return;
+        borrarDocumento(doc, datos, b);
+      });
+    });
+
+    var nuevo = $('#doc-nuevo');
+    var form = $('#doc-form');
+    if (nuevo && form) {
+      nuevo.addEventListener('click', function () {
+        form.hidden = !form.hidden;
+        if (!form.hidden) $('#doc-archivo').focus();
+      });
+    }
+
+    var tipo = $('#doc-tipo');
+    if (tipo) {
+      tipo.addEventListener('change', function () {
+        $('#doc-hab-caja').hidden = tipo.value !== 'credential';
+      });
+    }
+
+    /* El titulo se propone con el nombre del archivo: casi siempre es el
+       bueno, y escribirlo otra vez es trabajo sin premio. */
+    var archivo = $('#doc-archivo');
+    if (archivo) {
+      archivo.addEventListener('change', function () {
+        var f = archivo.files && archivo.files[0];
+        if (f && !$('#doc-titulo').value) $('#doc-titulo').value = f.name;
+      });
+    }
+
+    var guardar = $('#doc-guardar');
+    if (guardar) guardar.addEventListener('click', function () { subirDocumento(datos, this); });
+
+    var cancelar = $('#doc-cancelar');
+    if (cancelar) {
+      cancelar.addEventListener('click', function () {
+        errorDoc('');
+        form.hidden = true;
+      });
+    }
   }
 
   function paginaVoluntario() {
@@ -183,7 +432,10 @@
           ),
           PFP.db.rpc('my_skills').catch(function () { return []; }),
           PFP.db
-            .select('profile_documents', 'select=id,kind,title,skill_id,shared_with_orgs,created_at&order=created_at.desc')
+            .select(
+              'profile_documents',
+              'select=id,kind,title,storage_path,skill_id,shared_with_orgs,created_at&order=created_at.desc',
+            )
             .catch(function () { return []; }),
         ]);
       })
@@ -508,11 +760,105 @@
     ['company', 'c.org.emp', 'c.org.empSub'],
   ];
 
+  /* ---------------------------------------------------------------------
+     La ficha de la entidad
+     ---------------------------------------------------------------------
+     Lo que hay dado de alta, sin poder tocarlo, y editar aparte. Igual que
+     en «Mi perfil», y por el mismo motivo: a esta pantalla se viene sobre
+     todo a comprobar —¿estamos verificados?, ¿qué CIF consta?— y no a
+     escribir. */
+
+  var TEXTO_TIPO = {};
+  TIPOS.forEach(function (t) { TEXTO_TIPO[t[0]] = t[1]; });
+
+  function pintarFichaOrg(d) {
+    var o = d.org;
+
+    var marcaVer = o.verified_at
+      ? '<span class="marca marca--ok">' + esc(UI.T('c.mi.verificada')) + '</span>'
+      : '<span class="marca marca--espera">' + esc(UI.T('c.mi.enRevision')) + '</span>';
+
+    var marcaTam = o.size_confirmed_at
+      ? '<span class="marca marca--ok">' + esc(UI.T('c.org.tamConfirmado')) + '</span>'
+      : '<span class="marca marca--espera">' + esc(UI.T('c.org.tamSinConfirmar')) + '</span>';
+
+    var html = '';
+
+    /* Lo que identifica a la entidad. No se edita desde aquí: cambiar la
+       razón social o el CIF obliga a verificarla otra vez, y el permiso de
+       escritura del servidor tampoco lo deja. Se dice, en vez de dejar un
+       campo que fallaría al guardar. */
+    html +=
+      '<div class="tarjeta"><div class="tarjeta__cab"><div><h2>' + esc(UI.T('c.org.identidad')) + '</h2>' +
+      '<p>' + esc(UI.T('c.org.identidadSub')) + '</p></div>' + marcaVer + '</div>' +
+      '<ul class="lista-estado">' +
+      dato('c.org.nombre', o.display_name) +
+      dato('c.org.razon', o.legal_name) +
+      dato('c.org.cif', o.tax_id) +
+      dato('c.org.tipoFicha', o.kind ? UI.T(TEXTO_TIPO[o.kind] || 'c.org.tipo') : '') +
+      '</ul></div>';
+
+    /* Dónde y cómo localizarla. */
+    html +=
+      '<div class="tarjeta"><div class="tarjeta__cab"><h2>' + esc(UI.T('c.org.contacto')) + '</h2></div>' +
+      '<ul class="lista-estado">' +
+      dato('c.org.direccion',
+        [o.street, o.postal_code, o.city, o.province].filter(Boolean).join(', ')) +
+      dato('c.vol.tel', o.contact_phone) +
+      dato('c.email', o.contact_email) +
+      dato('c.org.webFicha', o.website) +
+      dato('c.perfil.ubicacion', UI.T(o.location ? 'c.perfil.ubiGuardada' : 'c.perfil.ubiNo')) +
+      '</ul></div>';
+
+    /* Tamaño y plan: es lo que decide la tarifa. */
+    html +=
+      '<div class="tarjeta"><div class="tarjeta__cab"><div><h2>' + esc(UI.T('c.org.tamano')) + '</h2>' +
+      '<p>' + esc(UI.T('c.org.tamanoSub')) + '</p></div>' + marcaTam + '</div>' +
+      '<ul class="lista-estado">' +
+      dato('c.org.tamDeclarado', o.size_metric != null ? String(o.size_metric) : '') +
+      dato('c.org.tramo', o.size_tier ? UI.T('c.pl.t.' + o.size_tier) : '') +
+      '</ul></div>';
+
+    $('#ficha').innerHTML = html;
+    if (UI.retraducir) UI.retraducir();
+  }
+
   function paginaOrganizacion() {
     if (!UI.exigirSesion()) return;
 
-    var tipo = 'ngo';
+    var datos = { yo: null, org: null };
+
+    PFP.consola
+      .montar()
+      .then(function (estado) {
+        datos.yo = estado.perfil;
+        if (!estado.organizacion) return null;
+
+        return PFP.db.select(
+          'organizations',
+          'select=id,kind,legal_name,display_name,tax_id,street,city,province,postal_code,' +
+            'country,location,contact_email,contact_phone,website,verified_at,' +
+            'size_metric,size_tier,size_confirmed_at&id=eq.' +
+            encodeURIComponent(estado.organizacion.id) + '&limit=1',
+        );
+      })
+      .then(function (filas) {
+        datos.org = (filas || [])[0] || null;
+        montarFormularioOrg(datos);
+      })
+      .catch(function (err) {
+        if (err && err.codigo === 'sin_sesion') return UI.ir('entrar.html');
+        UI.avisar('aviso', UI.explicar(err), 'error');
+      });
+  }
+
+  function montarFormularioOrg(datos) {
+    var existe = !!datos.org;
+    var org = datos.org || {};
+
+    var tipo = org.kind || 'ngo';
     var punto = null;
+    var ubicacionTocada = false;
 
     var cajaTipos = $('#tipos');
     TIPOS.forEach(function (t) {
@@ -631,6 +977,65 @@
       if (campoCif.value.trim()) campoCif.value = window.PFP_NIF.normalizar(campoCif.value);
     });
 
+    /* --- Lo que ya hay, dentro del formulario --- */
+    if (existe) {
+      $('#razon').value = org.legal_name || '';
+      $('#nombre').value = org.display_name || '';
+      campoCif.value = org.tax_id || '';
+      $('#calle').value = org.street || '';
+      $('#ciudad').value = org.city || '';
+      $('#provincia').value = org.province || '';
+      $('#cp').value = org.postal_code || '';
+      $('#telefono').value = org.contact_phone || '';
+      if ($('#web')) $('#web').value = org.website || '';
+      if (org.size_metric != null) campoTamano.value = String(org.size_metric);
+      $('#acepta').checked = true;
+      casillaUbi.checked = !!org.location;
+      if (org.location) estadoUbi.textContent = UI.T('c.perfil.ubiGuardada');
+      pintarTamano();
+
+      /* La razón social, el CIF y el tipo no se editan: cambiarlos obliga a
+         verificar otra vez, y el servidor tampoco deja escribir esas
+         columnas. Un campo abierto que falla al guardar es peor que uno
+         cerrado que explica por qué. */
+      ['razon', 'cif'].forEach(function (id) {
+        var c = $('#' + id);
+        if (c) { c.readOnly = true; c.setAttribute('aria-readonly', 'true'); }
+      });
+      $$('#tipos .opcion').forEach(function (b) { b.disabled = true; });
+      var avisoFijos = document.createElement('p');
+      avisoFijos.className = 'field__hint';
+      avisoFijos.textContent = UI.T('c.org.fijosAviso');
+      campoCif.parentNode.appendChild(avisoFijos);
+    }
+
+    function modoEdicionOrg(si) {
+      $('#editor').hidden = !si;
+      $('#ficha').hidden = si;
+      $('#org-acciones').innerHTML = si
+        ? (existe
+            ? '<button class="btn btn--ghost btn--small" type="button" id="btn-cancelar-org">' +
+              esc(UI.T('c.a.cancelar')) + '</button>'
+            : '')
+        : '<button class="btn btn--primary btn--small" type="button" id="btn-editar-org">' +
+          esc(UI.T('c.perfil.editar')) + '</button>';
+
+      var editar = $('#btn-editar-org');
+      if (editar) editar.addEventListener('click', function () { modoEdicionOrg(true); });
+
+      var cancelar = $('#btn-cancelar-org');
+      if (cancelar) {
+        cancelar.addEventListener('click', function () {
+          UI.limpiarAvisos();
+          modoEdicionOrg(false);
+        });
+      }
+    }
+
+    if (existe) pintarFichaOrg(datos);
+    else $('#ficha').innerHTML = '';
+    modoEdicionOrg(!existe);
+
     $('#form-organizacion').addEventListener('submit', function (ev) {
       ev.preventDefault();
       UI.limpiarAvisos();
@@ -643,15 +1048,25 @@
       var provincia = $('#provincia').value.trim();
       var cp = $('#cp').value.trim();
       var telefono = $('#telefono').value.trim();
+      /* Sin declararla, `web` no era el valor del campo: era el PROPIO campo.
+         Un elemento con `id="web"` cuelga del objeto global con ese nombre,
+         asi que `website: web` viajaba al servidor como un objeto vacio. */
+      var web = ($('#web') && $('#web').value.trim()) || '';
       var acepta = $('#acepta').checked;
 
-      if (razon.length < 3) return UI.avisar('aviso', UI.T('c.org.errRazon'));
+      /* La razón social y el CIF solo se comprueban al DAR DE ALTA, que es
+         cuando se escriben. Editando están bloqueados y no se mandan, así
+         que validarlos dejaría a una entidad con una errata antigua sin
+         poder cambiar ni su dirección. */
+      if (!existe) {
+        if (razon.length < 3) return UI.avisar('aviso', UI.T('c.org.errRazon'));
+        if (!window.PFP_NIF.valido(cif)) {
+          return UI.avisar('aviso', UI.T('c.org.errCif'));
+        }
+      }
+
       if (nombre.length < 2) return UI.avisar('aviso', UI.T('c.org.errNombre'));
       var tamano = Number(campoTamano.value.replace(/\D/g, '')) || 0;
-
-      if (!window.PFP_NIF.valido(cif)) {
-        return UI.avisar('aviso', UI.T('c.org.errCif'));
-      }
       if (calle.length < 3) return UI.avisar('aviso', UI.T('c.org.errCalle'));
       if (ciudad.length < 2) return UI.avisar('aviso', UI.T('c.org.errCiudad'));
       if (!provincia) return UI.avisar('aviso', UI.T('c.org.errProvincia'));
@@ -664,6 +1079,61 @@
 
       var boton = $('#btn-crear');
       UI.ocupado(boton, true, UI.T('c.org.enviando'));
+
+      /* --- Editando: se actualiza lo que el servidor deja actualizar --- */
+      if (existe) {
+        var cambiosOrg = {
+          display_name: nombre,
+          street: calle,
+          city: ciudad,
+          province: provincia,
+          postal_code: cp,
+          contact_phone: telefono,
+          website: web || null,
+        };
+
+        /* La ubicación solo si se ha tocado la casilla: `punto` únicamente
+           tiene valor cuando se acaba de dar permiso, y mandarlo siempre
+           borraría la que ya había al cambiar cualquier otra cosa. */
+        if (ubicacionTocada) {
+          cambiosOrg.location = punto
+            ? 'SRID=4326;POINT(' + punto.lng + ' ' + punto.lat + ')'
+            : null;
+        }
+
+        return PFP.db
+          .update('organizations', 'id=eq.' + encodeURIComponent(org.id), cambiosOrg)
+          .then(function () {
+            /* El tamaño va por su función, no por un UPDATE: recalcula el
+               tramo y anula la confirmación anterior, que es lo que tiene
+               que pasar si una entidad pasa de cuarenta a cuatrocientas
+               personas. Solo se llama si ha cambiado, para no invalidar una
+               confirmación sin motivo. */
+            if (tamano === org.size_metric) return null;
+            return PFP.db.rpc('declare_org_size', { p_org: org.id, p_metric: tamano });
+          })
+          .then(function () {
+            return PFP.db.select(
+              'organizations',
+              'select=id,kind,legal_name,display_name,tax_id,street,city,province,postal_code,' +
+                'country,location,contact_email,contact_phone,website,verified_at,' +
+                'size_metric,size_tier,size_confirmed_at&id=eq.' +
+                encodeURIComponent(org.id) + '&limit=1',
+            );
+          })
+          .then(function (filas) {
+            datos.org = (filas || [])[0] || datos.org;
+            org = datos.org;
+            UI.ocupado(boton, false);
+            pintarFichaOrg(datos);
+            modoEdicionOrg(false);
+            UI.avisar('aviso', UI.T('c.a.guardado'), 'ok');
+          })
+          .catch(function (e) {
+            UI.ocupado(boton, false);
+            UI.avisar('aviso', UI.explicar(e));
+          });
+      }
 
       PFP.db
         .select('profiles', 'select=id,email&limit=1')

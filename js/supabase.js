@@ -181,10 +181,22 @@
       for (var k in opciones.cabeceras) cabeceras[k] = opciones.cabeceras[k];
     }
 
+    /* `crudo` manda el cuerpo tal cual —un archivo— en vez de convertirlo
+       a JSON. Y entonces el tipo lo pone quien llama: un PDF no es
+       `application/json`. */
+    var cuerpo;
+    if (opciones.crudo !== undefined) {
+      cuerpo = opciones.crudo;
+      delete cabeceras['Content-Type'];
+      if (opciones.tipo) cabeceras['Content-Type'] = opciones.tipo;
+    } else if (opciones.cuerpo) {
+      cuerpo = JSON.stringify(opciones.cuerpo);
+    }
+
     return fetch(URL_BASE + ruta, {
       method: opciones.metodo || 'GET',
       headers: cabeceras,
-      body: opciones.cuerpo ? JSON.stringify(opciones.cuerpo) : undefined,
+      body: cuerpo,
     })
       .catch(function () {
         throw PfpError('network', 'Sin conexión con el servidor.');
@@ -478,11 +490,72 @@
     },
   };
 
+  /* ---------------------------------------------------------------------
+     Archivos
+     ---------------------------------------------------------------------
+     Los buckets de documentos son PRIVADOS: nada se sirve por una URL fija.
+     Para abrir algo se pide una URL firmada que caduca, y quien pueda
+     firmarla lo deciden las politicas del servidor —la ruta empieza por el
+     identificador del dueño y ahi se apoyan—. Este modulo no decide nada:
+     solo sabe pedirlo. */
+
+  var almacen = {
+    /**
+     * Sube un archivo.
+     *
+     * `ruta` tiene que empezar por el identificador de quien sube, porque es
+     * lo que mira la politica. No se comprueba aqui: si se equivoca, el
+     * servidor dice que no, que es donde tiene que decirse.
+     */
+    subir: function (bucket, ruta, archivo, tipo) {
+      return pedirAuth('/storage/v1/object/' + bucket + '/' + rutaSegura(ruta), {
+        metodo: 'POST',
+        crudo: archivo,
+        tipo: tipo || archivo.type || 'application/octet-stream',
+        // Nunca se pisa un archivo que ya este: cada subida lleva su marca
+        // de tiempo en el nombre, asi que un choque solo puede ser un error.
+        cabeceras: { 'x-upsert': 'false' },
+      });
+    },
+
+    /**
+     * Una URL para abrir un archivo privado, valida un rato.
+     *
+     * Una hora por defecto: lo que dura mirar un papel, no lo que dura un
+     * enlace que se reenvia por ahi.
+     */
+    firmar: function (bucket, ruta, segundos) {
+      return pedirAuth('/storage/v1/object/sign/' + bucket + '/' + rutaSegura(ruta), {
+        metodo: 'POST',
+        cuerpo: { expiresIn: segundos || 3600 },
+      }).then(function (r) {
+        if (!r || !r.signedURL) throw PfpError('unknown', 'El servidor no ha devuelto el enlace.');
+        return URL_BASE + '/storage/v1' + r.signedURL;
+      });
+    },
+
+    borrar: function (bucket, ruta) {
+      return pedirAuth('/storage/v1/object/' + bucket + '/' + rutaSegura(ruta), {
+        metodo: 'DELETE',
+      });
+    },
+  };
+
+  /* Cada tramo va escapado por separado: la barra separa carpetas y no debe
+     escaparse, pero un nombre con espacios o acentos si. */
+  function rutaSegura(ruta) {
+    return String(ruta)
+      .split('/')
+      .map(encodeURIComponent)
+      .join('/');
+  }
+
   window.PFP = {
     configurado: !!(URL_BASE && ANON),
     auth: auth,
     db: db,
     fn: fn,
+    almacen: almacen,
     error: PfpError,
   };
 })();
