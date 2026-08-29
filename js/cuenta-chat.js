@@ -818,7 +818,13 @@
       envio = PFP.db
         .insert(
           'messages',
-          { thread_owner: p.duenyo, thread_kind: p.clase2, body: texto, kind: 'text' },
+          {
+            sender_id: yo,
+            thread_owner: p.duenyo,
+            thread_kind: p.clase2,
+            body: texto,
+            kind: 'text',
+          },
           true,
         )
         .then(function (r) {
@@ -831,7 +837,11 @@
           return r;
         });
     } else {
-      var fila = { body: texto, kind: 'text' };
+      /* `sender_id` va explicito: la columna no tiene valor por defecto y la
+         politica de escritura exige que sea quien firma la sesion. Sin el, el
+         servidor responde «new row violates row-level security policy», que
+         suena a permisos y en realidad era una columna sin rellenar. */
+      var fila = { sender_id: yo, body: texto, kind: 'text' };
       fila[p.columna] = p.ref;
       if (p.columna === 'organization_id') fila.admin_only = !!p.soloResponsables;
       envio = PFP.db.insert('messages', fila, true);
