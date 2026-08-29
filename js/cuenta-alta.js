@@ -34,13 +34,186 @@
      ALTA DE VOLUNTARIO
      ===================================================================== */
 
+  /* ---------------------------------------------------------------------
+     La ficha
+     ---------------------------------------------------------------------
+     Todo lo que hay dado de alta, sin poder tocarlo. Editar es un paso
+     aparte y a propositio: en esta pantalla se viene sobre todo a MIRAR
+     —comprobar que el telefono es el bueno antes de una emergencia— y un
+     formulario abierto invita a cambiar algo sin querer. */
+
+  function esc(t) {
+    return UI.escapar ? UI.escapar(t) : String(t == null ? '' : t);
+  }
+
+  function dato(clave, valor, apunte) {
+    return (
+      '<li><span><strong>' + esc(UI.T(clave)) + '</strong>' +
+      (apunte ? '<small>' + esc(apunte) + '</small>' : '') + '</span>' +
+      '<span class="estado__valor">' +
+      (valor ? esc(valor) : '<span class="marca marca--espera">' + esc(UI.T('c.perfil.sinDato')) + '</span>') +
+      '</span></li>'
+    );
+  }
+
+  function tarjeta(titulo, filas) {
+    return (
+      '<div class="tarjeta"><div class="tarjeta__cab"><h2>' + esc(UI.T(titulo)) + '</h2></div>' +
+      '<ul class="lista-estado">' + filas.join('') + '</ul></div>'
+    );
+  }
+
+  function fechaSola(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString(document.documentElement.lang === 'de' ? 'de-DE' : 'es-ES', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+  }
+
+  var TEXTO_MODO = {
+    emergency_only: 'c.vol.modoEmergencia',
+    scheduled_only: 'c.vol.modoPlan',
+    both: 'c.vol.modoAmbos',
+  };
+
+  var TEXTO_DOC = { cv: 'c.perfil.docCv', credential: 'c.perfil.docAcred', other: 'c.perfil.docOtro' };
+
+  function nombreHabilidad(id) {
+    var idioma = document.documentElement.lang === 'de' ? 'de' : 'es';
+    var h = (window.PFP_HABILIDADES || []).filter(function (x) { return x.id === id; })[0];
+    return h ? h[idioma] || h.es : id;
+  }
+
+  function pintarFicha(d) {
+    var perfil = d.perfil;
+    var idioma = document.documentElement.lang === 'de' ? 'de' : 'es';
+
+    var html = '';
+
+    /* --- Quien eres --- */
+    html += tarjeta('c.perfil.identidad', [
+      dato('c.perfil.nombre', perfil.full_name),
+      dato('c.email', perfil.email),
+      dato('c.vol.tel', perfil.phone, UI.T('c.vol.telAyuda')),
+      dato('c.perfil.donde', [perfil.city, perfil.province].filter(Boolean).join(', ')),
+    ]);
+
+    /* --- Como puedes ayudar --- */
+    html += tarjeta('c.perfil.ayuda', [
+      dato('c.perfil.avisos', perfil.response_mode ? UI.T(TEXTO_MODO[perfil.response_mode]) : ''),
+      dato('c.perfil.distancia', perfil.max_travel_distance_m
+        ? Math.round(perfil.max_travel_distance_m / 1000) + ' km' : ''),
+      dato('c.perfil.vehiculo', UI.T(perfil.has_vehicle ? 'c.perfil.si' : 'c.perfil.no')),
+      dato('c.perfil.ubicacion', UI.T(perfil.home_location ? 'c.perfil.ubiGuardada' : 'c.perfil.ubiNo')),
+    ]);
+
+    /* --- Habilidades --- */
+    var hab = d.habilidades || [];
+    html +=
+      '<div class="tarjeta"><div class="tarjeta__cab"><h2>' + esc(UI.T('c.a.habilidades')) + '</h2></div>' +
+      (hab.length
+        ? '<div class="tarjeta__cuerpo"><div class="etiquetas">' +
+          hab.map(function (h) {
+            return (
+              '<span class="etiqueta' + (h.status === 'verified' ? ' etiqueta--acreditada' : '') + '">' +
+              esc(nombreHabilidad(h.skill_id)) +
+              (h.requires_credential && h.status !== 'verified'
+                ? ' · ' + esc(UI.T('c.a.sNone')) : '') +
+              '</span>'
+            );
+          }).join('') + '</div></div>'
+        : '<div class="tarjeta__vacio">' + esc(UI.T('c.a.sinHabilidades')) + '</div>') +
+      '</div>';
+
+    /* --- Documentos ---
+       Se listan, no se abren: la web todavia no habla con el almacen de
+       archivos, y un enlace que no descarga nada es peor que decirlo. */
+    var docs = d.documentos || [];
+    html +=
+      '<div class="tarjeta"><div class="tarjeta__cab"><h2>' + esc(UI.T('c.perfil.docs')) + '</h2>' +
+      '<p>' + esc(UI.T('c.perfil.docsSub')) + '</p></div>' +
+      (docs.length
+        ? '<ul class="lista-estado">' +
+          docs.map(function (x) {
+            var apunte = [
+              UI.T(TEXTO_DOC[x.kind] || 'c.perfil.docOtro'),
+              x.skill_id ? nombreHabilidad(x.skill_id) : '',
+              fechaSola(x.created_at),
+            ].filter(Boolean).join(' · ');
+            return (
+              '<li><span><strong>' + esc(x.title) + '</strong><small>' + esc(apunte) + '</small></span>' +
+              (x.shared_with_orgs
+                ? '<span class="marca marca--ok">' + esc(UI.T('c.perfil.compartido')) + '</span>'
+                : '<span class="etiqueta">' + esc(UI.T('c.perfil.soloTuyo')) + '</span>') +
+              '</li>'
+            );
+          }).join('') + '</ul>'
+        : '<div class="tarjeta__vacio">' + esc(UI.T('c.perfil.sinDocs')) + '</div>') +
+      '</div>';
+
+    /* --- Lo que aceptaste, con su fecha --- */
+    html += tarjeta('c.perfil.consent', [
+      dato('c.perfil.acuerdo',
+        perfil.agreement_accepted_at ? fechaSola(perfil.agreement_accepted_at) : '',
+        perfil.agreement_version ? UI.T('c.perfil.version') + ' ' + perfil.agreement_version : ''),
+      dato('c.perfil.privacidad',
+        perfil.privacy_accepted_at ? fechaSola(perfil.privacy_accepted_at) : ''),
+    ]);
+
+    $('#ficha').innerHTML = html;
+    if (UI.retraducir) UI.retraducir();
+  }
+
   function paginaVoluntario() {
     if (!UI.exigirSesion()) return;
 
+    var datos = { perfil: null, habilidades: [], documentos: [] };
+
+    PFP.consola
+      .montar()
+      .then(function () {
+        return Promise.all([
+          PFP.db.select(
+            'profiles',
+            'select=id,full_name,email,phone,city,province,photo_url,response_mode,' +
+              'max_travel_distance_m,has_vehicle,home_location,agreement_version,' +
+              'agreement_accepted_at,privacy_accepted_at,location_consent_at,onboarding_complete&limit=1',
+          ),
+          PFP.db.rpc('my_skills').catch(function () { return []; }),
+          PFP.db
+            .select('profile_documents', 'select=id,kind,title,skill_id,shared_with_orgs,created_at&order=created_at.desc')
+            .catch(function () { return []; }),
+        ]);
+      })
+      .then(function (r) {
+        datos.perfil = (r[0] || [])[0];
+        if (!datos.perfil) throw PFP.error('sin_sesion');
+        datos.habilidades = r[1] || [];
+        datos.documentos = r[2] || [];
+
+        montarEditorVoluntario(datos);
+      })
+      .catch(function (err) {
+        if (err && err.codigo === 'sin_sesion') return UI.ir('entrar.html');
+        UI.avisar('aviso', UI.explicar(err), 'error');
+      });
+  }
+
+  function montarEditorVoluntario(datos) {
+    var perfil = datos.perfil;
+
+    /* El estado del formulario arranca de lo que ya hay, no de los valores
+       por defecto: si no, abrir a editar y guardar sin tocar nada dejaria a
+       cualquiera con diez kilometros y sin habilidades. */
     var elegidas = {};
-    var distancia = 10000;
-    var modo = 'both';
+    (datos.habilidades || []).forEach(function (h) { elegidas[h.skill_id] = true; });
+
+    var distancia = perfil.max_travel_distance_m || 10000;
+    var modo = perfil.response_mode || 'both';
     var punto = null;
+    var ubicacionTocada = false;
 
     /* --- Modo de respuesta --- */
     var cajaModos = $('#modos');
@@ -108,7 +281,7 @@
         b.setAttribute('data-es', h.es + (h.cred ? ' \u00b7 ' + window.I18N.es['c.vol.acreditacion'] : ''));
         b.setAttribute('data-de', h.de + (h.cred ? ' \u00b7 ' + window.I18N.de['c.vol.acreditacion'] : ''));
         b.textContent = b.getAttribute('data-' + (document.documentElement.lang || 'es'));
-        b.setAttribute('aria-pressed', 'false');
+        b.setAttribute('aria-pressed', String(!!elegidas[h.id]));
         b.addEventListener('click', function () {
           if (elegidas[h.id]) delete elegidas[h.id];
           else elegidas[h.id] = true;
@@ -127,6 +300,7 @@
     var estadoUbi = $('#estado-ubicacion');
 
     casillaUbi.addEventListener('change', function () {
+      ubicacionTocada = true;
       if (!casillaUbi.checked) {
         punto = null;
         estadoUbi.textContent = '';
@@ -152,6 +326,50 @@
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
       );
     });
+
+    /* --- Lo que ya hay, dentro del formulario --- */
+    $('#telefono').value = perfil.phone || '';
+    $('#ciudad').value = perfil.city || '';
+    $('#provincia').value = perfil.province || '';
+    $('#vehiculo').checked = !!perfil.has_vehicle;
+    /* El acuerdo ya aceptado se enseña marcado: obligar a volver a marcarlo
+       para cambiar un teléfono haría pensar que se está aceptando otra vez
+       algo que ya se aceptó. */
+    $('#acuerdo').checked = !!perfil.agreement_accepted_at;
+    casillaUbi.checked = !!perfil.home_location;
+    if (perfil.home_location) estadoUbi.textContent = UI.T('c.perfil.ubiGuardada');
+
+    /* --- Ficha o formulario ---
+       Con el perfil sin terminar se abre directo el formulario: esta pantalla
+       es también el alta, y a quien acaba de registrarse no se le enseña una
+       ficha vacía con un botón. */
+    var completo = !!perfil.onboarding_complete;
+
+    function modoEdicion(si) {
+      $('#editor').hidden = !si;
+      $('#ficha').hidden = si;
+      $('#perfil-acciones').innerHTML = si
+        ? (completo
+            ? '<button class="btn btn--ghost btn--small" type="button" id="btn-cancelar">' +
+              esc(UI.T('c.a.cancelar')) + '</button>'
+            : '')
+        : '<button class="btn btn--primary btn--small" type="button" id="btn-editar">' +
+          esc(UI.T('c.perfil.editar')) + '</button>';
+
+      var editar = $('#btn-editar');
+      if (editar) editar.addEventListener('click', function () { modoEdicion(true); });
+
+      var cancelar = $('#btn-cancelar');
+      if (cancelar) {
+        cancelar.addEventListener('click', function () {
+          UI.limpiarAvisos();
+          modoEdicion(false);
+        });
+      }
+    }
+
+    pintarFicha(datos);
+    modoEdicion(!completo);
 
     /* --- Envío --- */
     $('#form-voluntario').addEventListener('submit', function (ev) {
@@ -193,15 +411,35 @@
             has_vehicle: vehiculo,
             response_mode: modo,
             max_travel_distance_m: distancia,
-            // PostGIS acepta WKT por texto. Igual que en la app.
-            home_location: punto ? 'SRID=4326;POINT(' + punto.lng + ' ' + punto.lat + ')' : null,
-            agreement_version: VERSION_ACUERDO,
-            agreement_accepted_at: ahora,
-            privacy_accepted_at: ahora,
-            location_consent_at: punto ? ahora : null,
             onboarding_complete: true,
             updated_at: ahora,
           };
+
+          /* La ubicación solo se toca si se ha tocado la casilla. `punto`
+             únicamente tiene valor cuando se acaba de dar permiso, así que
+             mandarlo siempre borraría la ubicación guardada al cambiar
+             cualquier otra cosa. */
+          if (ubicacionTocada) {
+            // PostGIS acepta WKT por texto. Igual que en la app.
+            cambios.home_location = punto
+              ? 'SRID=4326;POINT(' + punto.lng + ' ' + punto.lat + ')'
+              : null;
+            cambios.location_consent_at = punto ? ahora : null;
+          }
+
+          /* La fecha del acuerdo es el registro de CUÁNDO se aceptó, y sirve
+             de prueba a efectos de la Ley 45/2015. Solo se estampa si no
+             había ninguna, o si el texto ha cambiado de versión desde
+             entonces. Reescribirla al corregir una ciudad la falsearía. */
+          if (perfil.agreement_accepted_at !== null &&
+              perfil.agreement_version === VERSION_ACUERDO) {
+            // Ya aceptado, y de este mismo texto: no se toca.
+          } else {
+            cambios.agreement_version = VERSION_ACUERDO;
+            cambios.agreement_accepted_at = ahora;
+          }
+
+          if (!perfil.privacy_accepted_at) cambios.privacy_accepted_at = ahora;
 
           var filtroMio = 'profile_id=eq.' + encodeURIComponent(yo.id);
 
@@ -224,7 +462,28 @@
             });
         })
         .then(function () {
-          UI.ir('index.html');
+          if (!completo) return UI.ir('index.html');
+
+          /* Editando: se recarga lo guardado y se vuelve a la ficha. Repintar
+             con lo que había en pantalla enseñaría lo que creemos haber
+             guardado, no lo que hay. */
+          return Promise.all([
+            PFP.db.select(
+              'profiles',
+              'select=id,full_name,email,phone,city,province,photo_url,response_mode,' +
+                'max_travel_distance_m,has_vehicle,home_location,agreement_version,' +
+                'agreement_accepted_at,privacy_accepted_at,location_consent_at,onboarding_complete&limit=1',
+            ),
+            PFP.db.rpc('my_skills').catch(function () { return []; }),
+          ]).then(function (r) {
+            datos.perfil = (r[0] || [])[0] || datos.perfil;
+            datos.habilidades = r[1] || [];
+            perfil = datos.perfil;
+            UI.ocupado(boton, false);
+            pintarFicha(datos);
+            modoEdicion(false);
+            UI.avisar('aviso', UI.T('c.a.guardado'), 'ok');
+          });
         })
         .catch(function (e) {
           UI.ocupado(boton, false);
@@ -277,6 +536,7 @@
     var casillaUbi = $('#ubicacion');
     var estadoUbi = $('#estado-ubicacion');
     casillaUbi.addEventListener('change', function () {
+      ubicacionTocada = true;
       if (!casillaUbi.checked) {
         punto = null;
         estadoUbi.textContent = '';
