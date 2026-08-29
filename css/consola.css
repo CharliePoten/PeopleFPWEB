@@ -15,6 +15,19 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   `hidden` esconde de verdad
+   --------------------------------------------------------------------------
+   Varias cajas de la consola fijan su `display` desde una clase, y eso empata
+   en especificidad con el `[hidden] { display: none }` del navegador — que
+   pierde el empate por venir de la hoja de usuario. Sin esta regla, esconder
+   algo con `hidden` no lo esconde: el formulario de subir un documento salia
+   abierto nada mas entrar en el perfil.
+
+   Una sola vez para toda la consola, y no clase por clase: una lista se queda
+   corta en cuanto se añade otra caja que se esconda. */
+.consola [hidden] { display: none; }
+
+/* --------------------------------------------------------------------------
    Marco
    -------------------------------------------------------------------------- */
 
