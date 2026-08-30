@@ -110,3 +110,124 @@
     });
   });
 })();
+
+/* ==========================================================================
+   Carrusel del panel de coordinación
+   --------------------------------------------------------------------------
+   Tres capturas: la del centro destacada y una a cada lado, detrás. Se pasa
+   con las flechas, con los puntos, tocando una de las de los lados, con el
+   teclado o arrastrando en el móvil.
+
+   La posición la lleva un atributo y la animación la hace el CSS. Nada de
+   mover pixeles desde aquí: así el navegador puede animarlo en la tarjeta
+   gráfica, y quien tenga puesto «menos movimiento» se lo salta con una regla
+   de CSS en vez de con una rama de código.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var pista = document.getElementById('panel-demo');
+  if (!pista) return;
+
+  var fotos = Array.prototype.slice.call(pista.querySelectorAll('[data-shot]'));
+  if (fotos.length < 2) return;
+
+  var puntos = Array.prototype.slice.call(document.querySelectorAll('[data-ir]'));
+  var flechas = Array.prototype.slice.call(document.querySelectorAll('[data-mover]'));
+  var actual = 0;
+
+  function pintar() {
+    var n = fotos.length;
+    var saltan = [];
+
+    fotos.forEach(function (f, i) {
+      // Distancia a la del centro, por el camino más corto: con tres, la
+      // última está a la izquierda de la primera, no a dos saltos.
+      var d = ((i - actual) % n + n) % n;
+      if (d > n / 2) d -= n;
+
+      var pos = d === 0 ? 'centro' : d === -1 ? 'izq' : d === 1 ? 'der' : 'fuera';
+      var antes = f.getAttribute('data-pos');
+
+      /* La que da la vuelta pasa de un extremo al otro. Animar ese viaje la
+         haría cruzar toda la anchura por detrás de la del centro: un bicho
+         atravesando la pantalla cada vez que se pasa de captura. Se le quita
+         la transición ese fotograma, así que reaparece ya en el otro lado y
+         el ojo solo sigue a las dos que de verdad se mueven. */
+      if ((antes === 'izq' && pos === 'der') || (antes === 'der' && pos === 'izq')) {
+        f.setAttribute('data-salta', '');
+        saltan.push(f);
+      }
+
+      f.setAttribute('data-pos', pos);
+      // Lo que no está al frente no debe recibir el foco al tabular.
+      var img = f.querySelector('img');
+      if (img) img.setAttribute('draggable', 'false');
+    });
+
+    if (saltan.length) {
+      // Un único recálculo para todas: sin leerlo, el navegador junta las dos
+      // escrituras del atributo y el salto no llega a ocurrir.
+      void pista.offsetWidth;
+      saltan.forEach(function (f) { f.removeAttribute('data-salta'); });
+    }
+
+    puntos.forEach(function (p, i) {
+      p.setAttribute('aria-current', i === actual ? 'true' : 'false');
+    });
+  }
+
+  function ir(i) {
+    var n = fotos.length;
+    actual = ((i % n) + n) % n;
+    pintar();
+  }
+
+  flechas.forEach(function (b) {
+    b.addEventListener('click', function () {
+      ir(actual + Number(b.dataset.mover));
+    });
+  });
+
+  puntos.forEach(function (p) {
+    p.addEventListener('click', function () {
+      ir(Number(p.dataset.ir));
+    });
+  });
+
+  /* Pulsar una de los lados la trae al centro: es lo que uno intenta. */
+  fotos.forEach(function (f, i) {
+    f.addEventListener('click', function () {
+      if (f.getAttribute('data-pos') !== 'centro') ir(i);
+    });
+  });
+
+  /* Teclado: el carrusel es un grupo enfocable y las flechas lo mueven. */
+  pista.setAttribute('tabindex', '0');
+  pista.addEventListener('keydown', function (ev) {
+    if (ev.key === 'ArrowLeft') { ev.preventDefault(); ir(actual - 1); }
+    if (ev.key === 'ArrowRight') { ev.preventDefault(); ir(actual + 1); }
+  });
+
+  /* Arrastrar en el móvil. Se mira solo el eje X y con un umbral: sin él,
+     bajar por la página con el dedo encima cambiaría de captura. */
+  var x0 = null;
+
+  pista.addEventListener('pointerdown', function (ev) {
+    x0 = ev.clientX;
+  });
+
+  pista.addEventListener('pointerup', function (ev) {
+    if (x0 === null) return;
+    var dx = ev.clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) ir(actual + (dx < 0 ? 1 : -1));
+  });
+
+  pista.addEventListener('pointercancel', function () {
+    x0 = null;
+  });
+
+  pintar();
+})();

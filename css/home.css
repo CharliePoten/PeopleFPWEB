@@ -264,3 +264,197 @@
   .home .hero__copy { opacity: 1; transform: none; }
   .home .hero__scroll { display: none; }
 }
+
+/* --------------------------------------------------------------------------
+   El panel de coordinación, en carrusel
+   --------------------------------------------------------------------------
+   Tres capturas: la del centro grande y nítida, las de los lados detrás y
+   algo apagadas. Es el mismo recurso que la galería de la app con sus
+   iPhone —una pieza destacada y dos de contexto—, aquí dentro de un marco de
+   navegador porque esto se usa en un ordenador, no en el móvil.
+
+   Sin marco, una captura de una interfaz clara sobre un fondo claro parece
+   un trozo más de la propia página. */
+
+/* Las capturas de los lados se salen del contenedor a proposito —asoman
+   por los bordes— pero sin esto se salian tambien de la VENTANA y sacaban
+   una barra horizontal en toda la pagina: hasta 111px de sobra entre 1024 y
+   1440. Se recortan contra la seccion, que ocupa el ancho completo, asi que
+   se siguen viendo igual. */
+.home .panel-showcase { overflow: hidden; }
+
+.home .panel-demo {
+  position: relative;
+  /* Alto fijo: las tres capturas tienen la misma proporción, y sin esto el
+     contenedor daría un salto al cambiar de una a otra. */
+  height: clamp(320px, 42vw, 620px);
+  margin: 0 auto;
+  max-width: 1180px;
+  /* Le da fondo a la escena: sin esto el giro de las de los lados seria
+     un aplastamiento en plano, no una vuelta. */
+  perspective: 1800px;
+}
+
+.home .panel-shot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(74%, 860px);
+  margin: 0;
+  /* Un pelin de rebote al llegar: el recorrido se pasa un poco de su sitio
+     y vuelve. Es lo que separa un cambio de posicion de un movimiento. */
+  transition: transform 0.55s cubic-bezier(0.34, 1.42, 0.52, 1), opacity 0.5s ease;
+  will-change: transform, opacity;
+  transform-origin: 50% 55%;
+}
+
+/* La que da la vuelta cambia de extremo sin transicion —ver `home.js`—. */
+.home .panel-shot[data-salta] { transition: none; }
+
+/* La del centro: al frente, a tamaño completo y sin velo. */
+.home .panel-shot[data-pos='centro'] {
+  z-index: 3;
+  transform: translateX(-50%) scale(1) rotateY(0deg);
+  opacity: 1;
+}
+
+/* Las de los lados: detrás, más pequeñas y apagadas. Se dejan pulsables —
+   hacer clic en una la trae al centro, que es lo que uno intenta. */
+.home .panel-shot[data-pos='izq'],
+.home .panel-shot[data-pos='der'] {
+  z-index: 2;
+  opacity: 0.5;
+  cursor: pointer;
+}
+.home .panel-shot[data-pos='izq'] {
+  transform: translateX(-96%) scale(0.82) rotateY(17deg);
+}
+.home .panel-shot[data-pos='der'] {
+  transform: translateX(-4%) scale(0.82) rotateY(-17deg);
+}
+
+/* Con más de tres, las demás esperan fuera y sin ocupar el foco. */
+.home .panel-shot[data-pos='fuera'] {
+  z-index: 1;
+  transform: translateX(-50%) scale(0.7) rotateY(0deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home .navegador {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: #e9ecf1;
+  box-shadow: 0 30px 70px rgba(0, 14, 35, 0.45);
+}
+.home .panel-shot[data-pos='centro'] .navegador {
+  box-shadow: 0 40px 90px rgba(0, 14, 35, 0.55);
+}
+
+.home .navegador__barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  background: #dfe3ea;
+}
+.home .navegador__punto {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border-radius: 50%;
+  background: #b6bcc7;
+}
+/* La barra de dirección es decorativa: ni es un enlace ni la lee un lector. */
+.home .navegador__url {
+  flex: 1;
+  margin-left: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: #6f7987;
+  font-size: 0.74rem;
+  text-align: center;
+}
+.home .navegador img { display: block; width: 100%; height: auto; }
+
+.home .panel-shot figcaption {
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+  text-align: center;
+  transition: opacity 0.5s ease;
+}
+/* Solo se lee el pie de la del centro: tres a la vez es ruido. */
+.home .panel-shot:not([data-pos='centro']) figcaption { opacity: 0; }
+
+/* --- Controles --- */
+
+.home .panel-demo__mandos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: clamp(20px, 3vw, 34px);
+}
+
+.home .panel-demo__flecha {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.home .panel-demo__flecha:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.home .panel-demo__flecha svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.home .panel-demo__puntos { display: flex; gap: 9px; }
+.home .panel-demo__punto {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  cursor: pointer;
+  transition: background-color 0.25s ease, width 0.25s ease;
+}
+.home .panel-demo__punto[aria-current='true'] {
+  width: 26px;
+  background: var(--amber-500);
+}
+
+.home .panel-demo__nota {
+  margin: 22px auto 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.84rem;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  /* En pantalla estrecha no caben tres: se queda la del centro sola y a lo
+     ancho, que es como se mira una captura en un movil. */
+  .home .panel-demo { height: clamp(240px, 62vw, 420px); }
+  .home .panel-shot { width: 94%; }
+  .home .panel-shot[data-pos='izq'],
+  .home .panel-shot[data-pos='der'] {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) scale(0.9);
+  }
+  .home .navegador__url { display: none; }
+}
+
+/* Nota: quien pida menos movimiento ya lo tiene cubierto. `app.css` anula
+   todas las transiciones del sitio con `!important` bajo
+   `prefers-reduced-motion`, asi que repetirlo aqui seria una regla muerta. */
