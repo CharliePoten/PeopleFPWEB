@@ -278,15 +278,26 @@
     if (!form) return;
 
     var rol = 'volunteer';
+    var opciones = $$('.opcion[data-rol]');
 
-    $$('.opcion[data-rol]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        rol = b.dataset.rol;
-        $$('.opcion[data-rol]').forEach(function (o) {
-          o.setAttribute('aria-pressed', String(o === b));
-        });
+    function elegir(b) {
+      rol = b.dataset.rol;
+      opciones.forEach(function (o) {
+        o.setAttribute('aria-pressed', String(o === b));
       });
+    }
+
+    opciones.forEach(function (b) {
+      b.addEventListener('click', function () { elegir(b); });
     });
+
+    /* Se llega aquí desde «Inscribirme como ONG» y compañía, que traen ya el
+       tipo de cuenta en la dirección. Se comprueba contra los botones que hay
+       de verdad y no se usa tal cual: lo que venga en una URL lo escribe
+       cualquiera, y de aquí sale el rol con el que se crea la cuenta. */
+    var pedido = new URLSearchParams(window.location.search).get('rol');
+    var deLaUrl = opciones.filter(function (o) { return o.dataset.rol === pedido; })[0];
+    if (deLaUrl) elegir(deLaUrl);
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();

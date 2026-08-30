@@ -133,6 +133,7 @@
   var fotos = Array.prototype.slice.call(pista.querySelectorAll('[data-shot]'));
   if (fotos.length < 2) return;
 
+  var pie = document.getElementById('panel-pie');
   var puntos = Array.prototype.slice.call(document.querySelectorAll('[data-ir]'));
   var flechas = Array.prototype.slice.call(document.querySelectorAll('[data-mover]'));
   var actual = 0;
@@ -171,6 +172,19 @@
       // escrituras del atributo y el salto no llega a ocurrir.
       void pista.offsetWidth;
       saltan.forEach(function (f) { f.removeAttribute('data-salta'); });
+    }
+
+    /* El pie es uno solo y va debajo, en flujo. Se le cambia tambien la
+       clave de idioma y no solo el texto: asi, si alguien cambia de idioma
+       con el carrusel a mitad, el repaso de `site.js` lo traduce como a
+       cualquier otra frase de la pagina. */
+    if (pie) {
+      var clave = fotos[actual].getAttribute('data-pie');
+      var dicc = (window.I18N || {})[document.documentElement.lang];
+      if (clave) {
+        pie.setAttribute('data-i18n', clave);
+        if (dicc && clave in dicc) pie.textContent = dicc[clave];
+      }
     }
 
     puntos.forEach(function (p, i) {

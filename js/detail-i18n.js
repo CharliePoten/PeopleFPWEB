@@ -50,8 +50,8 @@
     'vol.safe2': 'Puedes consultar la entidad responsable antes de unirte.',
     'vol.safe3': 'Si no puedes asistir, avisa desde la app antes del inicio.',
     'vol.safe4': 'Ante una emergencia vital, llama al 112: PeopleForPeople no sustituye a los servicios de emergencia.',
-    'vol.finalTitle': 'La inscripción será desde la app.',
-    'vol.finalLead': 'Los botones de descarga ya están preparados y se activarán cuando PeopleForPeople se publique en las tiendas.',
+    'vol.finalTitle': 'Crea tu cuenta y empieza.',
+    'vol.finalLead': 'El registro de voluntariado es gratuito. La app llegará a las tiendas más adelante; tu cuenta te estará esperando.',
 
     'ngo.eyebrow': 'ONG y asociaciones',
     'ngo.hero': 'Más manos para cada misión.',
@@ -201,8 +201,8 @@
     'vol.safe2': 'Vor dem Beitritt kannst du die verantwortliche Organisation prüfen.',
     'vol.safe3': 'Wenn du verhindert bist, sage vor Beginn über die App ab.',
     'vol.safe4': 'Bei Lebensgefahr ruf 112 an: PeopleForPeople ersetzt keinen Rettungsdienst.',
-    'vol.finalTitle': 'Die Anmeldung erfolgt über die App.',
-    'vol.finalLead': 'Die Download-Schaltflächen sind vorbereitet und werden aktiviert, sobald PeopleForPeople in den Stores erscheint.',
+    'vol.finalTitle': 'Leg dein Konto an und fang an.',
+    'vol.finalLead': 'Die Anmeldung als Freiwillige:r ist kostenlos. Die App kommt später in die Stores; dein Konto wartet dann schon.',
 
     'ngo.eyebrow': 'NGOs und Vereine',
     'ngo.hero': 'Mehr Hände für jeden Einsatz.',

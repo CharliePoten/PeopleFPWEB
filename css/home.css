@@ -285,9 +285,6 @@
 
 .home .panel-demo {
   position: relative;
-  /* Alto fijo: las tres capturas tienen la misma proporción, y sin esto el
-     contenedor daría un salto al cambiar de una a otra. */
-  height: clamp(320px, 42vw, 620px);
   margin: 0 auto;
   max-width: 1180px;
   /* Le da fondo a la escena: sin esto el giro de las de los lados seria
@@ -300,10 +297,12 @@
   touch-action: pan-y;
 }
 
+
 .home .panel-shot {
   position: absolute;
   top: 0;
   left: 50%;
+  /* La de abajo se lo quita: ver `[data-shot='0']`. */
   width: min(74%, 860px);
   margin: 0;
   /* Un pelin de rebote al llegar: el recorrido se pasa un poco de su sitio
@@ -315,6 +314,13 @@
 
 /* La que da la vuelta cambia de extremo sin transicion —ver `home.js`—. */
 .home .panel-shot[data-salta] { transition: none; }
+
+/* Una tiene que quedarse en el flujo para dar el alto a la caja; si no,
+   con las tres absolutas la caja mide cero y hay que inventarle un alto —que
+   es justo lo que hacia que los mandos se subieran encima del pie—. Se queda
+   la primera, y da igual donde este colocada en cada momento: las tres miden
+   lo mismo, y girar o encoger no cambia el sitio que ocupa. */
+.home .panel-shot[data-shot='0'] { position: relative; }
 
 /* La del centro: al frente, a tamaño completo y sin velo. */
 .home .panel-shot[data-pos='centro'] {
@@ -384,15 +390,17 @@
 }
 .home .navegador img { display: block; width: 100%; height: auto; }
 
-.home .panel-shot figcaption {
-  margin-top: 16px;
+/* El pie va aparte y en flujo, no dentro de la figura. Dentro no cabia:
+   la figura esta posicionada y no cuenta para el alto de la caja, asi que el
+   texto se salia por abajo y los mandos se le echaban encima. Aqui empuja a
+   lo que viene despues, en cualquier idioma y a cualquier ancho. */
+.home .panel-demo__pie {
+  margin: 18px auto 0;
+  max-width: 46ch;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.9rem;
   text-align: center;
-  transition: opacity 0.5s ease;
 }
-/* Solo se lee el pie de la del centro: tres a la vez es ruido. */
-.home .panel-shot:not([data-pos='centro']) figcaption { opacity: 0; }
 
 /* --- Controles --- */
 
@@ -442,7 +450,6 @@
 @media (max-width: 860px) {
   /* En pantalla estrecha no caben tres: se queda la del centro sola y a lo
      ancho, que es como se mira una captura en un movil. */
-  .home .panel-demo { height: clamp(240px, 62vw, 420px); }
   .home .panel-shot { width: 94%; }
   .home .panel-shot[data-pos='izq'],
   .home .panel-shot[data-pos='der'] {
@@ -453,6 +460,26 @@
   .home .navegador__url { display: none; }
 }
 
-/* Nota: quien pida menos movimiento ya lo tiene cubierto. `app.css` anula
-   todas las transiciones del sitio con `!important` bajo
-   `prefers-reduced-motion`, asi que repetirlo aqui seria una regla muerta. */
+/* Quien pide menos movimiento no pide quedarse sin saber que ha pasado.
+
+   `app.css` anula TODAS las transiciones del sitio con `!important`, y con
+   eso el carrusel se quedaba mudo: al pulsar una flecha la imagen cambiaba de
+   golpe y no habia forma de entender que era lo mismo movido. Lo que molesta
+   de verdad a quien tiene la preferencia puesta es el MOVIMIENTO —desplazarse,
+   escalar, girar—, no que algo se funda; un fundido es justamente el recambio
+   que recomiendan las pautas.
+
+   Asi que aqui se quita el viaje y se deja el fundido: las tres quietas en el
+   centro y solo se ve la que toca. Hace falta `!important` para ganarle al de
+   `app.css`, que si no lo apaga tambien. */
+@media (prefers-reduced-motion: reduce) {
+  .home .panel-shot {
+    transition: opacity 0.3s ease !important;
+    transform: translateX(-50%) !important;
+  }
+  .home .panel-shot[data-pos='centro'] { opacity: 1 !important; }
+  .home .panel-shot:not([data-pos='centro']) {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+}
