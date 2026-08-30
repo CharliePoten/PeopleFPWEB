@@ -55,16 +55,23 @@
 
     <h3>Formulario de contacto</h3>
     <p>
-      Cuando usas el formulario de contacto, tu programa de correo se abre con el mensaje
-      ya redactado y <strong>eres tú quien lo envía</strong>. Esta web no guarda esos datos
-      ni los transmite a ningún servidor intermedio.
+      Cuando envías el formulario, tu mensaje se guarda en nuestra base de datos, se
+      reenvía a nuestro buzón y te llega un correo confirmando que lo hemos recibido.
+      Solo accede a él el equipo que administra la plataforma.
     </p>
     <ul>
-      <li><strong>Datos:</strong> los que escribas — nombre, correo, tipo de perfil y mensaje.</li>
-      <li><strong>Finalidad:</strong> responder a tu consulta.</li>
+      <li><strong>Datos:</strong> los que escribas — nombre, correo, tipo de perfil y mensaje — y el idioma en el que nos escribes.</li>
+      <li><strong>Finalidad:</strong> responder a tu consulta y confirmarte que ha llegado.</li>
       <li><strong>Base legal:</strong> tu consentimiento (art. 6.1.a RGPD), que das al marcar la casilla.</li>
-      <li><strong>Conservación:</strong> mientras dure la conversación y hasta un año después, salvo que pidas antes su supresión.</li>
+      <li><strong>Conservación:</strong> un año desde el envío, tras el cual se borra automáticamente. Puedes pedir antes su supresión.</li>
+      <li><strong>Encargados:</strong> <strong>Supabase</strong> (base de datos y servidor) y <strong>Resend</strong> (envío de los correos).</li>
     </ul>
+    <p>
+      Para evitar envíos masivos automatizados limitamos cuántos mensajes se pueden mandar
+      desde un mismo origen. <strong>No guardamos tu dirección IP</strong>: se almacena un
+      código irreversible derivado de ella, que sirve para contar envíos y no permite
+      identificarte ni reconstruir la dirección.
+    </p>
 
     <h3>Suscripción para recibir información</h3>
     <p>
@@ -99,7 +106,10 @@
     <p>
       No cedemos tus datos a terceros ni tomamos decisiones automatizadas sobre ti. Los
       únicos que pueden acceder técnicamente a información derivada de tu visita son los
-      proveedores citados en el apartado anterior, en calidad de prestadores de servicio.
+      proveedores citados en el apartado anterior, en calidad de prestadores de servicio:
+      <strong>GitHub</strong> (alojamiento de la web), <strong>Google Fonts</strong>
+      (tipografías), <strong>Supabase</strong> (base de datos y servidor de la plataforma)
+      y <strong>Resend</strong> (envío de correo).
     </p>
 
     <h2>4. Transferencias internacionales</h2>
@@ -107,6 +117,12 @@
       GitHub y Google están establecidos en Estados Unidos. Ambos se acogen al
       <em>EU-US Data Privacy Framework</em>, que la Comisión Europea reconoce como marco
       con nivel de protección adecuado.
+    </p>
+    <p>
+      Supabase Inc. y Resend, Inc. también están establecidas en Estados Unidos. El
+      tratamiento por su parte se ampara en los acuerdos de encargo de tratamiento
+      suscritos con cada una, que incorporan las cláusulas contractuales tipo aprobadas
+      por la Comisión Europea.
     </p>
 
     <h2>5. Tus derechos</h2>

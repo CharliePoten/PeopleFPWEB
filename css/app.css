@@ -622,6 +622,11 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .plan-b__copia { width: 100%; padding: var(--s-sm); border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: 0.88rem; resize: vertical; }
 .plan-b__copia[hidden] { display: none; }
 
+/* El campo trampa del formulario de contacto. Fuera de la pantalla y no
+   `display:none`: hay robots que se saltan lo que esta oculto del todo, y
+   la gracia es justamente que lo rellenen. */
+.trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
 /* --------------------------------------------------------------------------
    Pie
    -------------------------------------------------------------------------- */

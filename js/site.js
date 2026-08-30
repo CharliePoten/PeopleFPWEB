@@ -226,18 +226,56 @@
   }
 
   if (form) {
+  /**
+   * Manda el mensaje al servidor.
+   *
+   * Va a la Edge Function `contacto`, que lo guarda, nos lo reenvia y le
+   * manda un acuse a quien escribe. Antes esto abria el programa de correo
+   * del visitante, y cuando no habia ninguno configurado —que es lo normal—
+   * el mensaje no salia de su pantalla mientras la web le decia que si.
+   *
+   * Si la llamada falla queda el plan B de siempre: copiar el texto y la
+   * direccion. Ahora es lo que debe ser, un recambio, y no el camino.
+   */
+  function enviarContacto(datos) {
+    var cfg = window.PFP_CONFIG || {};
+    if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) {
+      return Promise.reject({ tipo: 'red' });
+    }
+
+    return fetch(cfg.supabaseUrl + '/functions/v1/contacto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: cfg.supabaseAnonKey,
+        Authorization: 'Bearer ' + cfg.supabaseAnonKey,
+      },
+      body: JSON.stringify(datos),
+    }).then(
+      function (r) {
+        return r.json().catch(function () { return {}; }).then(function (cuerpo) {
+          if (r.ok) return cuerpo;
+          throw { tipo: r.status === 429 ? 'limite' : (r.status === 400 ? 'datos' : 'servidor') };
+        });
+      },
+      function () { throw { tipo: 'red' }; },
+    );
+  }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       var lang = document.documentElement.lang || DEFAULT_LANG;
       var d = dict(lang);
       var status = document.getElementById('form-status');
+      var boton = form.querySelector('button[type=submit]');
 
       var name = form.name.value.trim();
       var email = form.email.value.trim();
       var role = form.role.value;
       var message = form.message.value.trim();
       var consent = form.consent.checked;
+      var trampa = form.web ? form.web.value : '';
 
       function fail(key) {
         status.textContent = d[key] || '';
@@ -251,29 +289,54 @@
 
       var subject = '[' + role + '] ' + name + ' — People for People';
       var body = message + '\n\n—\n' + name + '\n' + email;
-      var enlace =
-        'mailto:' + BUZON +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body);
 
-      /* Un clic en un enlace, no `location.href`. Si nadie atiende
-         `mailto:`, el clic no hace nada y la página se queda como está;
-         cambiar `location` en ese caso deja una navegación a medias. */
-      var tirador = document.createElement('a');
-      tirador.href = enlace;
-      tirador.style.display = 'none';
-      document.body.appendChild(tirador);
-      tirador.click();
-      document.body.removeChild(tirador);
-
+      /* El plan B se prepara ya, pero no se enseña salvo que falle el
+         envío: enseñarlo antes de tiempo hace pensar que ha ido mal. */
       copia = subject + '\n\n' + body;
-      if (abrir) abrir.setAttribute('href', enlace);
-      if (copiar) copiar.textContent = d['contact.copiar'] || '';
+      if (abrir) {
+        abrir.setAttribute(
+          "href",
+          'mailto:' + BUZON + '?subject=' + encodeURIComponent(subject) +
+            '&body=' + encodeURIComponent(body),
+        );
+      }
       if (caja) { caja.value = copia; caja.hidden = true; }
-      if (planB) planB.hidden = false;
+      if (copiar) copiar.textContent = d['contact.copiar'] || '';
+      if (planB) planB.hidden = true;
 
-      status.textContent = d['contact.ok'] || '';
-      status.setAttribute('data-state', 'ok');
+      if (boton) { boton.disabled = true; }
+      status.textContent = d['contact.sending'] || '';
+      status.setAttribute('data-state', '');
+
+      enviarContacto({
+        nombre: name,
+        email: email,
+        rol: role,
+        mensaje: message,
+        lang: lang,
+        web: trampa,
+      })
+        .then(function (r) {
+          if (boton) boton.disabled = false;
+          /* Solo se menciona el acuse si el servidor dice que lo ha
+             mandado. Volver a prometer correos que no salen sería repetir
+             exactamente el fallo que esto viene a arreglar. */
+          status.textContent = (r && r.acuse) ? (d['contact.okAcuse'] || '') : (d['contact.ok'] || '');
+          status.setAttribute('data-state', 'ok');
+          form.reset();
+        })
+        .catch(function (err) {
+          if (boton) boton.disabled = false;
+          var tipo = (err && err.tipo) || 'servidor';
+
+          if (tipo === 'limite') return fail('contact.errLimite');
+          if (tipo === 'datos') return fail('contact.errFields');
+
+          /* No se ha podido enviar. Aquí sí toca el plan B: la persona no
+             puede quedarse sin forma de hacernos llegar lo que escribió. */
+          fail('contact.errEnvio');
+          if (planB) planB.hidden = false;
+        });
     });
   }
 
