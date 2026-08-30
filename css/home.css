@@ -434,13 +434,6 @@
   background: var(--amber-500);
 }
 
-.home .panel-demo__nota {
-  margin: 22px auto 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.84rem;
-  text-align: center;
-}
-
 @media (max-width: 860px) {
   /* En pantalla estrecha no caben tres: se queda la del centro sola y a lo
      ancho, que es como se mira una captura en un movil. */
