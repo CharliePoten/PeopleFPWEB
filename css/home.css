@@ -293,6 +293,11 @@
   /* Le da fondo a la escena: sin esto el giro de las de los lados seria
      un aplastamiento en plano, no una vuelta. */
   perspective: 1800px;
+  /* El dedo hacia los lados es del carrusel; hacia arriba y abajo, de la
+     pagina. Sin decirlo, el navegador se queda el gesto en cuanto sospecha
+     que vas a hacer scroll, manda `pointercancel` y el deslizar no hacia
+     nada en el movil. `pan-y` cede el eje vertical y se queda el otro. */
+  touch-action: pan-y;
 }
 
 .home .panel-shot {

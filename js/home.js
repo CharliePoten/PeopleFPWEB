@@ -213,21 +213,37 @@
   /* Arrastrar en el móvil. Se mira solo el eje X y con un umbral: sin él,
      bajar por la página con el dedo encima cambiaría de captura. */
   var x0 = null;
+  var arrastrado = false;
 
   pista.addEventListener('pointerdown', function (ev) {
     x0 = ev.clientX;
+    arrastrado = false;
   });
 
   pista.addEventListener('pointerup', function (ev) {
     if (x0 === null) return;
     var dx = ev.clientX - x0;
     x0 = null;
-    if (Math.abs(dx) > 40) ir(actual + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 40) {
+      arrastrado = true;
+      ir(actual + (dx < 0 ? 1 : -1));
+    }
   });
 
   pista.addEventListener('pointercancel', function () {
     x0 = null;
   });
+
+  /* Al soltar, el navegador manda ademas un `click`. Si se venia de un
+     arrastre, ese clic cae sobre la captura que acaba de apartarse —el dedo
+     empezo encima de ella— y el manejador de ahi abajo la devuelve al centro:
+     el gesto se deshacia solo, y en el movil parecia que pasar el dedo no
+     hacia nada. Se corta en captura, antes de que llegue a la figura. */
+  pista.addEventListener('click', function (ev) {
+    if (!arrastrado) return;
+    arrastrado = false;
+    ev.stopPropagation();
+  }, true);
 
   pintar();
 })();
