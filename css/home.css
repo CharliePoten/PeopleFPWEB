@@ -211,6 +211,10 @@
 .home #contacto .field label { color: #fff; }
 .home #contacto .consent label { color: rgba(255,255,255,.76); }
 .home #contacto .consent a { color: var(--amber-300); }
+/* La seccion es azul marino: el enlace se queda con el color de enlace
+   normal, que sobre este fondo da 1,47:1 y no se lee. Aqui los enlaces
+   van en ambar, como los dos de arriba. */
+.home #contacto .plan-b__dir a { color: var(--amber-300); }
 .home .footer__brand img { width: 220px; height: auto; margin-bottom: 16px; }
 
 @media (max-width: 900px) {

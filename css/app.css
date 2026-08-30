@@ -609,6 +609,19 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .form-status[data-state="ok"]    { color: var(--green-600); }
 .form-status[data-state="error"] { color: var(--red-600); }
 
+/* La salida de emergencia del formulario de contacto: aparece al enviar,
+   porque no hay forma de saber si el `mailto:` ha abierto algo.
+   El `[hidden]` va explícito: en este proyecto ya se ha colado tres veces
+   una clase con `display` que le ganaba y dejaba a la vista lo que tenía
+   que estar escondido. */
+.plan-b { margin-top: var(--s-md); display: grid; gap: var(--s-sm); }
+.plan-b[hidden] { display: none; }
+.plan-b__texto { margin: 0; font-size: 0.92rem; color: var(--ink-600); }
+.plan-b__acciones { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+.plan-b__dir { margin: 0; font-size: 0.92rem; }
+.plan-b__copia { width: 100%; padding: var(--s-sm); border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: 0.88rem; resize: vertical; }
+.plan-b__copia[hidden] { display: none; }
+
 /* --------------------------------------------------------------------------
    Pie
    -------------------------------------------------------------------------- */

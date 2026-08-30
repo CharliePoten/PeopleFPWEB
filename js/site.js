@@ -163,9 +163,67 @@
      que la web no almacena ni transmite datos personales a nadie: el
      mensaje va directo del visitante a nuestro buzón. Menos que declarar
      en el aviso de privacidad y menos que puede fallar.
+
+     Lo que NO se puede hacer es dar por hecho que se ha abierto. Un
+     `mailto:` no avisa de nada: no hay evento, ni error, ni forma de
+     preguntarlo. En un Windows corriente lo atiende el propio navegador
+     —o cualquier programa que se haya apuntado a `mailto:`, que los hay—
+     y si detrás no hay nadie no pasa absolutamente nada. Antes aquí se
+     enseñaba «se ha abierto tu programa de correo» a los 800ms, pasara lo
+     que pasase: quien no tuviera gestor se marchaba convencido de haber
+     escrito, y el mensaje no salía de su pantalla.
+
+     Ahora se intenta abrir, y a la vez se deja siempre a mano la salida:
+     copiar el mensaje y la dirección a la que mandarlo.
      --------------------------------------------------------------------- */
 
+  var BUZON = 'peopleforpeopleofficial@gmail.com';
+
+  /** Al portapapeles, con red por si no hay API o no es un sitio seguro. */
+  function alPortapapeles(texto) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(texto);
+    }
+    return new Promise(function (bien, mal) {
+      var caja = document.createElement('textarea');
+      caja.value = texto;
+      caja.setAttribute('readonly', '');
+      caja.style.position = 'fixed';
+      caja.style.opacity = '0';
+      document.body.appendChild(caja);
+      caja.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(caja);
+      if (ok) bien(); else mal(new Error('sin portapapeles'));
+    });
+  }
+
   var form = document.getElementById('contact-form');
+  var planB = document.getElementById('plan-b');
+  var copiar = document.getElementById('cf-copiar');
+  var abrir = document.getElementById('cf-abrir');
+  var caja = document.getElementById('cf-copia');
+  var copia = '';
+
+  if (copiar) {
+    copiar.addEventListener('click', function () {
+      var d = dict(document.documentElement.lang || DEFAULT_LANG);
+      alPortapapeles(copia)
+        .then(function () {
+          copiar.textContent = d['contact.copiado'] || '';
+        })
+        .catch(function () {
+          /* Sin portapapeles queda enseñarlo para que lo copie a mano:
+             peor es dejarle sin el texto que acaba de escribir. */
+          if (!caja) return;
+          caja.hidden = false;
+          caja.focus();
+          caja.select();
+          copiar.textContent = d['contact.noCopia'] || '';
+        });
+    });
+  }
 
   if (form) {
     form.addEventListener('submit', function (e) {
@@ -193,19 +251,29 @@
 
       var subject = '[' + role + '] ' + name + ' — People for People';
       var body = message + '\n\n—\n' + name + '\n' + email;
-
-      status.textContent = d['contact.sending'] || '';
-      status.setAttribute('data-state', '');
-
-      window.location.href =
-        'mailto:peopleforpeopleofficial@gmail.com' +
+      var enlace =
+        'mailto:' + BUZON +
         '?subject=' + encodeURIComponent(subject) +
         '&body=' + encodeURIComponent(body);
 
-      setTimeout(function () {
-        status.textContent = d['contact.ok'] || '';
-        status.setAttribute('data-state', 'ok');
-      }, 800);
+      /* Un clic en un enlace, no `location.href`. Si nadie atiende
+         `mailto:`, el clic no hace nada y la página se queda como está;
+         cambiar `location` en ese caso deja una navegación a medias. */
+      var tirador = document.createElement('a');
+      tirador.href = enlace;
+      tirador.style.display = 'none';
+      document.body.appendChild(tirador);
+      tirador.click();
+      document.body.removeChild(tirador);
+
+      copia = subject + '\n\n' + body;
+      if (abrir) abrir.setAttribute('href', enlace);
+      if (copiar) copiar.textContent = d['contact.copiar'] || '';
+      if (caja) { caja.value = copia; caja.hidden = true; }
+      if (planB) planB.hidden = false;
+
+      status.textContent = d['contact.ok'] || '';
+      status.setAttribute('data-state', 'ok');
     });
   }
 
