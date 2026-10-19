@@ -85,29 +85,47 @@
   }
 
   /**
+   * Qué misión es: lo mismo que `persona()`, para las misiones.
+   *
+   * Por título se sumaban como una sola dos misiones que se llamen igual
+   * —«Reparto de comida» en Paiporta y en Catarroja—, con las horas y la
+   * gente de las dos, y la cifra de misiones de la memoria salía corta. El
+   * título solo se usa si la base todavía no manda el id (antes de la 0052).
+   */
+  function mision(f) {
+    return f.mission_id ? 'id:' + f.mission_id : 'titulo:' + (f.mission_title || '');
+  }
+
+  /**
    * Agrupa las filas validadas por lo que se le pida.
+   *
+   * `clave` dice qué filas van juntas —quién o cuál es, no cómo se llama— y
+   * `campo`, el nombre que se pinta.
    *
    * Las pendientes y las rechazadas se quedan fuera de los totales pero se
    * cuentan aparte, para el aviso de arriba.
    */
-  function agrupar(clave) {
+  function agrupar(clave, campo) {
     var mapa = {};
 
     filas.forEach(function (f) {
       if (f.hours_state !== 'validated') return;
-      var nombre = f[clave] || '—';
-      // Por persona se agrupa por quién es; el nombre es solo lo que se pinta.
-      var k = clave === 'volunteer_name' ? persona(f) : nombre;
-      if (!mapa[k]) mapa[k] = { nombre: nombre, horas: 0, partes: 0, gente: {} };
+      var k = clave(f);
+      if (!mapa[k]) mapa[k] = { nombre: f[campo] || '—', horas: 0, partes: 0, gente: {}, operaciones: {} };
       mapa[k].horas += Number(f.verified_hours || 0);
       mapa[k].partes += 1;
       mapa[k].gente[persona(f)] = true;
+      mapa[k].operaciones[f.operation_name || ''] = true;
     });
 
     return Object.keys(mapa)
       .map(function (k) {
         var g = mapa[k];
         g.personas = Object.keys(g.gente).length;
+        // Solo si es una: una base sin la 0052 aún junta misiones de varias
+        // operaciones bajo un título, y poner una sola sería mentir.
+        var ops = Object.keys(g.operaciones);
+        g.operacion = ops.length === 1 ? ops[0] : '';
         return g;
       })
       .sort(function (a, b) { return b.horas - a.horas; });
@@ -124,7 +142,7 @@
     var horas = 0;
     validadas.forEach(function (f) {
       gente[persona(f)] = true;
-      misiones[f.mission_title] = true;
+      misiones[mision(f)] = true;
       horas += Number(f.verified_hours || 0);
     });
     return {
@@ -147,8 +165,8 @@
     );
   }
 
-  function tablaAgrupada(clave, cabecera) {
-    var grupos = agrupar(clave);
+  function tablaAgrupada(clave, campo, cabecera) {
+    var grupos = agrupar(clave, campo);
 
     if (!grupos.length) {
       return '<div class="tarjeta__vacio">' + esc(T('c.i.sinDatos')) + '</div>';
@@ -164,7 +182,11 @@
       '</tr></thead><tbody>' +
       grupos.map(function (g) {
         return (
-          '<tr><td><strong>' + esc(g.nombre) + '</strong></td>' +
+          '<tr><td><strong>' + esc(g.nombre) + '</strong>' +
+          // Dos misiones que se llamen igual ya salen en filas separadas; sin
+          // la operación debajo parecerían la misma repetida.
+          (campo === 'mission_title' && g.operacion ? '<small>' + esc(g.operacion) + '</small>' : '') +
+          '</td>' +
           '<td class="tabla__num">' + esc(numero(g.personas, 0)) + '</td>' +
           '<td class="tabla__num">' + esc(numero(g.partes, 0)) + '</td>' +
           '<td class="tabla__num"><strong>' + esc(numero(g.horas)) + '</strong></td></tr>'
@@ -219,9 +241,9 @@
 
     var cuerpo =
       vista === 'persona'
-        ? tablaAgrupada('volunteer_name', T('c.h.cPersona'))
+        ? tablaAgrupada(persona, 'volunteer_name', T('c.h.cPersona'))
         : vista === 'mision'
-        ? tablaAgrupada('mission_title', T('c.h.cMision'))
+        ? tablaAgrupada(mision, 'mission_title', T('c.h.cMision'))
         : tablaDetalle();
 
     caja.innerHTML =
