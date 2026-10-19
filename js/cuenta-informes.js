@@ -73,6 +73,18 @@
      ===================================================================== */
 
   /**
+   * Quién hizo las horas: la clave para sumarlas y para contar personas.
+   *
+   * Por persona y no por nombre. Agrupar por nombre sumaba en una sola fila
+   * a dos voluntarias que se llamen igual —María García—: horas atribuidas a
+   * quien no las hizo, en un documento que va a una administración. El nombre
+   * solo se usa si la base todavía no manda el id (antes de la 0050).
+   */
+  function persona(f) {
+    return f.volunteer_id ? 'id:' + f.volunteer_id : 'nombre:' + (f.volunteer_name || '');
+  }
+
+  /**
    * Agrupa las filas validadas por lo que se le pida.
    *
    * Las pendientes y las rechazadas se quedan fuera de los totales pero se
@@ -83,11 +95,13 @@
 
     filas.forEach(function (f) {
       if (f.hours_state !== 'validated') return;
-      var k = f[clave] || '—';
-      if (!mapa[k]) mapa[k] = { nombre: k, horas: 0, partes: 0, gente: {} };
+      var nombre = f[clave] || '—';
+      // Por persona se agrupa por quién es; el nombre es solo lo que se pinta.
+      var k = clave === 'volunteer_name' ? persona(f) : nombre;
+      if (!mapa[k]) mapa[k] = { nombre: nombre, horas: 0, partes: 0, gente: {} };
       mapa[k].horas += Number(f.verified_hours || 0);
       mapa[k].partes += 1;
-      mapa[k].gente[f.volunteer_name] = true;
+      mapa[k].gente[persona(f)] = true;
     });
 
     return Object.keys(mapa)
@@ -109,7 +123,7 @@
     var misiones = {};
     var horas = 0;
     validadas.forEach(function (f) {
-      gente[f.volunteer_name] = true;
+      gente[persona(f)] = true;
       misiones[f.mission_title] = true;
       horas += Number(f.verified_hours || 0);
     });
