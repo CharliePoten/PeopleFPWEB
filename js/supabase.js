@@ -597,11 +597,177 @@
       .join('/');
   }
 
+  /* ---------------------------------------------------------------------
+     Tiempo real: solo los avisos de «escribiendo»
+     ---------------------------------------------------------------------
+     Los mensajes nuevos siguen llegando por sondeo. «Escribiendo» no se puede
+     hacer así: dura unos segundos, y preguntar por ello cada cuatro llegaría
+     tarde siempre. Va por Realtime Broadcast, el mismo canal que usa la app,
+     con un cliente mínimo escrito aquí —un WebSocket y el protocolo de Phoenix,
+     que es lo que habla Realtime— en vez del SDK entero: el sitio no carga
+     dependencias externas.
+
+     Los canales son PRIVADOS: Realtime pide la sesión al unirse y decide con
+     las reglas del servidor (migración 0057) quién entra. Solo quien puede
+     leer la conversación. */
+
+  var LATIDO_MS = 25000;
+
+  var realtime = {
+    /**
+     * Se une a un canal privado y avisa de lo que llega por él.
+     *
+     * Devuelve `{ enviar(evento, carga), cerrar() }`. Si la conexión se cae,
+     * vuelve a intentarlo sola, cada vez más espaciado; si el servidor dice
+     * que no —no puedes leer esa conversación—, deja de insistir.
+     */
+    canal: function (tema, alRecibir) {
+      var topic = 'realtime:' + tema;
+      var ws = null;
+      var unido = false;
+      var cerrado = false;
+      var latido = null;
+      var reintento = null;
+      var espera = 1000;
+      var ref = 0;
+      var joinRef = null;
+      var testigoEnUso = null;
+
+      function mandar(msg) {
+        if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
+      }
+
+      function conectar() {
+        if (cerrado) return;
+        token().then(function (t) {
+          if (cerrado || !t) return;
+          testigoEnUso = t;
+          ws = new WebSocket(
+            URL_BASE.replace(/^http/, 'ws') +
+              '/realtime/v1/websocket?apikey=' + encodeURIComponent(ANON) + '&vsn=1.0.0',
+          );
+
+          ws.onopen = function () {
+            espera = 1000;
+            joinRef = String(++ref);
+            mandar({
+              topic: topic,
+              event: 'phx_join',
+              ref: joinRef,
+              join_ref: joinRef,
+              payload: {
+                config: {
+                  broadcast: { ack: false, self: false },
+                  presence: { key: '', enabled: false },
+                  postgres_changes: [],
+                  private: true,
+                },
+                access_token: t,
+              },
+            });
+            latido = setInterval(function () {
+              mandar({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: String(++ref) });
+              // El testigo caduca a la hora: se le pasa el nuevo para que el
+              // canal no se cierre a mitad de conversación.
+              token().then(function (nuevo) {
+                if (!nuevo || nuevo === testigoEnUso) return;
+                testigoEnUso = nuevo;
+                mandar({
+                  topic: topic,
+                  event: 'access_token',
+                  ref: String(++ref),
+                  join_ref: joinRef,
+                  payload: { access_token: nuevo },
+                });
+              });
+            }, LATIDO_MS);
+          };
+
+          ws.onmessage = function (ev) {
+            var m;
+            try {
+              m = JSON.parse(ev.data);
+            } catch (e) {
+              return;
+            }
+            if (!m || m.topic !== topic) return;
+            if (m.event === 'phx_reply' && m.ref === joinRef) {
+              if (m.payload && m.payload.status === 'ok') {
+                unido = true;
+              } else {
+                // No hay permiso para esta conversación: no se insiste.
+                cerrado = true;
+                ws.close();
+              }
+            } else if (m.event === 'broadcast' && m.payload) {
+              alRecibir(m.payload.event, m.payload.payload || {});
+            }
+          };
+
+          ws.onclose = function () {
+            unido = false;
+            clearInterval(latido);
+            latido = null;
+            ws = null;
+            if (cerrado) return;
+            reintento = setTimeout(conectar, espera);
+            espera = Math.min(espera * 2, 30000);
+          };
+        });
+      }
+
+      conectar();
+
+      return {
+        enviar: function (evento, carga) {
+          if (unido) {
+            mandar({
+              topic: topic,
+              event: 'broadcast',
+              ref: String(++ref),
+              join_ref: joinRef,
+              payload: { type: 'broadcast', event: evento, payload: carga },
+            });
+            return;
+          }
+          // Sin el canal abierto todavía: por la API REST de Realtime, que
+          // aplica las mismas reglas con la misma sesión.
+          token()
+            .then(function (t) {
+              if (!t) return null;
+              return fetch(URL_BASE + '/realtime/v1/api/broadcast', {
+                method: 'POST',
+                headers: {
+                  apikey: ANON,
+                  Authorization: 'Bearer ' + t,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  messages: [{ topic: tema, event: evento, payload: carga, private: true }],
+                }),
+              });
+            })
+            .catch(function () {});
+        },
+        cerrar: function () {
+          cerrado = true;
+          clearTimeout(reintento);
+          clearInterval(latido);
+          if (ws) {
+            mandar({ topic: topic, event: 'phx_leave', payload: {}, ref: String(++ref), join_ref: joinRef });
+            ws.close();
+          }
+        },
+      };
+    },
+  };
+
   window.PFP = {
     configurado: !!(URL_BASE && ANON),
     auth: auth,
     db: db,
     fn: fn,
+    realtime: realtime,
     almacen: almacen,
     error: PfpError,
   };

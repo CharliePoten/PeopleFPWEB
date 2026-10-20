@@ -397,6 +397,49 @@
 }
 .chat__msg--mio .chat__pie { color: var(--navy-100); }
 
+/* «Escribiendo…»: tres puntos que botan, en una burbuja de quien contesta
+   —a la izquierda, con la esquina de su lado pinchada—. Es como lo enseñan
+   las apps de mensajería y lo que se reconoce sin leer nada. Igual para una
+   persona que para el asistente pensando. */
+.chat__escribiendo {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--s-sm);
+}
+.chat__puntos {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-bottom-left-radius: 5px;
+  background: var(--surface);
+}
+.chat__puntos i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-mute);
+  opacity: 0.4;
+  animation: chat-bote 1.1s ease-in-out infinite;
+}
+.chat__puntos i:nth-child(2) { animation-delay: 0.15s; }
+.chat__puntos i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes chat-bote {
+  0%, 50%, 100% { transform: none; opacity: 0.4; }
+  25% { transform: translateY(-4px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat__puntos i { animation: none; opacity: 0.7; }
+}
+
+/* El asistente no va a contestar: el aviso, con la salida a mano. */
+.chat__fallo p { margin: 0 0 var(--s-sm); }
+.chat__reintentar { padding: 6px 14px; font-size: 0.88rem; }
+
 /* El estado de envío: reloj mientras va, marca cuando el servidor lo ha
    guardado, aspa si no pudo. Sin esto, un mensaje que no sale se queda
    igual que uno que sí, y la persona lo da por enviado. */

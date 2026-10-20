@@ -18,10 +18,17 @@
    error de tener tres formas de nombrar la misma conversación.
 
    Sobre el sondeo: se pregunta por mensajes nuevos cada pocos segundos, y
-   solo mientras la pestaña está visible. No hay websockets a propósito —el
-   sitio no carga dependencias externas y Realtime obligaría a traerse el SDK
-   entero— pero el intervalo se afloja cuando no hay nadie mirando para no
-   dejar una pestaña de fondo llamando al servidor toda la tarde.
+   solo mientras la pestaña está visible. Los mensajes no van por Realtime a
+   propósito —el sitio no carga dependencias externas y eso obligaría a
+   traerse el SDK entero—, y el intervalo se afloja cuando no hay nadie
+   mirando para no dejar una pestaña de fondo llamando al servidor toda la
+   tarde.
+
+   La excepción es «escribiendo…»: dura unos segundos y por sondeo llegaría
+   siempre tarde. Va por un canal privado de Realtime con el cliente mínimo
+   de `PFP.realtime`, el mismo canal que usa la app. Y cuando alguien deja de
+   escribir se piden los mensajes en el momento: lo normal es que acabe de
+   mandar uno.
    ========================================================================== */
 
 (function () {
@@ -59,6 +66,7 @@
   var pegadoAbajo = true;   // ¿está el usuario mirando el final?
   var hayMas = true;        // ¿queda historia por cargar hacia arriba?
   var cargando = false;
+  var miNombre = '';        // mi nombre de pila, para «Ana está escribiendo»
 
   /* ---------------------------------------------------------------------
      Utilidades
@@ -572,6 +580,7 @@
 
   /** Deja el panel derecho como al entrar. */
   function cerrarPanel() {
+    cerrarEscribiendo();
     abierta = null;
     solicitudAbierta = null;
     $('#chat-conv').hidden = true;
@@ -610,6 +619,7 @@
     $('#chat-nada').hidden = true;
     $('#chat-conv').hidden = false;
 
+    abrirEscribiendo(id);
     pintarLista();
     return cargarMensajes(true);
   }
@@ -751,7 +761,11 @@
         '</div>';
     });
 
+    // Debajo del último: «escribiendo…», o el aviso del asistente.
+    html += '<div id="chat-cola"></div>';
+
     caja.innerHTML = html;
+    pintarCola();
 
     var mas = $('#chat-mas');
     if (mas) mas.addEventListener('click', function () { cargarMensajes(false); });
@@ -808,6 +822,7 @@
     mensajes.push(provisional);
     campo.value = '';
     ajustarAlto(campo);
+    avisarEscribiendo(false);
     pegadoAbajo = true;
     pintarMensajes(true);
 
@@ -830,9 +845,12 @@
         .then(function (r) {
           // Al asistente hay que despertarlo: es quien contesta. Si falla, el
           // mensaje ya esta guardado y se puede reintentar; por eso el error
-          // no tumba el envio.
+          // no tumba el envio: lo dice el aviso con «Volver a intentarlo».
           if (p.clase2 === 'assistant') {
-            PFP.fn.invoke('assistant', {}).catch(function () {});
+            var guardado = Array.isArray(r) ? r[0] : r;
+            if (guardado && guardado.sent_at) provisional.sent_at = guardado.sent_at;
+            provisional.enviando = false;
+            pedirAsistente();
           }
           return r;
         });
@@ -883,6 +901,214 @@
   function ajustarAlto(campo) {
     campo.style.height = 'auto';
     campo.style.height = Math.min(campo.scrollHeight, 144) + 'px';
+  }
+
+  /* ---------------------------------------------------------------------
+     «Escribiendo…» y el asistente
+     --------------------------------------------------------------------- */
+
+  /* Cuánto dura un «escribiendo» sin un aviso nuevo, por si se cae la red a
+     media frase; y cada cuánto, como mucho, se repite el mío. Los mismos
+     que en la app. */
+  var CADUCA_MS = 6000;
+  var CADA_MS = 2500;
+
+  /* Cuánto se espera al asistente. Su función se rinde con Google a los 30 s
+     y deja su propio aviso; si a los 60 no hay nada, no ha podido ni
+     escribir, y el aviso lo pone esta pantalla. */
+  var ESPERA_ASISTENTE_MS = 60000;
+
+  var canalEscribiendo = null;
+  var escribiendo = {};     // id → { nombre, hasta }
+  var ultimoAviso = 0;      // cuándo avisé de que escribo; 0 si no hay aviso vivo
+  var relojCola = null;
+  var asistente = { pedidoEn: null, falloEn: null };
+
+  /**
+   * El canal de «escribiendo» de una conversación, o null si no tiene.
+   *
+   * El mismo nombre que en la app y que entiende la regla del servidor. La
+   * de dos se llama distinto para cada uno —`peer:<la otra persona>`—, así que
+   * su canal lleva la pareja ordenada. El hilo del asistente no tiene.
+   */
+  function temaEscribiendo(id) {
+    var t = String(id || '').split(':');
+    if (!t[1] || !yo) return null;
+    if (t[0] === 'peer') {
+      if (t[1] === yo) return null;
+      var par = [yo, t[1]].sort();
+      return 'typing:peer:' + par[0] + ':' + par[1];
+    }
+    if (t[0] === 'mission' || t[0] === 'help' || t[0] === 'support') return 'typing:' + t[0] + ':' + t[1];
+    if (t[0] === 'org') return 'typing:org:' + t[1] + ':' + (t[2] === 'admin' ? 'admin' : 'all');
+    return null;
+  }
+
+  function abrirEscribiendo(id) {
+    cerrarEscribiendo();
+    var tema = temaEscribiendo(id);
+    if (!tema || !PFP.realtime) return;
+
+    canalEscribiendo = PFP.realtime.canal(tema, function (evento, carga) {
+      if (evento !== 'typing' || typeof carga.id !== 'string' || carga.id === yo) return;
+      var estaba = !!escribiendo[carga.id];
+      if (carga.typing === false) {
+        delete escribiendo[carga.id];
+      } else {
+        escribiendo[carga.id] = {
+          nombre: typeof carga.name === 'string' ? carga.name.slice(0, 40) : '',
+          hasta: Date.now() + CADUCA_MS,
+        };
+      }
+      pintarCola();
+      // Al dejar de escribir, lo normal es que acabe de mandarlo: se pide ya,
+      // sin esperar a la siguiente vuelta del sondeo.
+      if (estaba && carga.typing === false) traerNuevos().catch(function () {});
+    });
+  }
+
+  function cerrarEscribiendo() {
+    if (canalEscribiendo) {
+      avisarEscribiendo(false);
+      canalEscribiendo.cerrar();
+      canalEscribiendo = null;
+    }
+    escribiendo = {};
+    ultimoAviso = 0;
+  }
+
+  /**
+   * Avisa a los demás de que escribo, o de que he dejado de hacerlo.
+   *
+   * Se puede llamar con cada tecla: el aviso sale como mucho cada 2,5 s. El
+   * de «he dejado de escribir», al enviar o al vaciar el campo, hace que los
+   * puntos se vayan en el momento y no seis segundos después.
+   */
+  function avisarEscribiendo(si) {
+    if (!canalEscribiendo || !yo) return;
+    var ahora = Date.now();
+    if (si && ahora - ultimoAviso < CADA_MS) return;
+    if (!si && ultimoAviso === 0) return;
+    ultimoAviso = si ? ahora : 0;
+    canalEscribiendo.enviar('typing', { id: yo, name: miNombre, typing: si });
+  }
+
+  /**
+   * ¿Le toca contestar al asistente?
+   *
+   * `esperando` mientras el último mensaje es una pregunta mía ya guardada y
+   * hay margen; `fallo` si la llamada ha fallado o se ha acabado el margen.
+   * Se deduce de lo que hay: en cuanto entra su respuesta, o su aviso, el
+   * último deja de ser mío.
+   */
+  function estadoAsistente() {
+    var p = partes(abierta);
+    if (!p || p.clase2 !== 'assistant') return 'nada';
+    var ultimo = mensajes[mensajes.length - 1];
+    if (!ultimo || ultimo.sender_id !== yo || ultimo.enviando || ultimo.fallo) return 'nada';
+    if (asistente.falloEn !== null) return 'fallo';
+    var desde = Math.max(Date.parse(ultimo.sent_at), asistente.pedidoEn || 0);
+    return Date.now() - desde < ESPERA_ASISTENTE_MS ? 'esperando' : 'fallo';
+  }
+
+  /** Despierta al asistente, o le vuelve a preguntar. */
+  function pedirAsistente() {
+    asistente = { pedidoEn: Date.now(), falloEn: null };
+    pintarCola();
+    var lang = document.documentElement.lang === 'de' ? 'de' : 'es';
+    PFP.fn.invoke('assistant', { lang: lang }).then(
+      function () {
+        // La función contesta después de haber escrito la respuesta —o su
+        // aviso—: se trae ya, sin esperar al sondeo.
+        traerNuevos().catch(function () {});
+      },
+      function () {
+        asistente.falloEn = Date.now();
+        pintarCola();
+      },
+    );
+  }
+
+  function puntosHTML(etiqueta, nombre) {
+    return (
+      '<div class="chat__escribiendo">' +
+      (nombre ? '<span class="chat__autor">' + esc(nombre) + '</span>' : '') +
+      '<span class="chat__puntos" aria-hidden="true"><i></i><i></i><i></i></span>' +
+      '<span class="sr-only">' + esc(etiqueta) + '</span>' +
+      '</div>'
+    );
+  }
+
+  /** «Ana está escribiendo», «Ana y Luis están…», «Varias personas…». */
+  function quienEscribe(lista) {
+    var nombres = lista.map(function (e) { return e.nombre; }).filter(Boolean);
+    if (lista.length === 1) {
+      return nombres[0] ? T('c.chat.escribeUno').replace('{n}', nombres[0]) : T('c.chat.escribeAlguien');
+    }
+    if (lista.length === 2 && nombres.length === 2) {
+      return T('c.chat.escribenDos').replace('{a}', nombres[0]).replace('{b}', nombres[1]);
+    }
+    return T('c.chat.escribenVarios');
+  }
+
+  /** Encima de los puntos, en un grupo: «Ana», «Ana y Luis», «Varias personas». */
+  function nombresEscriben(lista) {
+    var nombres = lista.map(function (e) { return e.nombre; }).filter(Boolean);
+    if (lista.length === 1) return nombres[0] || '';
+    if (lista.length === 2 && nombres.length === 2) {
+      return T('c.chat.nombresDos').replace('{a}', nombres[0]).replace('{b}', nombres[1]);
+    }
+    return T('c.chat.variasPersonas');
+  }
+
+  /**
+   * Lo que va debajo del último mensaje: tres puntos, el aviso del
+   * asistente o nada. Se repinta solo cuando cambia, para que la animación
+   * no vuelva a empezar con cada aviso.
+   */
+  function pintarCola() {
+    var cola = $('#chat-cola');
+    if (!cola) return;
+    clearTimeout(relojCola);
+    relojCola = null;
+
+    var ahora = Date.now();
+    var html = '';
+    var estado = estadoAsistente();
+
+    if (estado === 'esperando') {
+      html = puntosHTML(T('c.chat.asistenteEscribe'), '');
+      var ultimo = mensajes[mensajes.length - 1];
+      var desde = Math.max(Date.parse(ultimo.sent_at), asistente.pedidoEn || 0);
+      relojCola = setTimeout(pintarCola, desde + ESPERA_ASISTENTE_MS - ahora + 50);
+    } else if (estado === 'fallo') {
+      html =
+        '<div class="chat__msg chat__msg--primero chat__fallo" role="status">' +
+        '<p>' + esc(T('c.chat.asistenteFallo')) + '</p>' +
+        '<button class="btn btn--ghost chat__reintentar" type="button" data-reintentar>' +
+        esc(T('c.chat.reintentar')) + '</button>' +
+        '</div>';
+    } else {
+      var lista = [];
+      Object.keys(escribiendo).forEach(function (id) {
+        if (escribiendo[id].hasta > ahora) lista.push(escribiendo[id]);
+        else delete escribiendo[id];
+      });
+      if (lista.length) {
+        var h = hiloActual();
+        // En un grupo hace falta saber quién; en una de dos, no.
+        html = puntosHTML(quienEscribe(lista), h && h.clase === 'grupo' ? nombresEscriben(lista) : '');
+        var proximo = Math.min.apply(null, lista.map(function (e) { return e.hasta; }));
+        relojCola = setTimeout(pintarCola, proximo - ahora + 50);
+      }
+    }
+
+    if (cola.innerHTML === html) return;
+    cola.innerHTML = html;
+    if (pegadoAbajo) {
+      var caja = $('#chat-mensajes');
+      caja.scrollTop = caja.scrollHeight;
+    }
   }
 
   /* ---------------------------------------------------------------------
@@ -1092,6 +1318,7 @@
     UI.cargarEstado()
       .then(function (e) {
         yo = e.perfil.id;
+        miNombre = String(e.perfil.full_name || '').trim().split(/\s+/)[0] || '';
         return cargarHilos();
       })
       .then(function () {
@@ -1127,6 +1354,7 @@
     // Aceptar y rechazar viven dentro del panel de mensajes, que se repinta
     // entero: por eso el oyente va en el contenedor y no en cada botón.
     $('#chat-mensajes').addEventListener('click', function (ev) {
+      if (ev.target.closest('[data-reintentar]')) return pedirAsistente();
       var si = ev.target.closest('[data-aceptar]');
       if (si) return aceptarSolicitud(si.dataset.aceptar);
       var no = ev.target.closest('[data-rechazar]');
@@ -1161,6 +1389,10 @@
     campo.addEventListener('input', function () {
       ajustarAlto(campo);
       $('#chat-enviar').disabled = campo.value.trim() === '';
+      avisarEscribiendo(campo.value.trim() !== '');
+    });
+    campo.addEventListener('blur', function () {
+      avisarEscribiendo(false);
     });
 
     campo.addEventListener('keydown', function (ev) {
@@ -1199,6 +1431,7 @@
 
     window.addEventListener('beforeunload', function () {
       if (reloj) clearInterval(reloj);
+      cerrarEscribiendo();
     });
   }
 
