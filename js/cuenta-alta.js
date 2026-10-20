@@ -201,7 +201,7 @@
       dato('c.perfil.distancia', perfil.max_travel_distance_m
         ? Math.round(perfil.max_travel_distance_m / 1000) + ' km' : ''),
       dato('c.perfil.vehiculo', UI.T(perfil.has_vehicle ? 'c.perfil.si' : 'c.perfil.no')),
-      dato('c.perfil.ubicacion', UI.T(perfil.home_location ? 'c.perfil.ubiGuardada' : 'c.perfil.ubiNo')),
+      dato('c.perfil.ubicacion', UI.T(perfil.location_consent_at ? 'c.perfil.ubiGuardada' : 'c.perfil.ubiNo')),
     ]);
 
     /* --- Habilidades --- */
@@ -415,6 +415,18 @@
     }
   }
 
+  /* Lo que se lee del perfil. SIN `home_location`: es el domicilio, y desde
+     la migración 0018 ninguna cuenta puede leerlo, ni la propia —lo usan
+     solo las funciones del servidor—. Postgres no se salta una columna sin
+     permiso: tumba la consulta entera con «permission denied for table
+     profiles», y «Mi perfil» se quedaba en «Cargando…». Si hay ubicación
+     guardada se sabe por `location_consent_at`, que se pone al guardarla y
+     se borra al quitarla. Igual que en la app. */
+  var COLUMNAS_PERFIL =
+    'select=id,full_name,email,phone,city,province,photo_url,response_mode,' +
+    'max_travel_distance_m,has_vehicle,agreement_version,' +
+    'agreement_accepted_at,privacy_accepted_at,location_consent_at,onboarding_complete&limit=1';
+
   function paginaVoluntario() {
     if (!UI.exigirSesion()) return;
 
@@ -424,12 +436,7 @@
       .montar()
       .then(function () {
         return Promise.all([
-          PFP.db.select(
-            'profiles',
-            'select=id,full_name,email,phone,city,province,photo_url,response_mode,' +
-              'max_travel_distance_m,has_vehicle,home_location,agreement_version,' +
-              'agreement_accepted_at,privacy_accepted_at,location_consent_at,onboarding_complete&limit=1',
-          ),
+          PFP.db.select('profiles', COLUMNAS_PERFIL),
           PFP.db.rpc('my_skills').catch(function () { return []; }),
           PFP.db
             .select(
@@ -588,8 +595,8 @@
        para cambiar un teléfono haría pensar que se está aceptando otra vez
        algo que ya se aceptó. */
     $('#acuerdo').checked = !!perfil.agreement_accepted_at;
-    casillaUbi.checked = !!perfil.home_location;
-    if (perfil.home_location) estadoUbi.textContent = UI.T('c.perfil.ubiGuardada');
+    casillaUbi.checked = !!perfil.location_consent_at;
+    if (perfil.location_consent_at) estadoUbi.textContent = UI.T('c.perfil.ubiGuardada');
 
     /* --- Ficha o formulario ---
        Con el perfil sin terminar se abre directo el formulario: esta pantalla
@@ -720,12 +727,7 @@
              con lo que había en pantalla enseñaría lo que creemos haber
              guardado, no lo que hay. */
           return Promise.all([
-            PFP.db.select(
-              'profiles',
-              'select=id,full_name,email,phone,city,province,photo_url,response_mode,' +
-                'max_travel_distance_m,has_vehicle,home_location,agreement_version,' +
-                'agreement_accepted_at,privacy_accepted_at,location_consent_at,onboarding_complete&limit=1',
-            ),
+            PFP.db.select('profiles', COLUMNAS_PERFIL),
             PFP.db.rpc('my_skills').catch(function () { return []; }),
           ]).then(function (r) {
             datos.perfil = (r[0] || [])[0] || datos.perfil;

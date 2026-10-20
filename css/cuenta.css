@@ -144,12 +144,6 @@
 .codigo .codigo__campo:focus { outline: none; box-shadow: none; }
 .codigo .codigo__campo::selection { background: transparent; }
 
-/* «Pegar el código», cuando el código está en el portapapeles. Suave y no
-   ámbar: la acción principal sigue siendo «Continuar». */
-.btn--suave { background: var(--navy-50); color: var(--navy-600); }
-.btn--suave:hover { background: #DCE5F0; color: var(--navy-700); }
-.pegar { justify-self: start; padding: 10px var(--s-base); font-size: 0.95rem; }
-.pegar__icono { flex: 0 0 auto; }
 
 /* Un botón que se lee como un enlace: «Usar otro correo». */
 .enlace {

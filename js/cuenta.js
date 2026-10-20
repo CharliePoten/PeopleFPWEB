@@ -171,108 +171,6 @@
   }
 
   /**
-   * El código de seis cifras que hay en un texto copiado, o null.
-   *
-   * La misma regla que la app: el código solo —«482913»—, partido —«482 913»,
-   * «482-913»— o dentro de una frase corta —«Tu código es 482913»—, siempre
-   * que haya UN solo grupo de seis cifras. Lo largo no se mira: un párrafo o
-   * una dirección no son un código copiado, y sacar de ahí una cifra suelta
-   * sería adivinar.
-   */
-  function extraerCodigo(texto) {
-    var limpio = String(texto || '').trim();
-    if (!limpio || limpio.length > 200) return null;
-
-    var sinSeparadores = limpio.replace(/[\s-]/g, '');
-    if (/^\d+$/.test(sinSeparadores)) return sinSeparadores.length === 6 ? sinSeparadores : null;
-
-    var candidatos = (limpio.match(/\d+/g) || []).filter(function (g) {
-      return g.length === 6;
-    });
-    return candidatos.length === 1 ? candidatos[0] : null;
-  }
-
-  /**
-   * «Pegar el código», para quien ha leído el correo en este mismo aparato.
-   *
-   * Leer el portapapeles exige permiso, así que se lee AL PULSAR: Chrome lo
-   * pregunta la primera vez y Safari enseña su burbuja de «Pegar». Y al volver
-   * a la pestaña —que es lo que pasa al ir al correo, copiar el código y
-   * volver— se mira solo si el navegador YA dio permiso: sin él, leerlo
-   * sacaría la pregunta sin que nadie hubiera pulsado nada. Entonces el botón
-   * enseña el código: «Pegar el código 482913».
-   *
-   * Sin la API del portapapeles el botón no sale: pegar con el teclado o con
-   * una pulsación larga sigue funcionando en las casillas.
-   */
-  function botonPegar(boton, campo, alFallar) {
-    var portapapeles = navigator.clipboard;
-    if (!boton || !portapapeles || typeof portapapeles.readText !== 'function') return;
-
-    var etiqueta = $('#' + boton.id + '-texto');
-    var sugerido = null;
-
-    function pintar() {
-      boton.hidden = campo.value.length === 6;
-      if (!etiqueta) return;
-      if (sugerido && sugerido !== campo.value) {
-        etiqueta.removeAttribute('data-i18n');
-        etiqueta.textContent = T('c.pegar.conCodigo').replace('{codigo}', sugerido);
-      } else {
-        etiqueta.setAttribute('data-i18n', 'c.pegar.btn');
-        etiqueta.textContent = T('c.pegar.btn');
-      }
-    }
-
-    function poner(codigo) {
-      campo.value = codigo;
-      // Por el mismo camino que si se tecleara: filtro, casillas y, donde
-      // toque, la comprobación automática.
-      campo.dispatchEvent(new Event('input', { bubbles: true }));
-      campo.focus();
-    }
-
-    boton.addEventListener('click', function () {
-      if (sugerido) return poner(sugerido);
-      portapapeles
-        .readText()
-        .then(function (texto) {
-          var codigo = extraerCodigo(texto);
-          if (codigo) poner(codigo);
-          else alFallar(T('c.pegar.nada'));
-        })
-        .catch(function () {
-          alFallar(T('c.pegar.denegado'));
-        });
-    });
-
-    function mirarSinPreguntar() {
-      if (!navigator.permissions || !navigator.permissions.query) return;
-      // Firefox y Safari no conocen este permiso y rechazan: no pasa nada.
-      navigator.permissions
-        .query({ name: 'clipboard-read' })
-        .then(function (permiso) {
-          if (permiso.state !== 'granted') return;
-          return portapapeles.readText().then(function (texto) {
-            sugerido = extraerCodigo(texto);
-            pintar();
-          });
-        })
-        .catch(function () {});
-    }
-
-    window.addEventListener('focus', mirarSinPreguntar);
-    campo.addEventListener('input', pintar);
-    document.addEventListener('click', function (ev) {
-      var b = ev.target.closest ? ev.target.closest('.lang [data-lang]') : null;
-      if (b) setTimeout(pintar, 0);
-    });
-
-    pintar();
-    mirarSinPreguntar();
-  }
-
-  /**
    * El botón de «Enviar otro código» con su espera.
    *
    * Ofrecer «reenviar» al segundo de mandar uno solo consigue que Supabase lo
@@ -678,9 +576,6 @@
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
     var casillas = codigoEnCasillas(campo);
-    botonPegar($('#btn-pegar'), campo, function (texto) {
-      avisar('aviso', texto);
-    });
 
     /* Cuenta atrás antes de poder pedir otro, contada desde el último envío
        de verdad; si no se ha mandado nada, no hay nada que esperar. */
@@ -844,9 +739,6 @@
     // Al completar las seis cifras se comprueba solo, sin buscar el botón.
     campo.addEventListener('input', function () {
       if (campo.value.length === 6) comprobar();
-    });
-    botonPegar($('#btn-pegar'), campo, function (texto) {
-      avisar('aviso', texto);
     });
 
     var comprobando = false;

@@ -366,12 +366,6 @@
       'Ha pasado demasiado tiempo desde que escribiste el código. Pide otro para seguir: tu contraseña no ha cambiado.',
     'c.rec.empezar': 'Pedir otro código',
 
-    /* --- Pegar el código copiado del correo --- */
-    'c.pegar.btn': 'Pegar el código',
-    'c.pegar.conCodigo': 'Pegar el código {codigo}',
-    'c.pegar.nada': 'Lo que hay copiado no es un código de seis cifras.',
-    'c.pegar.denegado':
-      'El navegador no ha dejado leer lo copiado. Pega el código en las casillas: mantén pulsado o usa Ctrl+V.',
 
     /* --- Mi cuenta --- */
     'c.mi.sub': 'Lo mismo que ves en la app, desde el navegador.',
@@ -976,11 +970,6 @@
       'Seit der Eingabe des Codes ist zu viel Zeit vergangen. Fordere einen neuen an, um weiterzumachen: Dein Passwort ist unverändert.',
     'c.rec.empezar': 'Neuen Code anfordern',
 
-    'c.pegar.btn': 'Code einfügen',
-    'c.pegar.conCodigo': 'Code {codigo} einfügen',
-    'c.pegar.nada': 'Was du kopiert hast, ist kein sechsstelliger Code.',
-    'c.pegar.denegado':
-      'Der Browser hat das Lesen der Zwischenablage nicht erlaubt. Füge den Code direkt in die Kästchen ein: lange drücken oder Strg+V.',
 
     'c.mi.sub': 'Dasselbe wie in der App, im Browser.',
     'c.mi.tipoCuenta': 'Konto',
