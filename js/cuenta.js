@@ -32,7 +32,7 @@
   /* Los mensajes viven en el diccionario, como el resto. Se resuelven por
      el codigo del error, que es igual en la web y en la app. */
   var CODIGOS = [
-    'invalid_credentials', 'email_taken', 'weak_password', 'email_not_confirmed',
+    'invalid_credentials', 'email_taken', 'weak_password', 'misma_clave', 'email_not_confirmed',
     'invalid_code', 'rate_limited', 'network', 'sin_sesion', 'sin_permiso', 'motivo',
     'cif_repetido', 'duplicado', 'unknown',
   ];
@@ -160,6 +160,153 @@
     return {
       error: function (si) {
         caja.classList.toggle('codigo--error', !!si);
+      },
+      /** Vacía las casillas, como si se borrara a mano: por el mismo evento,
+          para que se entere todo lo que escucha al campo. */
+      vaciar: function () {
+        campo.value = '';
+        campo.dispatchEvent(new Event('input', { bubbles: true }));
+      },
+    };
+  }
+
+  /**
+   * El código de seis cifras que hay en un texto copiado, o null.
+   *
+   * La misma regla que la app: el código solo —«482913»—, partido —«482 913»,
+   * «482-913»— o dentro de una frase corta —«Tu código es 482913»—, siempre
+   * que haya UN solo grupo de seis cifras. Lo largo no se mira: un párrafo o
+   * una dirección no son un código copiado, y sacar de ahí una cifra suelta
+   * sería adivinar.
+   */
+  function extraerCodigo(texto) {
+    var limpio = String(texto || '').trim();
+    if (!limpio || limpio.length > 200) return null;
+
+    var sinSeparadores = limpio.replace(/[\s-]/g, '');
+    if (/^\d+$/.test(sinSeparadores)) return sinSeparadores.length === 6 ? sinSeparadores : null;
+
+    var candidatos = (limpio.match(/\d+/g) || []).filter(function (g) {
+      return g.length === 6;
+    });
+    return candidatos.length === 1 ? candidatos[0] : null;
+  }
+
+  /**
+   * «Pegar el código», para quien ha leído el correo en este mismo aparato.
+   *
+   * Leer el portapapeles exige permiso, así que se lee AL PULSAR: Chrome lo
+   * pregunta la primera vez y Safari enseña su burbuja de «Pegar». Y al volver
+   * a la pestaña —que es lo que pasa al ir al correo, copiar el código y
+   * volver— se mira solo si el navegador YA dio permiso: sin él, leerlo
+   * sacaría la pregunta sin que nadie hubiera pulsado nada. Entonces el botón
+   * enseña el código: «Pegar el código 482913».
+   *
+   * Sin la API del portapapeles el botón no sale: pegar con el teclado o con
+   * una pulsación larga sigue funcionando en las casillas.
+   */
+  function botonPegar(boton, campo, alFallar) {
+    var portapapeles = navigator.clipboard;
+    if (!boton || !portapapeles || typeof portapapeles.readText !== 'function') return;
+
+    var etiqueta = $('#' + boton.id + '-texto');
+    var sugerido = null;
+
+    function pintar() {
+      boton.hidden = campo.value.length === 6;
+      if (!etiqueta) return;
+      if (sugerido && sugerido !== campo.value) {
+        etiqueta.removeAttribute('data-i18n');
+        etiqueta.textContent = T('c.pegar.conCodigo').replace('{codigo}', sugerido);
+      } else {
+        etiqueta.setAttribute('data-i18n', 'c.pegar.btn');
+        etiqueta.textContent = T('c.pegar.btn');
+      }
+    }
+
+    function poner(codigo) {
+      campo.value = codigo;
+      // Por el mismo camino que si se tecleara: filtro, casillas y, donde
+      // toque, la comprobación automática.
+      campo.dispatchEvent(new Event('input', { bubbles: true }));
+      campo.focus();
+    }
+
+    boton.addEventListener('click', function () {
+      if (sugerido) return poner(sugerido);
+      portapapeles
+        .readText()
+        .then(function (texto) {
+          var codigo = extraerCodigo(texto);
+          if (codigo) poner(codigo);
+          else alFallar(T('c.pegar.nada'));
+        })
+        .catch(function () {
+          alFallar(T('c.pegar.denegado'));
+        });
+    });
+
+    function mirarSinPreguntar() {
+      if (!navigator.permissions || !navigator.permissions.query) return;
+      // Firefox y Safari no conocen este permiso y rechazan: no pasa nada.
+      navigator.permissions
+        .query({ name: 'clipboard-read' })
+        .then(function (permiso) {
+          if (permiso.state !== 'granted') return;
+          return portapapeles.readText().then(function (texto) {
+            sugerido = extraerCodigo(texto);
+            pintar();
+          });
+        })
+        .catch(function () {});
+    }
+
+    window.addEventListener('focus', mirarSinPreguntar);
+    campo.addEventListener('input', pintar);
+    document.addEventListener('click', function (ev) {
+      var b = ev.target.closest ? ev.target.closest('.lang [data-lang]') : null;
+      if (b) setTimeout(pintar, 0);
+    });
+
+    pintar();
+    mirarSinPreguntar();
+  }
+
+  /**
+   * El botón de «Enviar otro código» con su espera.
+   *
+   * Ofrecer «reenviar» al segundo de mandar uno solo consigue que Supabase lo
+   * rechace por exceso de envíos. Devuelve `empezar(segundos)`; con 0 el
+   * botón queda libre.
+   */
+  function esperaDeReenvio(boton) {
+    // Espacios que no se parten: en un móvil estrecho «(52 s)» se quedaba
+    // con la «s)» sola en otra línea.
+    var FIJO = String.fromCharCode(160);
+    var restante = 0;
+    var temporizador = null;
+
+    function pintar() {
+      if (!boton) return;
+      boton.disabled = restante > 0;
+      boton.textContent =
+        restante > 0
+          ? T('c.ver.reenviar') + FIJO + '(' + restante + FIJO + 's)'
+          : T('c.ver.reenviar');
+    }
+
+    function tic() {
+      restante--;
+      pintar();
+      temporizador = restante > 0 ? setTimeout(tic, 1000) : null;
+    }
+
+    return {
+      empezar: function (segundos) {
+        clearTimeout(temporizador);
+        restante = Math.max(0, Math.round(segundos));
+        pintar();
+        temporizador = restante > 0 ? setTimeout(tic, 1000) : null;
       },
     };
   }
@@ -531,29 +678,15 @@
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
     var casillas = codigoEnCasillas(campo);
+    botonPegar($('#btn-pegar'), campo, function (texto) {
+      avisar('aviso', texto);
+    });
 
     /* Cuenta atrás antes de poder pedir otro, contada desde el último envío
-       de verdad. Ofrecer «reenviar» al segundo de mandar uno solo consigue
-       que Supabase lo rechace por exceso de envíos; y si no se ha mandado
-       nada, no hay nada que esperar. */
-    var espera = transcurrido === null ? 0 : Math.max(0, 60 - Math.floor(transcurrido / 1000));
+       de verdad; si no se ha mandado nada, no hay nada que esperar. */
     var btnReenviar = $('#btn-reenviar');
-
-    function pintarEspera() {
-      if (!btnReenviar) return;
-      if (espera > 0) {
-        btnReenviar.disabled = true;
-        // Espacios que no se parten: en un móvil estrecho «(52 s)» se
-        // quedaba con la «s)» sola en otra línea.
-        btnReenviar.textContent = T('c.ver.reenviar') + ' (' + espera + ' s)';
-        espera--;
-        setTimeout(pintarEspera, 1000);
-      } else {
-        btnReenviar.disabled = false;
-        btnReenviar.textContent = T('c.ver.reenviar');
-      }
-    }
-    pintarEspera();
+    var espera = esperaDeReenvio(btnReenviar);
+    espera.empezar(transcurrido === null ? 0 : 60 - Math.floor(transcurrido / 1000));
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -591,8 +724,7 @@
             anotarEnvio(email);
             pintarIntro(true);
             avisar('aviso', T('c.ver.reenviado'), 'ok');
-            espera = 60;
-            pintarEspera();
+            espera.empezar(60);
           })
           .catch(function (e) {
             ocupado(btnReenviar, false);
@@ -608,10 +740,68 @@
 
   function paginaRecuperar() {
     var pedir = $('#form-pedir');
+    var formCodigo = $('#form-codigo');
     var cambiar = $('#form-cambiar');
-    if (!pedir || !cambiar) return;
+    var caducado = $('#rec-caducado');
+    if (!pedir || !formCodigo || !cambiar) return;
 
     var email = '';
+    /* La sesión que abre el código, solo en esta página (ver
+       `PFP.auth.verificarRecuperacion`). Recargar o cerrar la pierde, y es lo
+       que se quiere: nadie se queda dentro sin haber cambiado la contraseña. */
+    var sesion = null;
+
+    /* ---- Los tres pasos ---- */
+
+    var TEXTOS = {
+      1: { titulo: 'c.rec.t', sub: 'c.rec.sub', fin: null },
+      2: { titulo: 'c.rec.codigoT', sub: 'c.rec.codigoA', fin: 'c.rec.codigoB' },
+      3: { titulo: 'c.rec.nuevaT', sub: 'c.rec.nuevaA', fin: 'c.rec.nuevaB' },
+      caducado: { titulo: 'c.rec.nuevaT', sub: null, fin: null },
+    };
+
+    /* Se cambia la clave y no solo el texto: si no, al pulsar el botón de
+       idioma `site.js` volvería a poner la frase del paso 1. */
+    function ponerTexto(el, clave) {
+      if (!el) return;
+      if (clave) {
+        el.setAttribute('data-i18n', clave);
+        el.textContent = T(clave);
+      } else {
+        el.removeAttribute('data-i18n');
+        el.textContent = '';
+      }
+    }
+
+    function irAPaso(paso, sinFoco) {
+      var n = paso === 'caducado' ? 3 : paso;
+      pedir.hidden = paso !== 1;
+      formCodigo.hidden = paso !== 2;
+      cambiar.hidden = paso !== 3;
+      if (caducado) caducado.hidden = paso !== 'caducado';
+
+      $$('.pasos__barra').forEach(function (barra, i) {
+        barra.setAttribute('data-hecho', String(i < n));
+      });
+      ponerTexto($('#rec-paso'), 'c.rec.paso' + n);
+
+      var textos = TEXTOS[paso];
+      ponerTexto($('#rec-titulo'), textos.titulo);
+      ponerTexto($('#rec-sub'), textos.sub);
+      ponerTexto($('#rec-sub-fin'), textos.fin);
+      $('#rec-correo').textContent = textos.fin ? email : '';
+
+      if (sinFoco) return;
+      // Al campo del paso: se llega a escribir, no a buscar dónde.
+      var primero = { 1: $('#email'), 2: campo, 3: $('#password'), caducado: $('#btn-empezar') }[paso];
+      if (primero) {
+        setTimeout(function () {
+          primero.focus();
+        }, 0);
+      }
+    }
+
+    /* ---- Paso 1: el correo ---- */
 
     pedir.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -632,51 +822,139 @@
           // correo no está registrado» convertiría esto en una forma
           // cómoda de averiguar quién tiene cuenta, y aquí eso es saber
           // quién ha pedido ayuda tras una emergencia.
-          pedir.style.display = 'none';
-          cambiar.style.display = '';
-          $('#destino').textContent = email;
-          avisar('aviso', T('c.rec.enviado'), 'ok');
+          casillas.vaciar();
+          casillas.error(false);
+          $('#correo-cuenta').value = email;
+          espera.empezar(60);
+          irAPaso(2);
         })
         .catch(function (e) {
           ocupado(boton, false);
           avisar('aviso', explicar(e));
         });
     });
+
+    /* ---- Paso 2: el código ---- */
 
     var campo = $('#codigo');
     campo.addEventListener('input', function () {
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
     var casillas = codigoEnCasillas(campo);
+    // Al completar las seis cifras se comprueba solo, sin buscar el botón.
+    campo.addEventListener('input', function () {
+      if (campo.value.length === 6) comprobar();
+    });
+    botonPegar($('#btn-pegar'), campo, function (texto) {
+      avisar('aviso', texto);
+    });
+
+    var comprobando = false;
+
+    function comprobar() {
+      if (comprobando) return;
+      limpiarAvisos();
+
+      var codigo = campo.value;
+      if (codigo.length !== 6) {
+        casillas.error(true);
+        return avisar('aviso', T('c.ver.seisDigitos'));
+      }
+
+      comprobando = true;
+      var boton = $('#btn-codigo');
+      ocupado(boton, true, T('c.ver.comprobando'));
+      PFP.auth
+        .verificarRecuperacion(email, codigo)
+        .then(function (s) {
+          comprobando = false;
+          ocupado(boton, false);
+          sesion = s;
+          irAPaso(3);
+        })
+        .catch(function (e) {
+          comprobando = false;
+          ocupado(boton, false);
+          // Con el código malo se vacían las casillas para volver a
+          // escribirlo: con seis cifras, borrar una a una cuesta más que
+          // teclearlas otra vez.
+          if (e.codigo === 'invalid_code') {
+            casillas.vaciar();
+            casillas.error(true);
+            campo.focus();
+          }
+          avisar('aviso', explicar(e));
+        });
+    }
+
+    formCodigo.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      comprobar();
+    });
+
+    var btnReenviar = $('#btn-reenviar-rec');
+    var espera = esperaDeReenvio(btnReenviar);
+    btnReenviar.addEventListener('click', function () {
+      limpiarAvisos();
+      ocupado(btnReenviar, true, T('c.ver.enviando'));
+      PFP.auth
+        .pedirRecuperacion(email)
+        .then(function () {
+          ocupado(btnReenviar, false);
+          casillas.vaciar();
+          avisar('aviso', T('c.ver.reenviado'), 'ok');
+          espera.empezar(60);
+        })
+        .catch(function (e) {
+          ocupado(btnReenviar, false);
+          avisar('aviso', explicar(e));
+        });
+    });
+
+    $('#btn-otro-correo').addEventListener('click', function () {
+      limpiarAvisos();
+      irAPaso(1);
+    });
+
+    /* ---- Paso 3: la contraseña nueva ---- */
 
     cambiar.addEventListener('submit', function (ev) {
       ev.preventDefault();
       limpiarAvisos();
 
-      var codigo = campo.value.trim();
       var nueva = $('#password').value;
       var repetir = $('#password2').value;
-
-      if (codigo.length !== 6) {
-        casillas.error(true);
-        return avisar('aviso', T('c.ver.seisDigitos'));
-      }
       if (nueva.length < 8) return avisar('aviso', T('c.e.weak_password'));
       if (nueva !== repetir) return avisar('aviso', T('c.e.noCoinciden'));
+      if (!sesion) return irAPaso('caducado');
 
       var boton = $('#btn-cambiar');
       ocupado(boton, true, T('c.rec.guardando'));
       PFP.auth
-        .cambiarContrasena(email, codigo, nueva)
+        .ponerContrasena(sesion, nueva)
         .then(function () {
+          sesion = null;
           ir('index.html');
         })
         .catch(function (e) {
           ocupado(boton, false);
-          casillas.error(e.codigo === 'invalid_code');
+          // 401: la sesión que abrió el código ya no vale. No es una
+          // contraseña mala: hay que pedir otro código.
+          if (e.codigo === 'sin_sesion') {
+            sesion = null;
+            return irAPaso('caducado');
+          }
           avisar('aviso', explicar(e));
         });
     });
+
+    $('#btn-empezar').addEventListener('click', function () {
+      limpiarAvisos();
+      sesion = null;
+      irAPaso(1);
+    });
+
+    irAPaso(1, true);
   }
 
   /* =====================================================================

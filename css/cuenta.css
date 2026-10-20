@@ -37,6 +37,9 @@
 /* Un segundo párrafo —el de «falta confirmar el correo»— no puede ir pegado
    al primero. */
 .cuenta__cabecera p + p { margin-top: 10px; }
+/* El correo que va en medio de la frase: una dirección larga no tiene por
+   dónde partirse y se salía de la tarjeta en un móvil. */
+.cuenta__cabecera strong { overflow-wrap: anywhere; }
 
 .cuenta__pie {
   margin-top: var(--s-lg);
@@ -140,6 +143,33 @@
 }
 .codigo .codigo__campo:focus { outline: none; box-shadow: none; }
 .codigo .codigo__campo::selection { background: transparent; }
+
+/* «Pegar el código», cuando el código está en el portapapeles. Suave y no
+   ámbar: la acción principal sigue siendo «Continuar». */
+.btn--suave { background: var(--navy-50); color: var(--navy-600); }
+.btn--suave:hover { background: #DCE5F0; color: var(--navy-700); }
+.pegar { justify-self: start; padding: 10px var(--s-base); font-size: 0.95rem; }
+.pegar__icono { flex: 0 0 auto; }
+
+/* Un botón que se lee como un enlace: «Usar otro correo». */
+.enlace {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--navy-600);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.enlace:hover { color: var(--navy-700); }
+
+/* Los pasos de recuperar la contraseña se esconden con `hidden`, y `.form`
+   lleva `display: grid`, que le gana al `[hidden]` del navegador: los tres
+   pasos salían a la vez. Explícito, como en el resto del proyecto. */
+.cuenta [hidden] { display: none; }
 
 /* --------------------------------------------------------------------------
    Elegir entre voluntario y entidad

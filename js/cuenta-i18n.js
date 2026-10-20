@@ -347,8 +347,31 @@
     'c.rec.nueva': 'Nueva contraseña',
     'c.rec.guardar': 'Guardar la contraseña',
     'c.rec.guardando': 'Guardando…',
-    'c.rec.enviado': 'Si hay una cuenta con ese correo, ya va el código.',
     'c.rec.volver': 'Volver a entrar',
+    'c.rec.paso1': 'Paso 1 de 3',
+    'c.rec.paso2': 'Paso 2 de 3',
+    'c.rec.paso3': 'Paso 3 de 3',
+    // Paso 2. Como en el 1, sin decir si el correo tiene cuenta. En dos
+    // piezas, antes y después del correo: en alemán el verbo va detrás.
+    'c.rec.codigoT': 'Escribe el código',
+    'c.rec.codigoA': 'Si hay una cuenta con',
+    'c.rec.codigoB': ', te hemos enviado un código de seis cifras.',
+    'c.rec.continuar': 'Continuar',
+    'c.rec.otroCorreo': 'Usar otro correo',
+    // Paso 3.
+    'c.rec.nuevaT': 'Elige una contraseña nueva',
+    'c.rec.nuevaA': 'Para la cuenta',
+    'c.rec.nuevaB': '.',
+    'c.rec.caducado':
+      'Ha pasado demasiado tiempo desde que escribiste el código. Pide otro para seguir: tu contraseña no ha cambiado.',
+    'c.rec.empezar': 'Pedir otro código',
+
+    /* --- Pegar el código copiado del correo --- */
+    'c.pegar.btn': 'Pegar el código',
+    'c.pegar.conCodigo': 'Pegar el código {codigo}',
+    'c.pegar.nada': 'Lo que hay copiado no es un código de seis cifras.',
+    'c.pegar.denegado':
+      'El navegador no ha dejado leer lo copiado. Pega el código en las casillas: mantén pulsado o usa Ctrl+V.',
 
     /* --- Mi cuenta --- */
     'c.mi.sub': 'Lo mismo que ves en la app, desde el navegador.',
@@ -551,6 +574,7 @@
     'c.e.invalid_credentials': 'El correo o la contraseña no son correctos.',
     'c.e.email_taken': 'Ya hay una cuenta con ese correo. Prueba a entrar.',
     'c.e.weak_password': 'La contraseña debe tener al menos 8 caracteres.',
+    'c.e.misma_clave': 'Es la misma contraseña que tenías. Elige una distinta.',
     'c.e.email_not_confirmed': 'Falta confirmar tu correo. Te llevamos a hacerlo.',
     'c.e.invalid_code': 'El código no es correcto o ya ha caducado. Pide otro.',
     'c.e.rate_limited': 'Has pedido demasiados correos seguidos. Espera un minuto.',
@@ -936,8 +960,27 @@
     'c.rec.nueva': 'Neues Passwort',
     'c.rec.guardar': 'Passwort speichern',
     'c.rec.guardando': 'Wird gespeichert…',
-    'c.rec.enviado': 'Wenn es ein Konto mit dieser Adresse gibt, ist der Code unterwegs.',
     'c.rec.volver': 'Zurück zur Anmeldung',
+    'c.rec.paso1': 'Schritt 1 von 3',
+    'c.rec.paso2': 'Schritt 2 von 3',
+    'c.rec.paso3': 'Schritt 3 von 3',
+    'c.rec.codigoT': 'Code eingeben',
+    'c.rec.codigoA': 'Falls es ein Konto mit',
+    'c.rec.codigoB': ' gibt, haben wir dorthin einen sechsstelligen Code geschickt.',
+    'c.rec.continuar': 'Weiter',
+    'c.rec.otroCorreo': 'Andere E-Mail verwenden',
+    'c.rec.nuevaT': 'Neues Passwort wählen',
+    'c.rec.nuevaA': 'Für das Konto',
+    'c.rec.nuevaB': '.',
+    'c.rec.caducado':
+      'Seit der Eingabe des Codes ist zu viel Zeit vergangen. Fordere einen neuen an, um weiterzumachen: Dein Passwort ist unverändert.',
+    'c.rec.empezar': 'Neuen Code anfordern',
+
+    'c.pegar.btn': 'Code einfügen',
+    'c.pegar.conCodigo': 'Code {codigo} einfügen',
+    'c.pegar.nada': 'Was du kopiert hast, ist kein sechsstelliger Code.',
+    'c.pegar.denegado':
+      'Der Browser hat das Lesen der Zwischenablage nicht erlaubt. Füge den Code direkt in die Kästchen ein: lange drücken oder Strg+V.',
 
     'c.mi.sub': 'Dasselbe wie in der App, im Browser.',
     'c.mi.tipoCuenta': 'Konto',
@@ -1135,6 +1178,7 @@
     'c.e.invalid_credentials': 'E-Mail oder Passwort stimmen nicht.',
     'c.e.email_taken': 'Mit dieser Adresse gibt es schon ein Konto. Versuch dich anzumelden.',
     'c.e.weak_password': 'Das Passwort braucht mindestens 8 Zeichen.',
+    'c.e.misma_clave': 'Das ist dein bisheriges Passwort. Wähle ein anderes.',
     'c.e.email_not_confirmed': 'Deine E-Mail ist noch nicht bestätigt. Wir bringen dich hin.',
     'c.e.invalid_code': 'Der Code stimmt nicht oder ist abgelaufen. Fordere einen neuen an.',
     'c.e.rate_limited': 'Du hast zu viele E-Mails hintereinander angefordert. Warte eine Minute.',

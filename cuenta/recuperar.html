@@ -7,14 +7,24 @@
 <header class="header is-solid" id="site-header"><div class="container header__inner"><a class="brand" href="../index.html" aria-label="PeopleForPeople, inicio"><img class="brand__logo brand__logo--icon" src="../imagenes/marca/icon.svg" alt="PeopleForPeople" /><span class="brand__name">People for People</span></a><nav class="nav" id="nav" aria-label="Principal" data-open="false"><div class="nav__head"><span data-i18n="nav.explore">Explora PeopleForPeople</span><button class="nav__close" type="button" aria-label="Cerrar menú">&times;</button></div><ul class="nav__list"><li><a class="nav__link" href="../index.html#que-hacemos"><span>01</span><strong data-i18n="nav.what">Qué hacemos</strong></a></li><li><a class="nav__link" href="../index.html#app"><span>02</span><strong data-i18n="nav.app">La app</strong></a></li><li><a class="nav__link" href="../index.html#para-quien"><span>03</span><strong data-i18n="nav.who">Para quién</strong></a></li><li><ul class="nav__sub"><li><a class="nav__sublink" href="../ongs/index.html" data-i18n="nav.whoNgo">ONG y asociaciones</a></li><li><a class="nav__sublink" href="../comunidades/index.html" data-i18n="nav.whoMuni">Ayuntamientos</a></li><li><a class="nav__sublink" href="../empresas/index.html" data-i18n="nav.whoCorp">Empresas RSC</a></li><li><a class="nav__sublink" href="../voluntarios/index.html" data-i18n="nav.whoVol">Voluntarios</a></li></ul></li><li><a class="nav__link" href="../index.html#contacto"><span>04</span><strong data-i18n="nav.contact">Contacto</strong></a></li><li><a class="nav__link" href="index.html"><span>05</span><strong data-i18n="nav.account">Mi cuenta</strong></a></li></ul><p class="nav__tagline" data-i18n="hero.slogan">Tu ayuda. Su esperanza. Nosotros unimos.</p></nav><button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button><div class="header__actions"><div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true"><img src="../imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button><button type="button" data-lang="de" aria-pressed="false"><img src="../imagenes/marca/bandera-de.svg" alt="" width="20" height="14" /> DE</button></div><a class="header__cuenta" data-i18n="nav.account" href="index.html">Mi cuenta</a><button class="nav-toggle" id="home-nav-toggle" aria-expanded="false" aria-controls="nav"><span class="nav-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button></div></div></header>
 <main id="main"><section class="cuenta"><div class="container">
 
+<!-- Tres pasos, como en la app: el correo, el código y, solo con el código
+     bueno, la contraseña nueva. Antes el código y la contraseña iban juntos, y
+     quien se equivocaba en el código se enteraba después de haber escrito dos
+     veces una contraseña que tenía que volver a escribir. -->
 <div class="cuenta__caja">
+  <div class="pasos" aria-hidden="true"><span class="pasos__barra" data-hecho="true"></span><span class="pasos__barra"></span><span class="pasos__barra"></span></div>
+  <p class="pasos__texto" id="rec-paso" data-i18n="c.rec.paso1">Paso 1 de 3</p>
+
   <div class="cuenta__cabecera">
-    <h1 data-i18n="c.rec.t">Recuperar la contrase&ntilde;a</h1>
-    <p data-i18n="c.rec.sub">Te enviamos un c&oacute;digo para poner una nueva.</p>
+    <h1 id="rec-titulo" data-i18n="c.rec.t">Recuperar la contrase&ntilde;a</h1>
+    <!-- En tres piezas porque en el paso 2 y el 3 lleva el correo en medio, y
+         en alemán el verbo va detrás. -->
+    <p><span id="rec-sub" data-i18n="c.rec.sub">Te enviamos un c&oacute;digo para poner una nueva.</span> <strong id="rec-correo"></strong><span id="rec-sub-fin"></span></p>
   </div>
 
   <div class="aviso aviso--error" id="aviso" data-visible="false" role="alert"></div>
 
+  <!-- Paso 1: el correo. -->
   <form class="form" id="form-pedir" novalidate>
     <div class="field">
       <label for="email" data-i18n="c.email">Correo electr&oacute;nico</label>
@@ -24,12 +34,33 @@
     <button class="btn btn--primary" type="submit" id="btn-pedir" data-i18n="c.rec.btn">Enviar el c&oacute;digo</button>
   </form>
 
-  <form class="form" id="form-cambiar" style="display:none" novalidate>
-    <p class="field__hint" style="margin:0">C&oacute;digo enviado a <strong id="destino"></strong>.</p>
+  <!-- Paso 2: el código, y nada más. Al completar las seis cifras se
+       comprueba solo; el botón se queda por si alguien lo prefiere. -->
+  <form class="form" id="form-codigo" hidden novalidate>
     <div class="field">
       <label for="codigo" data-i18n="c.ver.codigo">C&oacute;digo</label>
       <!-- Sin `maxlength`: cortaba lo pegado antes de limpiarlo. Ver verificar.html. -->
       <input type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" required />
+    </div>
+    <button class="btn btn--suave pegar" type="button" id="btn-pegar" hidden>
+      <svg class="pegar__icono" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1Zm7 1h1.5A1.5 1.5 0 0 1 19 6.5v13a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5v-13A1.5 1.5 0 0 1 6.5 5H8"/></svg>
+      <span id="btn-pegar-texto" data-i18n="c.pegar.btn">Pegar el c&oacute;digo</span>
+    </button>
+    <button class="btn btn--primary" type="submit" id="btn-codigo" data-i18n="c.rec.continuar">Continuar</button>
+    <button class="btn btn--ghost" type="button" id="btn-reenviar-rec" data-i18n="c.ver.reenviar">Enviar otro c&oacute;digo</button>
+    <p class="field__hint" style="margin:0" data-i18n="c.ver.spam">Si no lo ves, mira en la carpeta de spam. A veces tarda un par de minutos.</p>
+    <button class="enlace" type="button" id="btn-otro-correo" data-i18n="c.rec.otroCorreo">Usar otro correo</button>
+  </form>
+
+  <!-- Paso 3: la contraseña nueva. -->
+  <form class="form" id="form-cambiar" hidden novalidate>
+    <!-- El correo, de solo lectura. No es decoración: sin un campo marcado
+         como `username`, el gestor de contraseñas no sabe a qué cuenta
+         pertenece la nueva y guarda una suelta en vez de actualizar la que
+         había. -->
+    <div class="field">
+      <label for="correo-cuenta" data-i18n="c.email">Correo electr&oacute;nico</label>
+      <input type="email" id="correo-cuenta" name="username" autocomplete="username" readonly />
     </div>
     <div class="field">
       <label for="password" data-i18n="c.rec.nueva">Nueva contrase&ntilde;a</label>
@@ -42,6 +73,13 @@
     </div>
     <button class="btn btn--primary" type="submit" id="btn-cambiar" data-i18n="c.rec.guardar">Guardar la contrase&ntilde;a</button>
   </form>
+
+  <!-- El código comprobado ya no vale: se explica en vez de dejar un
+       formulario que va a fallar al final. -->
+  <div class="form" id="rec-caducado" hidden>
+    <p style="margin:0" data-i18n="c.rec.caducado">Ha pasado demasiado tiempo desde que escribiste el c&oacute;digo. Pide otro para seguir: tu contrase&ntilde;a no ha cambiado.</p>
+    <button class="btn btn--primary" type="button" id="btn-empezar" data-i18n="c.rec.empezar">Pedir otro c&oacute;digo</button>
+  </div>
 
   <div class="cuenta__pie"><a href="entrar.html" data-i18n="c.rec.volver">Volver a entrar</a></div>
 </div>

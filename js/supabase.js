@@ -113,6 +113,13 @@
     if (/token has expired|has expired|invalid token|otp_expired/i.test(msg)) {
       return PfpError('invalid_code', msg);
     }
+    /* La misma contraseña de antes, ANTES que la débil: su texto —«New password
+       should be different from the old password»— contiene «password should
+       be», y caía en «demasiado débil», que mandaba a complicar una contraseña
+       que estaba bien. */
+    if (/different from the old password/i.test(msg) || (cuerpo && cuerpo.error_code === 'same_password')) {
+      return PfpError('misma_clave', msg);
+    }
     if (/password should be|password.*at least|weak/i.test(msg)) return PfpError('weak_password', msg);
 
     // Un 401 es siempre el mismo problema: el testigo ya no vale. Se
@@ -399,25 +406,36 @@
       });
     },
 
-    /** Canjea el código de recuperación y deja la contraseña nueva puesta. */
-    cambiarContrasena: function (email, codigo, nueva) {
+    /**
+     * Canjea el código de recuperación. Devuelve la sesión SIN guardarla.
+     *
+     * El código y la contraseña nueva van en pasos distintos: primero se sabe
+     * si el código vale y solo entonces se pide la contraseña. Pero canjear
+     * el código abre una sesión, y si se guardara ya, quien dejara a medias
+     * el paso de la contraseña se quedaría dentro sin haberla cambiado. Así
+     * que la sesión vive en la página hasta `ponerContrasena`; si se recarga
+     * o se cierra, se pierde y no queda nada.
+     */
+    verificarRecuperacion: function (email, codigo) {
       return pedir('/auth/v1/verify', {
         metodo: 'POST',
         cuerpo: { type: 'recovery', email: email, token: String(codigo).trim() },
-      })
-        .then(function (datos) {
-          var s = conCaducidad(datos);
-          if (!s) throw PfpError('invalid_code');
-          guardarSesion(s);
-          return s.access_token;
-        })
-        .then(function (t) {
-          return pedir('/auth/v1/user', {
-            metodo: 'PUT',
-            token: t,
-            cuerpo: { password: nueva },
-          });
-        });
+      }).then(function (datos) {
+        var s = conCaducidad(datos);
+        if (!s) throw PfpError('invalid_code');
+        return s;
+      });
+    },
+
+    /** Pone la contraseña nueva con la sesión del código y, solo entonces, la guarda. */
+    ponerContrasena: function (sesion, nueva) {
+      return pedir('/auth/v1/user', {
+        metodo: 'PUT',
+        token: sesion.access_token,
+        cuerpo: { password: nueva },
+      }).then(function () {
+        guardarSesion(sesion);
+      });
     },
 
     /** Datos de la cuenta desde el servidor, o null si no hay sesión. */
