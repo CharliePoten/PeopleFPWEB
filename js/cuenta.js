@@ -75,6 +75,95 @@
     }
   }
 
+  /**
+   * Pone el campo del código en casillas, una por cifra.
+   *
+   * El campo de verdad no se sustituye: se mete en una caja con las
+   * casillas debajo y él encima, del mismo tamaño y transparente (ver
+   * `cuenta.css`). Las casillas solo pintan lo que hay escrito. Así siguen
+   * funcionando la sugerencia del código que hace el navegador, pegarlo de
+   * una vez, el botón de enviar el formulario y el lector de pantalla, que
+   * lee un solo campo con su nombre.
+   *
+   * Va DESPUÉS del filtro que deja solo dígitos: los dos escuchan `input` y
+   * se ejecutan en el orden en que se engancharon.
+   *
+   * Devuelve `error(si)`, que pinta las casillas en rojo hasta que se vuelve
+   * a escribir.
+   */
+  function codigoEnCasillas(campo, cifras) {
+    cifras = cifras || 6;
+
+    var caja = document.createElement('div');
+    caja.className = 'codigo';
+    var fila = document.createElement('div');
+    fila.className = 'codigo__fila';
+    fila.setAttribute('aria-hidden', 'true');
+
+    var casillas = [];
+    for (var i = 0; i < cifras; i++) {
+      var c = document.createElement('span');
+      c.className = 'codigo__casilla';
+      fila.appendChild(c);
+      casillas.push(c);
+    }
+
+    campo.parentNode.insertBefore(caja, campo);
+    caja.appendChild(fila);
+    caja.appendChild(campo);
+    campo.classList.add('codigo__campo');
+
+    function pintar() {
+      var v = campo.value;
+      var enfocado = document.activeElement === campo;
+      // Con el código completo queda marcada la última: es la que borra la
+      // tecla de borrar.
+      var activa = Math.min(v.length, cifras - 1);
+      casillas.forEach(function (casilla, n) {
+        var cifra = v.charAt(n);
+        casilla.textContent = cifra;
+        casilla.classList.toggle('codigo__casilla--llena', !!cifra);
+        casilla.classList.toggle('codigo__casilla--activa', enfocado && n === activa);
+        casilla.classList.toggle(
+          'codigo__casilla--cursor',
+          enfocado && n === activa && v.length < cifras,
+        );
+      });
+    }
+
+    /* El cursor, siempre al final. En un campo invisible no se ve dónde
+       está, y una cifra metida a mitad desplazaría las demás de casilla sin
+       que se entendiera por qué. */
+    function alFinal() {
+      var fin = campo.value.length;
+      try {
+        campo.setSelectionRange(fin, fin);
+      } catch (e) {}
+    }
+
+    campo.addEventListener('input', function () {
+      caja.classList.remove('codigo--error');
+      pintar();
+    });
+    campo.addEventListener('focus', function () {
+      pintar();
+      setTimeout(alFinal, 0);
+    });
+    campo.addEventListener('blur', pintar);
+    campo.addEventListener('click', alFinal);
+    campo.addEventListener('keydown', function (ev) {
+      if (/^(ArrowLeft|ArrowRight|ArrowUp|ArrowDown|Home|End)$/.test(ev.key)) ev.preventDefault();
+    });
+
+    pintar();
+
+    return {
+      error: function (si) {
+        caja.classList.toggle('codigo--error', !!si);
+      },
+    };
+  }
+
   /** Ruta relativa dentro del área de cuenta, sirva donde sirva el sitio. */
   function ir(destino) {
     window.location.href = destino;
@@ -441,6 +530,7 @@
     campo.addEventListener('input', function () {
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
+    var casillas = codigoEnCasillas(campo);
 
     /* Cuenta atrás antes de poder pedir otro, contada desde el último envío
        de verdad. Ofrecer «reenviar» al segundo de mandar uno solo consigue
@@ -453,7 +543,9 @@
       if (!btnReenviar) return;
       if (espera > 0) {
         btnReenviar.disabled = true;
-        btnReenviar.textContent = T('c.ver.reenviar') + ' (' + espera + ' s)';
+        // Espacios que no se parten: en un móvil estrecho «(52 s)» se
+        // quedaba con la «s)» sola en otra línea.
+        btnReenviar.textContent = T('c.ver.reenviar') + ' (' + espera + ' s)';
         espera--;
         setTimeout(pintarEspera, 1000);
       } else {
@@ -468,7 +560,10 @@
       limpiarAvisos();
 
       var codigo = campo.value.trim();
-      if (codigo.length !== 6) return avisar('aviso', T('c.ver.seisDigitos'));
+      if (codigo.length !== 6) {
+        casillas.error(true);
+        return avisar('aviso', T('c.ver.seisDigitos'));
+      }
 
       var boton = $('#btn-verificar');
       ocupado(boton, true, T('c.ver.comprobando'));
@@ -480,6 +575,7 @@
         })
         .catch(function (e) {
           ocupado(boton, false);
+          casillas.error(e.codigo === 'invalid_code');
           avisar('aviso', explicar(e));
         });
     });
@@ -551,6 +647,7 @@
     campo.addEventListener('input', function () {
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
+    var casillas = codigoEnCasillas(campo);
 
     cambiar.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -560,7 +657,10 @@
       var nueva = $('#password').value;
       var repetir = $('#password2').value;
 
-      if (codigo.length !== 6) return avisar('aviso', T('c.ver.seisDigitos'));
+      if (codigo.length !== 6) {
+        casillas.error(true);
+        return avisar('aviso', T('c.ver.seisDigitos'));
+      }
       if (nueva.length < 8) return avisar('aviso', T('c.e.weak_password'));
       if (nueva !== repetir) return avisar('aviso', T('c.e.noCoinciden'));
 
@@ -573,6 +673,7 @@
         })
         .catch(function (e) {
           ocupado(boton, false);
+          casillas.error(e.codigo === 'invalid_code');
           avisar('aviso', explicar(e));
         });
     });

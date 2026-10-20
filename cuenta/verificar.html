@@ -21,8 +21,9 @@
       <label for="codigo" data-i18n="c.ver.codigo">C&oacute;digo</label>
       <!-- Sin `maxlength`: cortaba lo pegado ANTES de quitar lo que no son
            dígitos, y « 123456» con un espacio delante se quedaba en 12345.
-           El límite de seis lo pone `cuenta.js` después de limpiar. -->
-      <input class="campo-codigo" type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" required />
+           El límite de seis lo pone `cuenta.js` después de limpiar, y
+           también las casillas. -->
+      <input type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" required />
     </div>
     <button class="btn btn--primary" type="submit" id="btn-verificar" data-i18n="c.ver.btn">Confirmar</button>
     <button class="btn btn--ghost" type="button" id="btn-reenviar" data-i18n="c.ver.reenviar">Enviar otro c&oacute;digo</button>
