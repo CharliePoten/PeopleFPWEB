@@ -34,6 +34,9 @@
 .cuenta__cabecera { margin-bottom: var(--s-lg); }
 .cuenta__cabecera h1 { margin-bottom: 8px; font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
 .cuenta__cabecera p { margin: 0; color: var(--text-soft); }
+/* Un segundo párrafo —el de «falta confirmar el correo»— no puede ir pegado
+   al primero. */
+.cuenta__cabecera p + p { margin-top: 10px; }
 
 .cuenta__pie {
   margin-top: var(--s-lg);

@@ -10,7 +10,8 @@
 <div class="cuenta__caja">
   <div class="cuenta__cabecera">
     <h1 data-i18n="c.ver.t">Confirma tu correo</h1>
-    <p>Te hemos enviado un c&oacute;digo de seis d&iacute;gitos a <strong id="destino"></strong>.</p>
+    <p><span id="intro" data-i18n="c.ver.enviado">Te hemos enviado un c&oacute;digo de seis d&iacute;gitos a</span> <strong id="destino"></strong><span id="intro-fin" data-i18n="c.ver.enviadoFin">.</span></p>
+    <p id="intro-pendiente" hidden data-i18n="c.ver.pendienteCuerpo">Tu cuenta est&aacute; creada, pero el correo a&uacute;n no est&aacute; confirmado. Escribe el c&oacute;digo que te enviamos al registrarte o, si ya no lo tienes o ha caducado, pide uno nuevo.</p>
   </div>
 
   <div class="aviso aviso--error" id="aviso" data-visible="false" role="alert"></div>
@@ -18,7 +19,10 @@
   <form class="form" id="form-verificar" novalidate>
     <div class="field">
       <label for="codigo" data-i18n="c.ver.codigo">C&oacute;digo</label>
-      <input class="campo-codigo" type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+      <!-- Sin `maxlength`: cortaba lo pegado ANTES de quitar lo que no son
+           dígitos, y « 123456» con un espacio delante se quedaba en 12345.
+           El límite de seis lo pone `cuenta.js` después de limpiar. -->
+      <input class="campo-codigo" type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" required />
     </div>
     <button class="btn btn--primary" type="submit" id="btn-verificar" data-i18n="c.ver.btn">Confirmar</button>
     <button class="btn btn--ghost" type="button" id="btn-reenviar" data-i18n="c.ver.reenviar">Enviar otro c&oacute;digo</button>

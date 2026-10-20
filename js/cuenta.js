@@ -98,6 +98,62 @@
     }
   }
 
+  /* Cuándo se mandó el último código de confirmación, y a qué correo.
+
+     Con la hora de verdad y no con una cuenta atrás que empieza al abrir la
+     página: antes, al recargar `verificar.html` volvían a ser sesenta
+     segundos, y quien llegaba desde «Entrar» con el correo sin confirmar
+     —sin que se le hubiera mandado nada— tenía que esperar un minuto para
+     pedir un código mientras la página le aseguraba que ya lo tenía. */
+  var CLAVE_ENVIO = 'pfp.codigoEnviado';
+
+  function anotarEnvio(email) {
+    try {
+      sessionStorage.setItem(CLAVE_ENVIO, JSON.stringify({ email: email, en: Date.now() }));
+    } catch (e) {}
+  }
+
+  /** Milisegundos desde el último código mandado a este correo, o null. */
+  function desdeElEnvio(email) {
+    try {
+      var e = JSON.parse(sessionStorage.getItem(CLAVE_ENVIO) || 'null');
+      if (!e || e.email !== email || typeof e.en !== 'number') return null;
+      var ms = Date.now() - e.en;
+      return ms >= 0 ? ms : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  /* El correo de bienvenida se pide en la página SIGUIENTE, no en la que
+     confirma. Pedirlo justo antes de cambiar de página es perderlo: el
+     navegador corta lo que está en vuelo al salir. Así que se deja anotado y
+     la primera página de la cuenta que se abre lo pide con calma. Si no hay
+     red, la nota se queda y lo intenta la siguiente. Pedirlo de más no
+     duplica nada: el servidor manda uno por cuenta. */
+  var CLAVE_BIENVENIDA = 'pfp.bienvenidaPendiente';
+
+  function anotarBienvenida() {
+    try {
+      sessionStorage.setItem(CLAVE_BIENVENIDA, '1');
+    } catch (e) {}
+  }
+
+  function pedirBienvenidaPendiente() {
+    try {
+      if (sessionStorage.getItem(CLAVE_BIENVENIDA) !== '1') return;
+    } catch (e) {
+      return;
+    }
+    if (!PFP.auth.haySesion()) return;
+    PFP.auth.bienvenida().then(function (hecho) {
+      if (!hecho) return;
+      try {
+        sessionStorage.removeItem(CLAVE_BIENVENIDA);
+      } catch (e) {}
+    });
+  }
+
   /* ---------------------------------------------------------------------
      Idioma
      --------------------------------------------------------------------- */
@@ -253,6 +309,11 @@
       PFP.auth
         .signIn(email, clave)
         .then(function () {
+          // Red de seguridad, no el camino normal: quien confirmó el correo
+          // y perdió la conexión justo después se quedó sin bienvenida. El
+          // servidor solo la manda si la cuenta es de esta semana y no la
+          // tiene ya.
+          anotarBienvenida();
           ir(destinoTrasEntrar());
         })
         .catch(function (e) {
@@ -325,7 +386,13 @@
           guardarCorreo(email);
           // Con la confirmación de correo activada no hay sesión todavía:
           // toca teclear el código. Sin ella se entra directo.
-          ir(r.estado === 'falta_verificar' ? 'verificar.html' : 'index.html');
+          if (r.estado === 'falta_verificar') {
+            anotarEnvio(email);
+            ir('verificar.html');
+          } else {
+            anotarBienvenida();
+            ir('index.html');
+          }
         })
         .catch(function (e) {
           ocupado(boton, false);
@@ -351,15 +418,35 @@
     var destino = $('#destino');
     if (destino) destino.textContent = email;
 
+    /* Lo que dice la cabecera depende de si de verdad acabamos de mandar
+       algo. Se cambia la clave y no solo el texto: si no, al pulsar el
+       botón de idioma `site.js` volvería a poner la frase de «enviado». */
+    function pintarIntro(reciente) {
+      var intro = $('#intro');
+      var fin = $('#intro-fin');
+      var cuerpo = $('#intro-pendiente');
+      if (intro) intro.setAttribute('data-i18n', reciente ? 'c.ver.enviado' : 'c.ver.pendiente');
+      if (fin) fin.setAttribute('data-i18n', reciente ? 'c.ver.enviadoFin' : 'c.ver.pendienteFin');
+      [intro, fin].forEach(function (el) {
+        if (el) el.textContent = T(el.getAttribute('data-i18n'));
+      });
+      if (cuerpo) cuerpo.hidden = reciente;
+    }
+
+    // Un código vale una hora: pasada, no tiene sentido decir que lo tienes.
+    var transcurrido = desdeElEnvio(email);
+    pintarIntro(transcurrido !== null && transcurrido < 60 * 60 * 1000);
+
     var campo = $('#codigo');
     campo.addEventListener('input', function () {
       campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
     });
 
-    /* Cuenta atrás antes de poder pedir otro. El primero se acaba de
-       enviar; ofrecer «reenviar» al segundo solo consigue que Supabase lo
-       rechace por exceso de envíos. */
-    var espera = 60;
+    /* Cuenta atrás antes de poder pedir otro, contada desde el último envío
+       de verdad. Ofrecer «reenviar» al segundo de mandar uno solo consigue
+       que Supabase lo rechace por exceso de envíos; y si no se ha mandado
+       nada, no hay nada que esperar. */
+    var espera = transcurrido === null ? 0 : Math.max(0, 60 - Math.floor(transcurrido / 1000));
     var btnReenviar = $('#btn-reenviar');
 
     function pintarEspera() {
@@ -388,6 +475,7 @@
       PFP.auth
         .verificarCodigo(email, codigo)
         .then(function () {
+          anotarBienvenida();
           ir('index.html');
         })
         .catch(function (e) {
@@ -404,6 +492,8 @@
           .reenviarCodigo(email)
           .then(function () {
             ocupado(btnReenviar, false);
+            anotarEnvio(email);
+            pintarIntro(true);
             avisar('aviso', T('c.ver.reenviado'), 'ok');
             espera = 60;
             pintarEspera();
@@ -607,6 +697,8 @@
     }
 
     var pagina = document.body.dataset.pagina;
+
+    pedirBienvenidaPendiente();
 
     // Con sesión abierta, entrar y registrarse no tienen sentido.
     if ((pagina === 'entrar' || pagina === 'registro') && PFP.auth.haySesion()) {

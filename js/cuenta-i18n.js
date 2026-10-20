@@ -328,6 +328,16 @@
     'c.ver.reenviado': 'Te hemos enviado otro código.',
     'c.ver.sinCorreo': 'No sabemos a qué correo enviarlo. Vuelve a empezar.',
     'c.ver.seisDigitos': 'El código tiene seis dígitos.',
+    /* La frase lleva el correo en medio, y en alemán el verbo va detrás: por
+       eso son dos piezas, antes y después de la dirección. */
+    'c.ver.enviado': 'Te hemos enviado un código de seis dígitos a',
+    'c.ver.enviadoFin': '.',
+    // Se llega desde «Entrar» con el correo sin confirmar: no se acaba de
+    // mandar nada, y el código del registro puede haber caducado.
+    'c.ver.pendiente': 'Falta confirmar',
+    'c.ver.pendienteFin': '.',
+    'c.ver.pendienteCuerpo':
+      'Tu cuenta está creada, pero el correo aún no está confirmado. Escribe el código que te enviamos al registrarte o, si ya no lo tienes o ha caducado, pide uno nuevo.',
 
     /* --- Recuperar --- */
     'c.rec.t': 'Recuperar la contraseña',
@@ -912,6 +922,12 @@
     'c.ver.reenviado': 'Wir haben dir einen neuen Code geschickt.',
     'c.ver.sinCorreo': 'Wir wissen nicht, an welche Adresse. Fang bitte neu an.',
     'c.ver.seisDigitos': 'Der Code hat sechs Ziffern.',
+    'c.ver.enviado': 'Wir haben einen sechsstelligen Code an',
+    'c.ver.enviadoFin': ' geschickt.',
+    'c.ver.pendiente': 'Die Adresse',
+    'c.ver.pendienteFin': ' ist noch nicht bestätigt.',
+    'c.ver.pendienteCuerpo':
+      'Dein Konto ist angelegt, aber deine E-Mail ist noch nicht bestätigt. Gib den Code ein, den wir dir bei der Anmeldung geschickt haben, oder fordere einen neuen an, falls du ihn nicht mehr hast oder er abgelaufen ist.',
 
     'c.rec.t': 'Passwort zurücksetzen',
     'c.rec.sub': 'Wir schicken dir einen Code für ein neues Passwort.',

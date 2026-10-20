@@ -345,6 +345,35 @@
       });
     },
 
+    /**
+     * Pide el correo de bienvenida. Nunca falla.
+     *
+     * Se puede llamar de más: la función del servidor decide si toca —cuenta
+     * recién confirmada y sin bienvenida todavía— y manda una sola por
+     * cuenta, se haya dado de alta aquí o en la app. Un correo de cortesía no
+     * puede impedir que nadie entre, así que cualquier fallo se calla.
+     *
+     * Resuelve `true` cuando ya no hace falta volver a pedirla —el servidor
+     * ha contestado, diga lo que diga, o no hay sesión— y `false` solo si no
+     * hubo red: entonces merece la pena intentarlo en la página siguiente.
+     */
+    bienvenida: function () {
+      return token()
+        .then(function (t) {
+          if (!t) return true;
+          return pedir('/functions/v1/welcome-email', {
+            metodo: 'POST',
+            token: t,
+            cuerpo: { lang: document.documentElement.lang || 'es', origin: 'web' },
+          }).then(function () {
+            return true;
+          });
+        })
+        .catch(function (e) {
+          return !(e && e.codigo === 'network');
+        });
+    },
+
     reenviarCodigo: function (email) {
       return pedir('/auth/v1/resend', {
         metodo: 'POST',
