@@ -1,0 +1,6 @@
+# Todo se puede rastrear. Las paginas de /cuenta/ llevan su propio
+# `noindex`: si se bloquearan aqui, el buscador no llegaria a leerlo.
+User-agent: *
+Allow: /
+
+Sitemap: https://peopleforpeople.es/sitemap.xml
