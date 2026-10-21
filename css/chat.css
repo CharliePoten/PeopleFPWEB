@@ -858,3 +858,103 @@
 @media (prefers-reduced-motion: reduce) {
   .voz--cargando .voz__play svg { animation: none; opacity: 0.5; }
 }
+
+/* --------------------------------------------------------------------------
+   Fotos, vídeos y archivos
+   --------------------------------------------------------------------------
+   Los mismos tres formatos que en la app: la foto se ve, el vídeo es un
+   recuadro con el botón de reproducir, y los documentos una tarjeta con su
+   nombre y su tamaño. */
+.chat__msg--adjunto { width: min(78%, 15.5rem); }
+
+.adjunto {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+/* Sin la URL firmada todavía, no lleva a ningún sitio. */
+.adjunto:not([href]) { cursor: progress; }
+.adjunto:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 10px; }
+.chat__msg--mio .adjunto:focus-visible { outline-color: #fff; }
+
+.adjunto--foto,
+.adjunto--video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--n-200);
+}
+.adjunto--foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Una imagen sin `src` aún no enseña el icono de imagen rota. */
+.adjunto--foto img:not([src]) { visibility: hidden; }
+
+.adjunto--video {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  background: #0B1220;
+  color: #fff;
+}
+.adjunto__play {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+.adjunto__play svg { width: 26px; height: 26px; fill: currentColor; }
+.adjunto--video .adjunto__peso { color: rgba(255, 255, 255, 0.8); }
+
+.adjunto__pie {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 0.74rem;
+  color: var(--text-mute);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat__msg--mio .adjunto__pie { color: var(--navy-100); }
+
+.adjunto--doc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--n-100, #F1F3F6);
+}
+.chat__msg--mio .adjunto--doc { background: rgba(255, 255, 255, 0.14); }
+.adjunto__icono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--brand);
+}
+.adjunto__icono svg { width: 22px; height: 22px; fill: currentColor; }
+.chat__msg--mio .adjunto__icono { background: rgba(255, 255, 255, 0.18); color: #fff; }
+.adjunto__texto { min-width: 0; display: flex; flex-direction: column; }
+.adjunto__nombre {
+  overflow: hidden;
+  font-size: 0.86rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adjunto__peso { font-size: 0.72rem; color: var(--text-mute); }
+.chat__msg--mio .adjunto__peso { color: var(--navy-100); }
+
+/* Si no se pudo firmar, se dice sin romper la burbuja. */
+.adjunto--fallo { opacity: 0.55; cursor: not-allowed; }

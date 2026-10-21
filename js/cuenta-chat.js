@@ -750,7 +750,8 @@
       var sigue = autorPrevio === m.sender_id;
       autorPrevio = m.sender_id;
 
-      var clases = 'chat__msg' + (mio ? ' chat__msg--mio' : '') + (metaVoz(m) ? ' chat__msg--voz' : '');
+      var clases = 'chat__msg' + (mio ? ' chat__msg--mio' : '') + (metaVoz(m) ? ' chat__msg--voz' : '') +
+        (esAdjunto(m) ? ' chat__msg--adjunto' : '');
       clases += sigue ? ' chat__msg--sigue' : ' chat__msg--primero';
 
       var estado = '';
@@ -779,6 +780,7 @@
     // Las notas de voz se ponen al día aparte: lo que suena no se reinicia
     // porque haya llegado un mensaje.
     pintarNotas();
+    pintarAdjuntos();
 
     var mas = $('#chat-mas');
     if (mas) mas.addEventListener('click', function () { cargarMensajes(false); });
@@ -800,6 +802,7 @@
    */
   function cuerpoHTML(m) {
     if (metaVoz(m)) return notaHTML(m);
+    if (esAdjunto(m)) return adjuntoHTML(m);
     if (m.kind === 'location' && m.lat != null && m.lng != null) {
       var url = 'https://www.google.com/maps/search/?api=1&query=' + m.lat + ',' + m.lng;
       return (
@@ -1056,12 +1059,13 @@
     voz.bucle = window.requestAnimationFrame(paso);
   }
 
-  function firmarNota(ruta) {
+  /** La URL firmada de un archivo del chat (notas, fotos, documentos), guardada un rato. */
+  function firmarAdjunto(ruta) {
     var f = voz.firmas[ruta];
     if (f && f.hasta > Date.now()) return Promise.resolve(f.url);
     return PFP.almacen.firmar('chat-attachments', ruta, 3600).then(function (url) {
       // Se da por caducada antes que el servidor: una que vence a mitad de
-      // una nota larga cortaría la descarga.
+      // una nota larga, o de una descarga, la cortaría.
       voz.firmas[ruta] = { url: url, hasta: Date.now() + 50 * 60000 };
       return url;
     });
@@ -1081,7 +1085,7 @@
     if (anterior && anterior !== m.id) pintarNota(anterior);
     pintarNota(m.id);
 
-    firmarNota(m.attachment_path)
+    firmarAdjunto(m.attachment_path)
       .then(function (url) {
         if (voz.id !== m.id) return;
         a.src = url;
@@ -1272,15 +1276,112 @@
    * 0059, pedir `attachment_meta` tumbaba la conversación entera. Se intenta
    * con ellas y, si la base no la conoce, se sigue sin ellas.
    */
-  var columnasVoz = ',attachment_path,attachment_meta';
+  var COLUMNAS_ADJUNTO = ',attachment_path,attachment_name,attachment_mime,attachment_size';
+  var columnasVoz = COLUMNAS_ADJUNTO + ',attachment_meta';
   function pedirConVoz(hacer) {
     return hacer(columnasVoz).catch(function (e) {
       var texto = (e && (e.detalle || e.message)) || '';
       if (columnasVoz.indexOf('attachment_meta') >= 0 && /attachment_meta/.test(texto)) {
-        columnasVoz = ',attachment_path';
+        columnasVoz = COLUMNAS_ADJUNTO;
         return hacer(columnasVoz);
       }
       throw e;
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     Fotos, vídeos y archivos
+     ---------------------------------------------------------------------
+     Se mandan desde la app; aquí se ven igual que allí. La foto, dentro de la
+     burbuja. El vídeo, un recuadro oscuro con el botón de reproducir. Los
+     documentos —y un audio que no es nota de voz—, una tarjeta con el nombre
+     y el tamaño: saber si son 200 KB o 20 MB decide si se abre ahora.
+
+     El almacén es privado: cada archivo lleva su URL firmada, que se pide al
+     pintar y se guarda un rato. Mientras llega, el enlace no lleva destino y
+     no hace nada.
+     --------------------------------------------------------------------- */
+
+  var ICONO_DOC =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 2.5L17.5 8H14zM8 13h8v1.5H8zm0 3h8v1.5H8zm0-6h4v1.5H8z"/></svg>';
+
+  function esAdjunto(m) {
+    return !!m.attachment_path && /^(image|video|audio|file)$/.test(m.kind) && !metaVoz(m);
+  }
+
+  /** «2,4 MB». */
+  function peso(bytes) {
+    var n = Number(bytes) || 0;
+    var fmt = function (v, d) {
+      return v.toLocaleString(idioma(), { minimumFractionDigits: d, maximumFractionDigits: d });
+    };
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return fmt(n / 1024, 0) + ' KB';
+    return fmt(n / (1024 * 1024), 1) + ' MB';
+  }
+
+  function adjuntoHTML(m) {
+    var ruta = esc(m.attachment_path);
+    var nombre = m.attachment_name || m.body || T('c.chat.archivo');
+    var enlace = ' data-ruta="' + ruta + '" target="_blank" rel="noopener noreferrer"';
+
+    if (m.kind === 'image') {
+      return (
+        '<a class="adjunto adjunto--foto"' + enlace +
+        ' aria-label="' + esc(T('c.chat.verFoto')) + '">' +
+        '<img alt="' + esc(nombre) + '" />' +
+        '</a>' +
+        '<span class="adjunto__pie">' + esc(nombre) + '</span>'
+      );
+    }
+
+    if (m.kind === 'video') {
+      return (
+        '<a class="adjunto adjunto--video"' + enlace +
+        ' aria-label="' + esc(T('c.chat.verVideo')) + '">' +
+        '<span class="adjunto__play">' + ICONO_PLAY + '</span>' +
+        '<span class="adjunto__peso">' + esc(peso(m.attachment_size)) + '</span>' +
+        '</a>' +
+        '<span class="adjunto__pie">' + esc(nombre) + '</span>'
+      );
+    }
+
+    return (
+      '<a class="adjunto adjunto--doc"' + enlace +
+      ' data-nombre="' + esc(nombre) + '" data-tipo="' + esc(m.attachment_mime || '') + '"' +
+      ' aria-label="' + esc(T('c.chat.abrirArchivo').replace('{n}', nombre)) + '">' +
+      '<span class="adjunto__icono">' + ICONO_DOC + '</span>' +
+      '<span class="adjunto__texto">' +
+      '<span class="adjunto__nombre">' + esc(nombre) + '</span>' +
+      '<span class="adjunto__peso">' + esc(peso(m.attachment_size)) + '</span>' +
+      '</span>' +
+      '</a>'
+    );
+  }
+
+  /**
+   * Pone a cada adjunto pintado su URL firmada. Un PDF se abre en el
+   * navegador; el resto se descarga con su nombre de verdad, no con el del
+   * almacén, que es un identificador.
+   */
+  function pintarAdjuntos() {
+    var caja = $('#chat-mensajes');
+    if (!caja) return;
+    Array.prototype.forEach.call(caja.querySelectorAll('.adjunto[data-ruta]'), function (a) {
+      firmarAdjunto(a.getAttribute('data-ruta'))
+        .then(function (url) {
+          if (!a.isConnected) return;
+          var tipo = a.getAttribute('data-tipo') || '';
+          var nombre = a.getAttribute('data-nombre');
+          a.href = nombre && tipo !== 'application/pdf'
+            ? url + (url.indexOf('?') >= 0 ? '&' : '?') + 'download=' + encodeURIComponent(nombre)
+            : url;
+          var img = a.querySelector('img');
+          if (img && !img.getAttribute('src')) img.src = url;
+        })
+        .catch(function () {
+          if (a.isConnected) a.classList.add('adjunto--fallo');
+        });
     });
   }
 

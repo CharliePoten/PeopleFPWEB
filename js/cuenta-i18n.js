@@ -83,6 +83,11 @@
     'c.chat.vozVelocidad': 'Velocidad {v}. Pulsa para cambiarla',
     'c.chat.vozEscuchada': 'Escuchada',
     'c.chat.vozError': 'No se ha podido reproducir la nota de voz. Comprueba la conexión.',
+    // Fotos, vídeos y archivos que llegan desde la app.
+    'c.chat.archivo': 'Archivo',
+    'c.chat.verFoto': 'Ver la foto',
+    'c.chat.verVideo': 'Ver el vídeo',
+    'c.chat.abrirArchivo': 'Abrir {n}',
     'c.chat.sinLeerN': '{n} sin leer',
     /* --- Comunes --- */
     'c.volver': 'Volver a mi cuenta',
@@ -713,6 +718,10 @@
     'c.chat.vozVelocidad': 'Geschwindigkeit {v}. Klicken zum Ändern',
     'c.chat.vozEscuchada': 'Angehört',
     'c.chat.vozError': 'Die Sprachnachricht konnte nicht abgespielt werden. Prüfe deine Verbindung.',
+    'c.chat.archivo': 'Datei',
+    'c.chat.verFoto': 'Foto ansehen',
+    'c.chat.verVideo': 'Video ansehen',
+    'c.chat.abrirArchivo': '{n} öffnen',
     'c.chat.sinLeerN': '{n} ungelesen',
     'c.volver': 'Zurück zu meinem Konto',
     'c.salir': 'Abmelden',
