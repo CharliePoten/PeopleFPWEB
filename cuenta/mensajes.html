@@ -52,10 +52,14 @@
       <div class="chat__panelInterior" id="chat-conv" hidden>
         <div class="chat__cab">
           <button class="chat__volver" type="button" id="chat-volver" data-i18n-aria="c.chat.volverLista" aria-label="Volver a la lista">&#8592;</button>
-          <span class="chat__cabTitulo">
+          <span class="chat__av chat__av--cab" id="chat-cab-av" aria-hidden="true" hidden></span>
+          <!-- En una conversación de dos, el nombre abre la ficha de la persona:
+               es donde se busca en cualquier app de mensajería. En las demás,
+               el botón está apagado y se lee como un título. -->
+          <button class="chat__cabTitulo" type="button" id="chat-cab-ficha" disabled>
             <strong id="chat-cab-nombre"></strong>
             <span id="chat-cab-sub"></span>
-          </span>
+          </button>
         </div>
 
         <!-- `aria-live` en cortés y no en asertivo: quien usa lector de
@@ -66,6 +70,12 @@
         <button class="chat__abajo" type="button" id="chat-abajo" hidden data-i18n-aria="c.chat.irAbajo" aria-label="Ir al último mensaje">
           &#8595;<span id="chat-abajo-n" hidden></span>
         </button>
+
+        <!-- Con la persona bloqueada, en vez de escribir, cómo deshacerlo. -->
+        <div class="chat__bloqueada" id="chat-bloqueada" hidden>
+          <p id="chat-bloqueada-texto"></p>
+          <button class="btn btn--ghost" type="button" id="chat-desbloquear" data-i18n="c.ficha.desbloquearAccion">Desbloquear</button>
+        </div>
 
         <div class="chat__escribir">
           <label class="sr-only" for="chat-texto" data-i18n="c.chat.escribe">Escribe un mensaje</label>
@@ -86,6 +96,17 @@
     </div>
     <p class="chat__grupo" data-i18n="c.chat.deTusEntidades">De tus entidades</p>
     <div class="chat__dlgLista" id="chat-dlg-lista"></div>
+  </dialog>
+
+  <!-- Ficha de contacto: quién es, lo que os habéis mandado, ayuda, y
+       bloquear, denunciar o eliminar la conversación. -->
+  <dialog class="chat__dlg chat__ficha" id="chat-ficha" aria-labelledby="chat-ficha-t">
+    <div class="chat__dlgCab">
+      <button class="chat__dlgCerrar ficha__volver" type="button" id="chat-ficha-volver" data-i18n-aria="c.ficha.volver" aria-label="Volver" hidden>&#8249;</button>
+      <h2 id="chat-ficha-t" data-i18n="c.ficha.titulo">Información del contacto</h2>
+      <button class="chat__dlgCerrar" type="button" id="chat-ficha-cerrar" data-i18n-aria="c.chat.cerrar" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="ficha__cuerpo" id="chat-ficha-cuerpo"></div>
   </dialog>
 
 </main>

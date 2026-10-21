@@ -583,6 +583,7 @@
   function cerrarPanel() {
     cerrarEscribiendo();
     pararNota();
+    prepararFicha(null);
     abierta = null;
     solicitudAbierta = null;
     $('#chat-conv').hidden = true;
@@ -622,6 +623,8 @@
       : '';
     $('#chat-nada').hidden = true;
     $('#chat-conv').hidden = false;
+    // En una de dos, el nombre abre la ficha; y si está bloqueada, se dice.
+    prepararFicha(id);
 
     abrirEscribiendo(id);
     pintarLista();
@@ -1366,8 +1369,525 @@
    */
   function pintarAdjuntos() {
     var caja = $('#chat-mensajes');
-    if (!caja) return;
-    Array.prototype.forEach.call(caja.querySelectorAll('.adjunto[data-ruta]'), function (a) {
+    if (caja) firmarEnlaces(caja);
+  }
+
+  /* ---------------------------------------------------------------------
+     Ficha de contacto
+     ---------------------------------------------------------------------
+     La misma que en la app: se abre tocando el nombre de la persona en la
+     cabecera de una conversación de dos. Arriba quién es; después lo que os
+     habéis mandado y la ayuda; y abajo, en rojo y separado, lo serio:
+     bloquear, denunciar y eliminar la conversación, cada uno con su
+     confirmación antes.
+
+     Todo lo decide el servidor (migración 0058 de la app). Un bloqueo que
+     solo respetara la app no bloquearía a quien escribe desde aquí, y al
+     revés.
+     --------------------------------------------------------------------- */
+
+  var MOTIVOS = ['harassment', 'inappropriate', 'scam', 'spam', 'impersonation', 'other'];
+
+  var ficha = {
+    otro: null,        // id de la otra persona
+    nombre: '',
+    foto: null,
+    entidad: '',       // la entidad que compartís, si se sabe
+    bloqueada: null,   // ¿la he bloqueado yo? null mientras no se sabe
+    medios: null,      // { media, docs, links } o null
+    cargandoMedios: false,
+    pestanaMedios: 'media',
+    trabajando: false,
+  };
+
+  /** T con huecos: `{nombre}` → el nombre. */
+  function Tv(clave, vars) {
+    var s = T(clave);
+    Object.keys(vars || {}).forEach(function (k) {
+      s = s.split('{' + k + '}').join(vars[k]);
+    });
+    return s;
+  }
+
+  /** ¿La he bloqueado yo? Si me ha bloqueado ella, no se puede saber: a propósito. */
+  function consultarBloqueo(otro) {
+    return PFP.db
+      .select('peer_blocks', 'select=blocked_id&blocked_id=eq.' + encodeURIComponent(otro))
+      .then(function (filas) { return (filas || []).length > 0; })
+      .catch(function () { return false; });
+  }
+
+  /**
+   * Con la persona bloqueada, en vez de escribir, cómo deshacerlo. Como en la
+   * app: escribirle no serviría de nada y el servidor lo rechazaría igual.
+   */
+  function pintarBloqueo() {
+    var p = partes(abierta);
+    var si = !!(p && p.clase === 'peer' && p.otro === ficha.otro && ficha.bloqueada);
+    var aviso = $('#chat-bloqueada');
+    var escribir = $('.chat__escribir');
+    if (aviso) {
+      aviso.hidden = !si;
+      $('#chat-bloqueada-texto').textContent = si ? Tv('c.ficha.bloqueadaAviso', { nombre: ficha.nombre }) : '';
+    }
+    if (escribir && p && p.clase === 'peer') escribir.hidden = si;
+  }
+
+  /** Al abrir una conversación: la cabecera pulsable y si está bloqueada. */
+  function prepararFicha(id) {
+    var p = partes(id);
+    var boton = $('#chat-cab-ficha');
+    var av = $('#chat-cab-av');
+    var esPeer = !!(p && p.clase === 'peer');
+
+    if (boton) {
+      boton.disabled = !esPeer;
+      boton.setAttribute('aria-label', esPeer ? T('c.ficha.abrir') : '');
+    }
+
+    if (!esPeer) {
+      ficha.otro = null;
+      if (av) av.hidden = true;
+      pintarBloqueo();
+      return;
+    }
+
+    var h = hiloActual();
+    ficha.otro = p.otro;
+    ficha.nombre = (h && h.nombre) || T('c.chat.alguien');
+    ficha.foto = (h && h.foto) || null;
+    ficha.entidad = '';
+    ficha.bloqueada = null;
+    ficha.medios = null;
+    ficha.cargandoMedios = false;
+
+    if (av) {
+      av.hidden = false;
+      av.innerHTML = ficha.foto
+        ? '<img src="' + esc(ficha.foto) + '" alt="" />'
+        : esc(iniciales(ficha.nombre));
+    }
+    pintarBloqueo();
+
+    var otro = p.otro;
+    consultarBloqueo(otro).then(function (si) {
+      if (ficha.otro !== otro) return;
+      ficha.bloqueada = si;
+      pintarBloqueo();
+    });
+  }
+
+  // ---- El diálogo ----------------------------------------------------------
+
+  function dialogoFicha() { return $('#chat-ficha'); }
+
+  function abrirFicha() {
+    if (!ficha.otro) return;
+    var dlg = dialogoFicha();
+    vistaInicio();
+    if (dlg.showModal && !dlg.open) dlg.showModal();
+
+    var otro = ficha.otro;
+    // Lo que os habéis mandado, para el número de la fila, y la entidad que
+    // compartís, que es lo que dice quién es esta persona para ti.
+    cargarMedios(otro).then(function () {
+      if (ficha.otro !== otro) return;
+      var v = dialogoFicha().dataset.vista;
+      if (v === 'inicio') vistaInicio();
+      else if (v === 'medios') vistaMedios();
+    });
+    PFP.db.rpc('contactable_people').then(function (gente) {
+      (gente || []).forEach(function (g) {
+        if (g.id === otro && !ficha.entidad) ficha.entidad = g.org_name || '';
+      });
+      if (ficha.otro === otro && dialogoFicha().dataset.vista === 'inicio') vistaInicio();
+    }).catch(function () {});
+  }
+
+  function cerrarFicha() {
+    var dlg = dialogoFicha();
+    if (dlg && dlg.open) dlg.close();
+  }
+
+  /** Cambia lo que enseña el diálogo: título, contenido y el «volver». */
+  function vista(nombre, titulo, html) {
+    var dlg = dialogoFicha();
+    dlg.dataset.vista = nombre;
+    $('#chat-ficha-t').textContent = titulo;
+    $('#chat-ficha-volver').hidden = nombre === 'inicio';
+    $('#chat-ficha-cuerpo').innerHTML = html;
+    var foco = $('#chat-ficha-cuerpo [data-foco]');
+    if (foco) foco.focus();
+  }
+
+  /**
+   * Una fila de la ficha. `tono`: sin él, lleva a otra vista y lleva flecha;
+   * 'peligro' (rojo) y 'accion' (azul) hacen algo —con su confirmación— y no
+   * llevan flecha, como en la app.
+   */
+  function fila(accion, icono, texto, detalle, tono) {
+    return (
+      '<button type="button" class="ficha__fila' + (tono ? ' ficha__fila--' + tono : '') + '"' +
+      ' data-ficha="' + accion + '"' + (ficha.trabajando ? ' disabled' : '') + '>' +
+      '<span class="ficha__icono" aria-hidden="true">' + icono + '</span>' +
+      '<span class="ficha__texto">' + esc(texto) + '</span>' +
+      (detalle ? '<span class="ficha__detalle">' + esc(detalle) + '</span>' : '') +
+      (tono ? '' : '<span class="ficha__flecha" aria-hidden="true">›</span>') +
+      '</button>'
+    );
+  }
+
+  function vistaInicio() {
+    var n = ficha.medios
+      ? ficha.medios.media.length + ficha.medios.docs.length + ficha.medios.links.length
+      : null;
+    var bloqueada = ficha.bloqueada === true;
+
+    vista(
+      'inicio',
+      T('c.ficha.titulo'),
+      '<div class="ficha__quien">' +
+        '<span class="chat__av ficha__av" aria-hidden="true">' +
+        (ficha.foto ? '<img src="' + esc(ficha.foto) + '" alt="" />' : esc(iniciales(ficha.nombre))) +
+        '</span>' +
+        '<strong class="ficha__nombre">' + esc(ficha.nombre) + '</strong>' +
+        (ficha.entidad ? '<span class="ficha__entidad">' + esc(Tv('c.ficha.deEntidad', { entidad: ficha.entidad })) + '</span>' : '') +
+      '</div>' +
+      (bloqueada
+        ? '<p class="ficha__aviso">' + esc(Tv('c.ficha.bloqueadaAviso', { nombre: ficha.nombre })) + '</p>'
+        : '') +
+      '<div class="ficha__grupo">' +
+        fila('medios', '▦', T('c.ficha.medios'), n === null ? '' : n === 0 ? T('c.ficha.ninguno') : String(n)) +
+      '</div>' +
+      '<div class="ficha__grupo">' + fila('ayuda', '?', T('c.ficha.ayuda')) + '</div>' +
+      // Lo serio, abajo y separado: se lee antes de tocarlo.
+      '<div class="ficha__grupo">' +
+        fila(
+          'bloquear',
+          bloqueada ? '✓' : '⊘',
+          Tv(bloqueada ? 'c.ficha.desbloquear' : 'c.ficha.bloquear', { nombre: ficha.nombre }),
+          '',
+          bloqueada ? 'accion' : 'peligro',
+        ) +
+        fila('denunciar', '⚑', Tv('c.ficha.denunciar', { nombre: ficha.nombre }), '', 'peligro') +
+        fila('eliminar', '🗑', T('c.ficha.eliminar'), '', 'peligro') +
+      '</div>' +
+      '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>',
+    );
+  }
+
+  function errorFicha(e) {
+    var p = $('#chat-ficha-error');
+    var texto = (e && (e.detalle || UI.explicar(e))) || T('c.ficha.fallo');
+    if (p) p.textContent = texto;
+    else UI.avisar('aviso', texto);
+  }
+
+  // ---- Confirmar lo serio ------------------------------------------------
+
+  function vistaConfirmar(tipo) {
+    var datos = {
+      bloquear: { t: 'c.ficha.bloquearTitulo', c: 'c.ficha.bloquearCuerpo', a: 'c.ficha.bloquearAccion', peligro: true },
+      desbloquear: { t: 'c.ficha.desbloquearTitulo', c: 'c.ficha.desbloquearCuerpo', a: 'c.ficha.desbloquearAccion', peligro: false },
+      eliminar: { t: 'c.ficha.eliminarTitulo', c: 'c.ficha.eliminarCuerpo', a: 'c.ficha.eliminarAccion', peligro: true },
+    }[tipo];
+    var vars = { nombre: ficha.nombre };
+    vista(
+      'confirmar',
+      Tv(datos.t, vars),
+      '<p class="ficha__parrafo">' + esc(Tv(datos.c, vars)) + '</p>' +
+      '<div class="ficha__botones">' +
+        '<button type="button" class="btn btn--ghost" data-ficha="inicio">' + esc(T('c.ficha.cancelar')) + '</button>' +
+        '<button type="button" class="btn ' + (datos.peligro ? 'ficha__btnPeligro' : 'btn--primary') + '"' +
+        ' data-ficha="hacer-' + tipo + '" data-foco>' + esc(T(datos.a)) + '</button>' +
+      '</div>' +
+      '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>',
+    );
+  }
+
+  /** Mientras se hace algo, los botones no se pueden volver a pulsar. */
+  function ocupado(si) {
+    ficha.trabajando = si;
+    Array.prototype.forEach.call(document.querySelectorAll('#chat-ficha-cuerpo button'), function (b) {
+      b.disabled = si;
+    });
+  }
+
+  function bloquear(si) {
+    var otro = ficha.otro;
+    ocupado(true);
+    PFP.db
+      .rpc(si ? 'block_peer' : 'unblock_peer', { p_other: otro })
+      .then(function () {
+        ocupado(false);
+        if (ficha.otro !== otro) return;
+        ficha.bloqueada = si;
+        pintarBloqueo();
+        vistaInicio();
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+      });
+  }
+
+  /**
+   * Elimina la conversación de mi vista: de mi lista y de todos mis
+   * dispositivos. La otra persona la conserva entera.
+   */
+  function eliminarConversacion() {
+    var otro = ficha.otro;
+    var id = 'peer:' + otro;
+    ocupado(true);
+    PFP.db
+      .rpc('clear_conversation', { p_key: id })
+      .then(function () {
+        ocupado(false);
+        cerrarFicha();
+        hilos = hilos.filter(function (h) { return h.id !== id; });
+        if (abierta === id) cerrarPanel();
+        pintarLista();
+        pintarTotal();
+        cargarHilos().catch(function () {});
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+      });
+  }
+
+  // ---- Ayuda ---------------------------------------------------------------
+
+  function vistaAyuda() {
+    var punto = function (clave, icono) {
+      return '<li><span aria-hidden="true">' + icono + '</span>' + esc(T(clave)) + '</li>';
+    };
+    vista(
+      'ayuda',
+      T('c.ficha.ayudaTitulo'),
+      '<ul class="ficha__puntos">' +
+        punto('c.ficha.ayudaPrivada', '🔒') +
+        punto('c.ficha.ayudaNunca', '🛡') +
+        punto('c.ficha.ayudaBloquear', '⊘') +
+        punto('c.ficha.ayuda112', '☎') +
+      '</ul>' +
+      '<div class="ficha__botones">' +
+        '<button type="button" class="btn btn--primary" data-ficha="soporte" data-foco>' +
+        esc(T('c.ficha.ayudaEquipo')) + '</button>' +
+      '</div>',
+    );
+  }
+
+  /** Al chat con el equipo. Si aún no tiene mensajes, no está en la lista: se añade. */
+  function irASoporte() {
+    var id = 'support:' + yo;
+    cerrarFicha();
+    if (!hilos.some(function (h) { return h.id === id; })) {
+      hilos.push({
+        id: id,
+        clase: 'directo',
+        nombre: T('c.chat.soporte'),
+        subtitulo: T('c.chat.soporteSub'),
+        previo: null,
+        fecha: null,
+        sinLeer: 0,
+      });
+    }
+    abrir(id);
+  }
+
+  // ---- Denunciar -----------------------------------------------------------
+
+  function vistaDenuncia() {
+    var vars = { nombre: ficha.nombre };
+    vista(
+      'denunciar',
+      Tv('c.ficha.denunciaTitulo', vars),
+      '<form class="ficha__form" id="chat-denuncia" novalidate>' +
+        '<p class="ficha__parrafo">' + esc(Tv('c.ficha.denunciaCuerpo', vars)) + '</p>' +
+        '<fieldset class="ficha__motivos">' +
+          '<legend>' + esc(T('c.ficha.denunciaMotivo')) + '</legend>' +
+          MOTIVOS.map(function (m) {
+            return (
+              '<label class="ficha__motivo"><input type="radio" name="motivo" value="' + m + '" /> ' +
+              esc(T('c.ficha.motivo.' + m)) + '</label>'
+            );
+          }).join('') +
+        '</fieldset>' +
+        '<label class="ficha__etiqueta" for="chat-denuncia-detalle">' + esc(T('c.ficha.denunciaDetalle')) + '</label>' +
+        '<textarea id="chat-denuncia-detalle" rows="3" maxlength="1000"' +
+        ' placeholder="' + esc(T('c.ficha.denunciaDetalleHint')) + '"></textarea>' +
+        '<label class="ficha__casilla"><input type="checkbox" id="chat-denuncia-bloquear"' +
+        (ficha.bloqueada ? ' checked disabled' : '') + ' /> ' +
+        esc(Tv('c.ficha.denunciaBloquear', vars)) + '</label>' +
+        '<div class="ficha__botones">' +
+          '<button type="submit" class="btn ficha__btnPeligro" disabled>' + esc(T('c.ficha.denunciaEnviar')) + '</button>' +
+        '</div>' +
+        '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>' +
+      '</form>',
+    );
+  }
+
+  function enviarDenuncia(form) {
+    var elegido = form.querySelector('input[name="motivo"]:checked');
+    if (!elegido) return;
+    var otro = ficha.otro;
+    var bloquearTambien = $('#chat-denuncia-bloquear').checked && !ficha.bloqueada;
+    var detalle = $('#chat-denuncia-detalle').value.trim();
+
+    ocupado(true);
+    PFP.db
+      .rpc('report_peer', {
+        p_other: otro,
+        p_reason: elegido.value,
+        p_details: detalle || null,
+        p_block: bloquearTambien,
+      })
+      .then(function () {
+        ocupado(false);
+        if (ficha.otro !== otro) return;
+        if (bloquearTambien) {
+          ficha.bloqueada = true;
+          pintarBloqueo();
+        }
+        vista(
+          'enviada',
+          T('c.ficha.denunciaEnviada'),
+          '<p class="ficha__parrafo">' + esc(T('c.ficha.denunciaGracias')) + '</p>' +
+          '<div class="ficha__botones"><button type="button" class="btn btn--primary" data-ficha="inicio" data-foco>' +
+          esc(T('c.ficha.volverFicha')) + '</button></div>',
+        );
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+        // Con un motivo elegido el botón vuelve a valer.
+        form.querySelector('button[type="submit"]').disabled = false;
+      });
+  }
+
+  // ---- Archivos, enlaces y documentos ---------------------------------------
+
+  /** Los enlaces de un texto, sin la puntuación que cierra la frase. Como en la app. */
+  function enlacesDe(texto) {
+    var encontrados = String(texto || '').match(/https?:\/\/[^\s<>"']+/gi) || [];
+    return encontrados
+      .map(function (u) { return u.replace(/[.,;:!?)\]}»”’]+$/, ''); })
+      .filter(function (u) { return u.length > 8; });
+  }
+
+  function dominio(url) {
+    var m = /^https?:\/\/([^/?#:]+)/i.exec(url);
+    return ((m && m[1]) || url).replace(/^www\./i, '').toLowerCase();
+  }
+
+  function cargarMedios(otro) {
+    ficha.cargandoMedios = true;
+    return PFP.db
+      .rpc('peer_media', { p_other: otro })
+      .then(function (filas) {
+        var r = { media: [], docs: [], links: [] };
+        (filas || []).forEach(function (f) {
+          if (f.attachment_path) {
+            var item = {
+              id: f.id,
+              mio: f.sender_id === yo,
+              kind: f.kind || 'file',
+              path: f.attachment_path,
+              name: f.attachment_name || String(f.attachment_path).split('/').pop(),
+              mime: f.attachment_mime || '',
+              size: f.attachment_size,
+              sentAt: f.sent_at,
+            };
+            (item.kind === 'image' || item.kind === 'video' ? r.media : r.docs).push(item);
+          }
+          enlacesDe(f.body).forEach(function (url) {
+            r.links.push({ url: url, host: dominio(url), mio: f.sender_id === yo, sentAt: f.sent_at });
+          });
+        });
+        if (ficha.otro === otro) ficha.medios = r;
+      })
+      .catch(function () {
+        if (ficha.otro === otro) ficha.medios = null;
+      })
+      .then(function () {
+        if (ficha.otro === otro) ficha.cargandoMedios = false;
+      });
+  }
+
+  function fechaCorta(iso) {
+    return new Date(iso).toLocaleDateString(idioma(), { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function vistaMedios() {
+    var m = ficha.medios;
+    var pestana = ficha.pestanaMedios;
+    var tabs = [
+      ['media', T('c.ficha.tabMedia')],
+      ['links', T('c.ficha.tabEnlaces')],
+      ['docs', T('c.ficha.tabDocs')],
+    ];
+
+    var cuerpo;
+    if (!m) {
+      cuerpo = '<p class="chat__dlgVacio">' + esc(T(ficha.cargandoMedios ? 'c.cargando' : 'c.ficha.mediosFallo')) + '</p>';
+    } else if (pestana === 'media') {
+      cuerpo = m.media.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinMedia')) + '</p>'
+        : '<div class="ficha__rejilla">' + m.media.map(function (x) {
+            return (
+              '<a class="ficha__miniatura adjunto' + (x.kind === 'video' ? ' ficha__miniatura--video' : '') + '"' +
+              ' data-ruta="' + esc(x.path) + '" target="_blank" rel="noopener noreferrer"' +
+              ' aria-label="' + esc(Tv(x.kind === 'video' ? 'c.ficha.videoDel' : 'c.ficha.fotoDel', { fecha: fechaCorta(x.sentAt) })) + '">' +
+              (x.kind === 'video' ? '<span class="adjunto__play">' + ICONO_PLAY + '</span>' : '<img alt="" />') +
+              '</a>'
+            );
+          }).join('') + '</div>';
+    } else if (pestana === 'links') {
+      cuerpo = m.links.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinEnlaces')) + '</p>'
+        : '<ul class="ficha__lista">' + m.links.map(function (x) {
+            return (
+              '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' +
+              '<strong>' + esc(x.host) + '</strong>' +
+              '<span>' + esc(x.url) + '</span>' +
+              '<small>' + esc((x.mio ? T('c.ficha.tu') : ficha.nombre) + ' · ' + fechaCorta(x.sentAt)) + '</small>' +
+              '</a></li>'
+            );
+          }).join('') + '</ul>';
+    } else {
+      cuerpo = m.docs.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinDocs')) + '</p>'
+        : '<ul class="ficha__lista">' + m.docs.map(function (x) {
+            return (
+              '<li><a class="adjunto" data-ruta="' + esc(x.path) + '" data-nombre="' + esc(x.name) + '"' +
+              ' data-tipo="' + esc(x.mime) + '" target="_blank" rel="noopener noreferrer">' +
+              '<strong>' + esc(x.name) + '</strong>' +
+              '<small>' + esc((x.size != null ? peso(x.size) + ' · ' : '') + fechaCorta(x.sentAt)) + '</small>' +
+              '</a></li>'
+            );
+          }).join('') + '</ul>';
+    }
+
+    vista(
+      'medios',
+      T('c.ficha.medios'),
+      '<div class="ficha__tabs" role="tablist">' +
+        tabs.map(function (tb) {
+          return (
+            '<button type="button" role="tab" data-ficha="tab-' + tb[0] + '"' +
+            ' aria-selected="' + (tb[0] === pestana) + '">' + esc(tb[1]) + '</button>'
+          );
+        }).join('') +
+      '</div>' +
+      '<div class="ficha__medios">' + cuerpo + '</div>',
+    );
+    firmarEnlaces($('#chat-ficha-cuerpo'));
+  }
+
+  /** Pone su URL firmada a cada archivo de un trozo de página. */
+  function firmarEnlaces(raiz) {
+    Array.prototype.forEach.call(raiz.querySelectorAll('.adjunto[data-ruta]'), function (a) {
       firmarAdjunto(a.getAttribute('data-ruta'))
         .then(function (url) {
           if (!a.isConnected) return;
@@ -1382,6 +1902,62 @@
         .catch(function () {
           if (a.isConnected) a.classList.add('adjunto--fallo');
         });
+    });
+  }
+
+  // ---- Lo que se pulsa dentro --------------------------------------------
+
+  function engancharFicha() {
+    var dlg = dialogoFicha();
+    if (!dlg) return;
+
+    $('#chat-cab-ficha').addEventListener('click', abrirFicha);
+    $('#chat-ficha-cerrar').addEventListener('click', cerrarFicha);
+    $('#chat-ficha-volver').addEventListener('click', vistaInicio);
+    $('#chat-desbloquear').addEventListener('click', function () {
+      abrirFicha();
+      vistaConfirmar('desbloquear');
+    });
+
+    dlg.addEventListener('click', function (ev) {
+      // Un clic en el fondo, fuera de la caja, cierra: es lo que espera todo el mundo.
+      if (ev.target === dlg) { cerrarFicha(); return; }
+      var b = ev.target.closest('[data-ficha]');
+      if (!b || b.disabled) return;
+      var a = b.getAttribute('data-ficha');
+      if (a === 'inicio') vistaInicio();
+      else if (a === 'medios') {
+        // Si aún no ha llegado, se enseña «cargando» y se pinta al llegar.
+        if (!ficha.medios && !ficha.cargandoMedios) {
+          cargarMedios(ficha.otro).then(function () {
+            if (dialogoFicha().dataset.vista === 'medios') vistaMedios();
+          });
+        }
+        vistaMedios();
+      } else if (a.indexOf('tab-') === 0) {
+        ficha.pestanaMedios = a.slice(4);
+        vistaMedios();
+      } else if (a === 'ayuda') vistaAyuda();
+      else if (a === 'soporte') irASoporte();
+      else if (a === 'denunciar') vistaDenuncia();
+      else if (a === 'bloquear') vistaConfirmar(ficha.bloqueada ? 'desbloquear' : 'bloquear');
+      else if (a === 'eliminar') vistaConfirmar('eliminar');
+      else if (a === 'hacer-bloquear') bloquear(true);
+      else if (a === 'hacer-desbloquear') bloquear(false);
+      else if (a === 'hacer-eliminar') eliminarConversacion();
+    });
+
+    // El botón de enviar la denuncia vale en cuanto hay un motivo elegido.
+    dlg.addEventListener('change', function (ev) {
+      if (ev.target.name === 'motivo') {
+        var form = ev.target.form;
+        form.querySelector('button[type="submit"]').disabled = false;
+      }
+    });
+    dlg.addEventListener('submit', function (ev) {
+      if (ev.target.id !== 'chat-denuncia') return;
+      ev.preventDefault();
+      enviarDenuncia(ev.target);
     });
   }
 
@@ -1913,6 +2489,7 @@
 
     var caja = $('#chat-mensajes');
     engancharNotas(caja);
+    engancharFicha();
 
     UI.cargarEstado()
       .then(function (e) {

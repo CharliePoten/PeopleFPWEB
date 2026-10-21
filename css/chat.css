@@ -958,3 +958,195 @@
 
 /* Si no se pudo firmar, se dice sin romper la burbuja. */
 .adjunto--fallo { opacity: 0.55; cursor: not-allowed; }
+
+/* --------------------------------------------------------------------------
+   Ficha de contacto
+   --------------------------------------------------------------------------
+   La cabecera de una conversación de dos es un botón: el nombre abre la
+   ficha. En las demás conversaciones está apagado y se ve como un título. */
+button.chat__cabTitulo {
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+button.chat__cabTitulo:not(:disabled):hover { background: var(--n-100, #EEF0F4); }
+button.chat__cabTitulo:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+button.chat__cabTitulo:disabled { cursor: default; }
+
+.chat__av--cab { width: 36px; height: 36px; font-size: 0.8rem; }
+
+/* Bloqueada por mí: en vez de escribir, cómo deshacerlo. */
+.chat__bloqueada {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  padding: var(--s-sm) var(--s-base);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.chat__bloqueada[hidden] { display: none; }
+.chat__bloqueada p { margin: 0; font-size: 0.86rem; color: var(--text-soft); }
+
+.chat__ficha { max-height: min(88dvh, 40rem); }
+.ficha__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-base);
+  max-height: calc(min(88dvh, 40rem) - 4rem);
+  padding: var(--s-base);
+  overflow-y: auto;
+}
+.ficha__volver { font-size: 1.8rem; }
+
+.ficha__quien {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.ficha__av { width: 96px; height: 96px; font-size: 1.8rem; }
+.ficha__nombre { font-size: 1.15rem; }
+.ficha__entidad { font-size: 0.82rem; color: var(--text-mute); }
+
+.ficha__aviso {
+  margin: 0;
+  padding: var(--s-sm) var(--s-base);
+  border-radius: 10px;
+  background: var(--red-50, #FEF2F2);
+  color: var(--red-600);
+  font-size: 0.88rem;
+}
+
+/* Bloques de filas, como los ajustes del teléfono. */
+.ficha__grupo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.ficha__fila {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  min-height: 52px;
+  padding: 0 var(--s-base);
+  border: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.94rem;
+  text-align: left;
+  cursor: pointer;
+}
+.ficha__fila + .ficha__fila { border-top: 1px solid var(--border); }
+.ficha__fila:hover:not(:disabled) { background: var(--n-100, #EEF0F4); }
+.ficha__fila:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.ficha__fila:disabled { opacity: 0.5; cursor: default; }
+.ficha__fila--peligro { color: var(--red-600); }
+.ficha__icono { width: 22px; text-align: center; color: var(--text-soft); }
+.ficha__fila--peligro .ficha__icono { color: var(--red-600); }
+.ficha__fila--accion, .ficha__fila--accion .ficha__icono { color: var(--brand); }
+.ficha__texto { flex: 1; }
+.ficha__detalle, .ficha__flecha { color: var(--text-mute); }
+
+.ficha__error { min-height: 1em; margin: 0; font-size: 0.86rem; color: var(--red-600); }
+.ficha__error:empty { display: none; }
+.ficha__parrafo { margin: 0; line-height: 1.5; color: var(--text-soft); }
+
+.ficha__botones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s-sm); }
+.ficha__btnPeligro { background: var(--red-600); color: #fff; border-color: var(--red-600); }
+.ficha__btnPeligro:hover:not(:disabled) { filter: brightness(0.92); }
+.ficha__btnPeligro:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ficha__puntos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ficha__puntos li { display: flex; gap: var(--s-sm); line-height: 1.45; color: var(--text-soft); }
+.ficha__puntos li > span { flex: none; width: 1.4em; text-align: center; }
+
+/* Denunciar */
+.ficha__form { display: flex; flex-direction: column; gap: var(--s-sm); }
+.ficha__motivos { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; border: 0; }
+.ficha__motivos legend { margin-bottom: 4px; font-weight: 600; }
+.ficha__motivo, .ficha__casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  min-height: 40px;
+  cursor: pointer;
+}
+.ficha__etiqueta { font-weight: 600; font-size: 0.9rem; }
+.ficha__form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  resize: vertical;
+}
+
+/* Archivos, enlaces y documentos */
+.ficha__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.ficha__tabs button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.ficha__tabs button[aria-selected="true"] { background: var(--brand); color: #fff; font-weight: 600; }
+.ficha__rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.ficha__miniatura {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--n-200);
+}
+.ficha__miniatura img { width: 100%; height: 100%; object-fit: cover; }
+.ficha__miniatura img:not([src]) { visibility: hidden; }
+.ficha__miniatura--video { display: grid; place-items: center; background: #0B1220; color: #fff; }
+.ficha__miniatura--video .adjunto__play { width: 40px; height: 40px; }
+.ficha__lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.ficha__lista li + li { border-top: 1px solid var(--border); }
+.ficha__lista a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--s-sm) 2px;
+  color: inherit;
+  text-decoration: none;
+}
+.ficha__lista a:hover strong { text-decoration: underline; }
+.ficha__lista span {
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: var(--navy-500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ficha__lista small { font-size: 0.74rem; color: var(--text-mute); }
