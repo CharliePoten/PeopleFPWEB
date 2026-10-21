@@ -153,6 +153,13 @@
 .home .store-badge strong { margin-top: 3px; font-size: 1rem; }
 .home .store-links:target .store-badge { animation: store-highlight 1.2s ease 1; }
 @keyframes store-highlight { 0%,100% { box-shadow: none; } 40% { border-color: var(--amber-300); box-shadow: 0 0 0 5px rgba(252,175,23,.17); } }
+/* Las tiendas todavía no llevan a ninguna parte: sin el salto al pasar el
+   ratón, que las hacía parecer un botón que luego no hace nada. */
+.home .store-badge[aria-disabled="true"] { cursor: default; }
+.home .store-badge[aria-disabled="true"]:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.3); transform: none; }
+/* Lo que sí se puede hacer ya, justo debajo de lo que aún no. */
+.home .store-cuenta { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 46ch; margin: 28px auto 0; text-align: center; }
+.home .store-cuenta p { margin: 0; }
 
 /* Qué hacemos. */
 .home .what .section-head { max-width: 760px; }
@@ -250,6 +257,8 @@
   .home .iphone-17__island { top: 10px; height: 21px; }
   .home .store-links { align-items: stretch; flex-direction: column; }
   .home .store-badge { width: 100%; }
+  .home .store-cuenta { align-items: stretch; }
+  .home .panel-demo__acciones { flex-direction: column; align-items: stretch; width: min(100%, 340px); margin-inline: auto; }
   .home .organization-group__head { grid-template-columns: 1fr; }
   .home .organization-card p, .home .organization-card > div:last-child { margin-left: 0; }
   .home .organization-card > div:last-child { align-items: stretch; flex-direction: column; }
@@ -449,6 +458,14 @@
 .home .panel-demo__punto[aria-current='true'] {
   width: 26px;
   background: var(--amber-500);
+}
+
+.home .panel-demo__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: clamp(28px, 4vw, 44px);
 }
 
 @media (max-width: 860px) {
