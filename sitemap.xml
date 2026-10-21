@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Las paginas publicas, con la misma URL que su canonical. Las de
-     /cuenta/ no van: son pantallas de sesion y llevan noindex. -->
+<!-- Generado por _herramientas/seo.py: las paginas publicas, con la misma
+     URL que su canonical. Las de /cuenta/ no van: llevan noindex. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://peopleforpeople.es/</loc><lastmod>2026-10-21</lastmod></url>
   <url><loc>https://peopleforpeople.es/voluntarios/</loc><lastmod>2026-10-21</lastmod></url>
