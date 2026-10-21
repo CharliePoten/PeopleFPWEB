@@ -703,3 +703,450 @@
 /* Soporte y asistente: ni una persona ni un grupo, asi que ni foto ni
    iniciales. Un simbolo sobre el azul de marca los distingue de un vistazo. */
 .chat__av--directo { background: var(--navy-500); font-size: 1.05rem; }
+
+/* --------------------------------------------------------------------------
+   Notas de voz
+   --------------------------------------------------------------------------
+   Como en WhatsApp: reproducir, la onda con lo escuchado coloreado y un punto
+   que se arrastra, la duración, y la cara de quien habla con un micrófono
+   —verde sin escuchar, azul escuchada—. Mientras suena, la cara se cambia
+   por la velocidad. La cara va del lado de quien habla: a la izquierda en
+   lo que te mandan, a la derecha en lo tuyo. */
+.chat__msg--voz { width: min(78%, 21rem); }
+
+.voz {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.voz__play {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+}
+.voz__play svg { width: 28px; height: 28px; fill: currentColor; }
+.voz__play:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.chat__msg--mio .voz__play { color: #fff; }
+.voz--cargando .voz__play svg { animation: voz-carga 0.9s ease-in-out infinite alternate; }
+@keyframes voz-carga { from { opacity: 1; } to { opacity: 0.3; } }
+
+.voz__centro {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.voz__onda {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  cursor: pointer;
+  /* Arrastrar el punto con el dedo no puede desplazar la conversación. */
+  touch-action: none;
+}
+.voz__onda:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 4px; }
+.chat__msg--mio .voz__onda:focus-visible { outline-color: #fff; }
+
+.voz__barra {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--n-300);
+}
+.voz__barra--hecha { background: var(--brand); }
+.chat__msg--mio .voz__barra { background: rgba(255, 255, 255, 0.38); }
+.chat__msg--mio .voz__barra--hecha { background: #fff; }
+
+.voz__punto {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--brand);
+  pointer-events: none;
+}
+.chat__msg--mio .voz__punto { background: #fff; }
+
+.voz__tiempo {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-mute);
+}
+.chat__msg--mio .voz__tiempo { color: var(--navy-100); }
+
+.voz__lado {
+  flex: none;
+  order: -1;
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+.chat__msg--mio .voz__lado { order: 3; }
+
+.voz__cara {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--navy-200);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  user-select: none;
+}
+.voz__cara img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+.voz__micro {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+}
+.voz__micro svg { width: 14px; height: 14px; fill: currentColor; }
+.chat__msg--mio .voz__micro { background: var(--brand); color: #fff; }
+.voz__micro--nueva { color: var(--green-600); }
+/* El azul de «escuchada» de WhatsApp: se lee igual sobre blanco y sobre el
+   azul marino de lo propio. */
+.voz__micro--escuchada,
+.chat__msg--mio .voz__micro--escuchada { color: #53BDEB; }
+
+.voz__velocidad {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 26px;
+  margin-top: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--text-mute);
+  color: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat__msg--mio .voz__velocidad { background: rgba(255, 255, 255, 0.22); }
+.voz__velocidad:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.voz--activa .voz__cara { display: none; }
+.voz--activa .voz__velocidad { display: grid; }
+
+@media (prefers-reduced-motion: reduce) {
+  .voz--cargando .voz__play svg { animation: none; opacity: 0.5; }
+}
+
+/* --------------------------------------------------------------------------
+   Fotos, vídeos y archivos
+   --------------------------------------------------------------------------
+   Los mismos tres formatos que en la app: la foto se ve, el vídeo es un
+   recuadro con el botón de reproducir, y los documentos una tarjeta con su
+   nombre y su tamaño. */
+.chat__msg--adjunto { width: min(78%, 15.5rem); }
+
+.adjunto {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+/* Sin la URL firmada todavía, no lleva a ningún sitio. */
+.adjunto:not([href]) { cursor: progress; }
+.adjunto:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 10px; }
+.chat__msg--mio .adjunto:focus-visible { outline-color: #fff; }
+
+.adjunto--foto,
+.adjunto--video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--n-200);
+}
+.adjunto--foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Una imagen sin `src` aún no enseña el icono de imagen rota. */
+.adjunto--foto img:not([src]) { visibility: hidden; }
+
+.adjunto--video {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  background: #0B1220;
+  color: #fff;
+}
+.adjunto__play {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+.adjunto__play svg { width: 26px; height: 26px; fill: currentColor; }
+.adjunto--video .adjunto__peso { color: rgba(255, 255, 255, 0.8); }
+
+.adjunto__pie {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 0.74rem;
+  color: var(--text-mute);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat__msg--mio .adjunto__pie { color: var(--navy-100); }
+
+.adjunto--doc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--n-100, #F1F3F6);
+}
+.chat__msg--mio .adjunto--doc { background: rgba(255, 255, 255, 0.14); }
+.adjunto__icono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--brand);
+}
+.adjunto__icono svg { width: 22px; height: 22px; fill: currentColor; }
+.chat__msg--mio .adjunto__icono { background: rgba(255, 255, 255, 0.18); color: #fff; }
+.adjunto__texto { min-width: 0; display: flex; flex-direction: column; }
+.adjunto__nombre {
+  overflow: hidden;
+  font-size: 0.86rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adjunto__peso { font-size: 0.72rem; color: var(--text-mute); }
+.chat__msg--mio .adjunto__peso { color: var(--navy-100); }
+
+/* Si no se pudo firmar, se dice sin romper la burbuja. */
+.adjunto--fallo { opacity: 0.55; cursor: not-allowed; }
+
+/* --------------------------------------------------------------------------
+   Ficha de contacto
+   --------------------------------------------------------------------------
+   La cabecera de una conversación de dos es un botón: el nombre abre la
+   ficha. En las demás conversaciones está apagado y se ve como un título. */
+button.chat__cabTitulo {
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+button.chat__cabTitulo:not(:disabled):hover { background: var(--n-100, #EEF0F4); }
+button.chat__cabTitulo:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+button.chat__cabTitulo:disabled { cursor: default; }
+
+.chat__av--cab { width: 36px; height: 36px; font-size: 0.8rem; }
+
+/* Bloqueada por mí: en vez de escribir, cómo deshacerlo. */
+.chat__bloqueada {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  padding: var(--s-sm) var(--s-base);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.chat__bloqueada[hidden] { display: none; }
+.chat__bloqueada p { margin: 0; font-size: 0.86rem; color: var(--text-soft); }
+
+.chat__ficha { max-height: min(88dvh, 40rem); }
+.ficha__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-base);
+  max-height: calc(min(88dvh, 40rem) - 4rem);
+  padding: var(--s-base);
+  overflow-y: auto;
+}
+.ficha__volver { font-size: 1.8rem; }
+
+.ficha__quien {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.ficha__av { width: 96px; height: 96px; font-size: 1.8rem; }
+.ficha__nombre { font-size: 1.15rem; }
+.ficha__entidad { font-size: 0.82rem; color: var(--text-mute); }
+
+.ficha__aviso {
+  margin: 0;
+  padding: var(--s-sm) var(--s-base);
+  border-radius: 10px;
+  background: var(--red-50, #FEF2F2);
+  color: var(--red-600);
+  font-size: 0.88rem;
+}
+
+/* Bloques de filas, como los ajustes del teléfono. */
+.ficha__grupo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.ficha__fila {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  min-height: 52px;
+  padding: 0 var(--s-base);
+  border: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.94rem;
+  text-align: left;
+  cursor: pointer;
+}
+.ficha__fila + .ficha__fila { border-top: 1px solid var(--border); }
+.ficha__fila:hover:not(:disabled) { background: var(--n-100, #EEF0F4); }
+.ficha__fila:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.ficha__fila:disabled { opacity: 0.5; cursor: default; }
+.ficha__fila--peligro { color: var(--red-600); }
+.ficha__icono { width: 22px; text-align: center; color: var(--text-soft); }
+.ficha__fila--peligro .ficha__icono { color: var(--red-600); }
+.ficha__fila--accion, .ficha__fila--accion .ficha__icono { color: var(--brand); }
+.ficha__texto { flex: 1; }
+.ficha__detalle, .ficha__flecha { color: var(--text-mute); }
+
+.ficha__error { min-height: 1em; margin: 0; font-size: 0.86rem; color: var(--red-600); }
+.ficha__error:empty { display: none; }
+.ficha__parrafo { margin: 0; line-height: 1.5; color: var(--text-soft); }
+
+.ficha__botones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s-sm); }
+.ficha__btnPeligro { background: var(--red-600); color: #fff; border-color: var(--red-600); }
+.ficha__btnPeligro:hover:not(:disabled) { filter: brightness(0.92); }
+.ficha__btnPeligro:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ficha__puntos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ficha__puntos li { display: flex; gap: var(--s-sm); line-height: 1.45; color: var(--text-soft); }
+.ficha__puntos li > span { flex: none; width: 1.4em; text-align: center; }
+
+/* Denunciar */
+.ficha__form { display: flex; flex-direction: column; gap: var(--s-sm); }
+.ficha__motivos { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; border: 0; }
+.ficha__motivos legend { margin-bottom: 4px; font-weight: 600; }
+.ficha__motivo, .ficha__casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  min-height: 40px;
+  cursor: pointer;
+}
+.ficha__etiqueta { font-weight: 600; font-size: 0.9rem; }
+.ficha__form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  resize: vertical;
+}
+
+/* Archivos, enlaces y documentos */
+.ficha__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.ficha__tabs button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.ficha__tabs button[aria-selected="true"] { background: var(--brand); color: #fff; font-weight: 600; }
+.ficha__rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.ficha__miniatura {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--n-200);
+}
+.ficha__miniatura img { width: 100%; height: 100%; object-fit: cover; }
+.ficha__miniatura img:not([src]) { visibility: hidden; }
+.ficha__miniatura--video { display: grid; place-items: center; background: #0B1220; color: #fff; }
+.ficha__miniatura--video .adjunto__play { width: 40px; height: 40px; }
+.ficha__lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.ficha__lista li + li { border-top: 1px solid var(--border); }
+.ficha__lista a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--s-sm) 2px;
+  color: inherit;
+  text-decoration: none;
+}
+.ficha__lista a:hover strong { text-decoration: underline; }
+.ficha__lista span {
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: var(--navy-500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ficha__lista small { font-size: 0.74rem; color: var(--text-mute); }

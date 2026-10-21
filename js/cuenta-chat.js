@@ -67,6 +67,7 @@
   var hayMas = true;        // ¿queda historia por cargar hacia arriba?
   var cargando = false;
   var miNombre = '';        // mi nombre de pila, para «Ana está escribiendo»
+  var miFoto = null;        // mi foto, para mis notas de voz
 
   /* ---------------------------------------------------------------------
      Utilidades
@@ -581,6 +582,8 @@
   /** Deja el panel derecho como al entrar. */
   function cerrarPanel() {
     cerrarEscribiendo();
+    pararNota();
+    prepararFicha(null);
     abierta = null;
     solicitudAbierta = null;
     $('#chat-conv').hidden = true;
@@ -599,6 +602,8 @@
   }
 
   function abrir(id) {
+    // Lo que sonaba era de la conversación anterior.
+    if (id !== abierta) pararNota();
     abierta = id;
     solicitudAbierta = null;
     // Puede venir de una solicitud, que lo esconde.
@@ -618,6 +623,8 @@
       : '';
     $('#chat-nada').hidden = true;
     $('#chat-conv').hidden = false;
+    // En una de dos, el nombre abre la ficha; y si está bloqueada, se dice.
+    prepararFicha(id);
 
     abrirEscribiendo(id);
     pintarLista();
@@ -645,23 +652,28 @@
         p_limit: PAGINA,
       });
     } else if (p.clase === 'directo') {
-      var qd =
-        'select=id,sender_id,kind,body,sent_at' +
-        '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
-        '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
-        '&order=sent_at.desc&limit=' + PAGINA;
-      if (antes) qd += '&sent_at=lt.' + encodeURIComponent(antes);
-      peticion = PFP.db.select('messages', qd);
+      peticion = pedirConVoz(function (cols) {
+        var qd =
+          'select=id,sender_id,kind,body,sent_at' + cols +
+          '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
+          '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
+          '&order=sent_at.desc&limit=' + PAGINA;
+        if (antes) qd += '&sent_at=lt.' + encodeURIComponent(antes);
+        return PFP.db.select('messages', qd);
+      });
     } else {
-      var q =
-        'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +
-        '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
-        '&order=sent_at.desc&limit=' + PAGINA;
-      if (p.columna === 'organization_id') {
-        q += '&admin_only=is.' + (p.soloResponsables ? 'true' : 'false');
-      }
-      if (antes) q += '&sent_at=lt.' + encodeURIComponent(antes);
-      peticion = PFP.db.select('messages', q);
+      peticion = pedirConVoz(function (cols) {
+        var q =
+          'select=id,sender_id,kind,body,sent_at' + cols +
+          ',public_profiles!messages_sender_id_fkey!inner(full_name)' +
+          '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
+          '&order=sent_at.desc&limit=' + PAGINA;
+        if (p.columna === 'organization_id') {
+          q += '&admin_only=is.' + (p.soloResponsables ? 'true' : 'false');
+        }
+        if (antes) q += '&sent_at=lt.' + encodeURIComponent(antes);
+        return PFP.db.select('messages', q);
+      });
     }
 
     return peticion
@@ -684,6 +696,7 @@
 
         pintarMensajes(reinicio);
         marcarLeida();
+        refrescarEscuchas(false);
       })
       .catch(function (e) {
         cargando = false;
@@ -740,7 +753,8 @@
       var sigue = autorPrevio === m.sender_id;
       autorPrevio = m.sender_id;
 
-      var clases = 'chat__msg' + (mio ? ' chat__msg--mio' : '');
+      var clases = 'chat__msg' + (mio ? ' chat__msg--mio' : '') + (metaVoz(m) ? ' chat__msg--voz' : '') +
+        (esAdjunto(m) ? ' chat__msg--adjunto' : '');
       clases += sigue ? ' chat__msg--sigue' : ' chat__msg--primero';
 
       var estado = '';
@@ -766,6 +780,10 @@
 
     caja.innerHTML = html;
     pintarCola();
+    // Las notas de voz se ponen al día aparte: lo que suena no se reinicia
+    // porque haya llegado un mensaje.
+    pintarNotas();
+    pintarAdjuntos();
 
     var mas = $('#chat-mas');
     if (mas) mas.addEventListener('click', function () { cargarMensajes(false); });
@@ -786,6 +804,8 @@
    * enseñar unas coordenadas que no dicen nada.
    */
   function cuerpoHTML(m) {
+    if (metaVoz(m)) return notaHTML(m);
+    if (esAdjunto(m)) return adjuntoHTML(m);
     if (m.kind === 'location' && m.lat != null && m.lng != null) {
       var url = 'https://www.google.com/maps/search/?api=1&query=' + m.lat + ',' + m.lng;
       return (
@@ -794,6 +814,1151 @@
       );
     }
     return esc(m.body).replace(/\n/g, '<br />');
+  }
+
+  /* ---------------------------------------------------------------------
+     Notas de voz
+     ---------------------------------------------------------------------
+     Las graba la app. Aquí se escuchan igual que allí, que es igual que en
+     WhatsApp: reproducir, la onda —lo escuchado coloreado y un punto que se
+     arrastra—, la duración, y la cara de quien habla con un micrófono:
+     verde si te la han mandado y no la has escuchado, azul cuando sí (en las
+     tuyas, azul cuando la ha escuchado quien tenía que hacerlo). Mientras
+     suena, la cara se cambia por la velocidad: 1×, 1,5×, 2×.
+
+     Un solo <audio> para toda la página, y su estado fuera del HTML: la
+     conversación se vuelve a pintar entera cada vez que llega un mensaje, y
+     si el reproductor viviera en la burbuja se cortaría a media nota.
+     --------------------------------------------------------------------- */
+
+  var BARRAS_VOZ = 34;
+  var VELOCIDADES = [1, 1.5, 2];
+  var CLAVE_VELOCIDAD = 'pfp.velocidadVoz';
+  /* Cada cuánto, como mucho, se pregunta si alguien ha escuchado lo mío. */
+  var ESCUCHAS_CADA_MS = 10000;
+
+  var ICONO_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>';
+  var ICONO_PAUSA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 5h4v14h-4zM13.5 5h4v14h-4z"/></svg>';
+  var ICONO_MICRO =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14.5a3.5 3.5 0 0 0 3.5-3.5V5.5a3.5 3.5 0 0 0-7 0V11a3.5 3.5 0 0 0 3.5 3.5zm6-3.5a6 6 0 0 1-12 0H4.5a7.5 7.5 0 0 0 6.75 7.46V21h1.5v-2.54A7.5 7.5 0 0 0 19.5 11z"/></svg>';
+
+  var voz = {
+    audio: null,
+    id: null,          // la nota cargada en el reproductor
+    cargando: false,
+    pos: {},           // dónde se quedó cada nota que no suena, en ms
+    firmas: {},        // ruta → { url, hasta }: firmar cada vez retrasa el play
+    velocidad: leerVelocidad(),
+    escuchas: {},      // id → { yo: bool, otros: n }
+    escuchasDesde: 0,  // cuándo se preguntó por última vez
+    escuchasPausa: 0,  // sin la 0060 en el servidor, se deja de preguntar un rato
+    arrastre: null,    // { id, fraccion } mientras se arrastra el punto
+    bucle: 0,
+  };
+
+  function leerVelocidad() {
+    try {
+      var v = Number(window.localStorage.getItem(CLAVE_VELOCIDAD));
+      return VELOCIDADES.indexOf(v) >= 0 ? v : 1;
+    } catch (e) {
+      return 1;
+    }
+  }
+
+  /** Duración y onda, o null si el mensaje no es una nota de voz. */
+  function metaVoz(m) {
+    var meta = m && m.attachment_meta;
+    if (!meta || meta.voice !== true || !m.attachment_path || m.kind !== 'audio') return null;
+    return {
+      ms: Number(meta.duration_ms) || 0,
+      onda: Array.isArray(meta.waveform) ? meta.waveform : [],
+    };
+  }
+
+  /** «0:07», «1:23», «12:05». */
+  function duracion(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    var seg = s % 60;
+    return Math.floor(s / 60) + ':' + (seg < 10 ? '0' : '') + seg;
+  }
+
+  function etiquetaVelocidad(v) {
+    return String(v).replace('.', ',') + '×';
+  }
+
+  /** Las 64 barras guardadas, reducidas a las que caben: el pico de cada tramo. */
+  function reducirOnda(onda, n) {
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      var desde = Math.floor((i * onda.length) / n);
+      var hasta = Math.max(desde + 1, Math.floor(((i + 1) * onda.length) / n));
+      var pico = 0;
+      for (var j = desde; j < hasta && j < onda.length; j++) if (onda[j] > pico) pico = onda[j];
+      out.push(pico);
+    }
+    var max = Math.max.apply(null, out.concat([0]));
+    return out.map(function (v) { return max > 0 ? Math.round((v / max) * 100) : 0; });
+  }
+
+  function buscarMensaje(id) {
+    for (var i = 0; i < mensajes.length; i++) if (mensajes[i].id === id) return mensajes[i];
+    return null;
+  }
+
+  /** Cuántas personas tienen que escuchar una nota mía para que salga en azul. */
+  function oyentesNecesarios() {
+    var h = hiloActual();
+    if (h && h.clase === 'grupo') return Math.max(1, (h.participantes || 2) - 1);
+    return 1;
+  }
+
+  function notaHTML(m) {
+    var meta = metaVoz(m);
+    var mio = m.sender_id === yo;
+    var h = hiloActual();
+    var nombre = mio ? miNombre : m.autor || (h && h.nombre) || '';
+    var foto = mio ? miFoto : h && h.clase === 'peer' ? h.foto : null;
+
+    var barras = reducirOnda(meta.onda, BARRAS_VOZ)
+      .map(function (v) {
+        return '<span class="voz__barra" style="height:' + (12 + v * 0.88).toFixed(0) + '%"></span>';
+      })
+      .join('');
+
+    return (
+      '<div class="voz" data-voz="' + esc(m.id) + '">' +
+      '<button type="button" class="voz__play" data-voz-accion="play"></button>' +
+      '<div class="voz__centro">' +
+      '<div class="voz__onda" data-voz-accion="ir" role="slider" tabindex="0"' +
+      ' aria-label="' + esc(T('c.chat.vozNota')) + '" aria-valuemin="0"' +
+      ' aria-valuemax="' + Math.round(meta.ms / 1000) + '">' +
+      barras +
+      '<span class="voz__punto" aria-hidden="true"></span>' +
+      '</div>' +
+      '<span class="voz__tiempo"></span>' +
+      '</div>' +
+      '<span class="voz__lado">' +
+      '<span class="voz__cara" aria-hidden="true">' +
+      (foto ? '<img src="' + esc(foto) + '" alt="" loading="lazy" />' : esc(iniciales(nombre))) +
+      '<span class="voz__micro">' + ICONO_MICRO + '</span>' +
+      '</span>' +
+      '<button type="button" class="voz__velocidad" data-voz-accion="velocidad"></button>' +
+      '</span>' +
+      '</div>'
+    );
+  }
+
+  /** Pone una burbuja al día sin volver a pintarla: se llama en cada fotograma mientras suena. */
+  function pintarNota(id) {
+    var el = document.querySelector('.voz[data-voz="' + CSS.escape(id) + '"]');
+    var m = buscarMensaje(id);
+    var meta = metaVoz(m);
+    if (!el || !meta) return;
+
+    var a = voz.audio;
+    var activa = voz.id === id;
+    var sonando = activa && a && !a.paused;
+    var dur = meta.ms;
+    var pos = activa && a ? a.currentTime * 1000 : voz.pos[id] || 0;
+    if (voz.arrastre && voz.arrastre.id === id) pos = voz.arrastre.fraccion * dur;
+    var progreso = dur > 0 ? Math.min(1, Math.max(0, pos / dur)) : 0;
+    var enMarcha = activa || pos > 0 || (voz.arrastre && voz.arrastre.id === id);
+
+    el.classList.toggle('voz--activa', activa);
+    el.classList.toggle('voz--cargando', activa && voz.cargando);
+
+    var play = el.querySelector('.voz__play');
+    var icono = sonando ? 'pausa' : 'play';
+    if (play.dataset.icono !== icono) {
+      play.innerHTML = sonando ? ICONO_PAUSA : ICONO_PLAY;
+      play.dataset.icono = icono;
+    }
+    // El micrófono: verde sin escuchar, azul escuchada. Sin saberlo aún
+    // (o sin la 0060 en el servidor), el color de siempre.
+    var mio = m.sender_id === yo;
+    var e = voz.escuchas[id];
+    var escuchada = e ? (mio ? e.otros >= oyentesNecesarios() : e.yo) : false;
+    var micro = el.querySelector('.voz__micro');
+    micro.classList.toggle('voz__micro--escuchada', escuchada);
+    micro.classList.toggle('voz__micro--nueva', !mio && !!e && !e.yo);
+
+    play.setAttribute(
+      'aria-label',
+      (sonando ? T('c.chat.vozPausar') : T('c.chat.vozReproducir').replace('{d}', duracion(dur))) +
+        (escuchada ? '. ' + T('c.chat.vozEscuchada') : ''),
+    );
+
+    var barras = el.querySelectorAll('.voz__barra');
+    for (var i = 0; i < barras.length; i++) {
+      barras[i].classList.toggle('voz__barra--hecha', !!enMarcha && (i + 0.5) / barras.length <= progreso);
+    }
+    el.querySelector('.voz__punto').style.left = (progreso * 100).toFixed(2) + '%';
+    el.querySelector('.voz__tiempo').textContent = duracion(enMarcha ? pos : dur);
+    var onda = el.querySelector('.voz__onda');
+    onda.setAttribute('aria-valuenow', String(Math.round(pos / 1000)));
+    onda.setAttribute('aria-valuetext', duracion(pos));
+
+    var vel = el.querySelector('.voz__velocidad');
+    vel.textContent = etiquetaVelocidad(voz.velocidad);
+    vel.setAttribute('aria-label', T('c.chat.vozVelocidad').replace('{v}', etiquetaVelocidad(voz.velocidad)));
+  }
+
+  function pintarNotas() {
+    mensajes.forEach(function (m) { if (metaVoz(m)) pintarNota(m.id); });
+  }
+
+  function elAudio() {
+    if (voz.audio) return voz.audio;
+    var a = new Audio();
+    a.preload = 'auto';
+
+    a.addEventListener('playing', function () {
+      voz.cargando = false;
+      var m = buscarMensaje(voz.id);
+      // Empezar a escucharla cuenta como escuchada, como en WhatsApp.
+      if (m && m.sender_id !== yo) marcarEscuchada(m.id);
+      seguirBucle();
+    });
+    a.addEventListener('pause', function () { if (voz.id) pintarNota(voz.id); });
+    a.addEventListener('waiting', function () {
+      voz.cargando = true;
+      if (voz.id) pintarNota(voz.id);
+    });
+    a.addEventListener('ended', function () {
+      var id = voz.id;
+      voz.id = null;
+      delete voz.pos[id];
+      pintarNota(id);
+      // Si justo detrás va otra nota de la misma persona, empieza sola,
+      // como en WhatsApp. De otra persona no: una respuesta tuya no se pone
+      // a sonar porque acabe la nota a la que contestaba.
+      var acabada = buscarMensaje(id);
+      var i = mensajes.indexOf(acabada);
+      var sig = i >= 0 ? mensajes[i + 1] : null;
+      if (sig && metaVoz(sig) && sig.sender_id === acabada.sender_id) reproducirNota(sig, 0);
+    });
+    a.addEventListener('error', function () {
+      if (!voz.id || !a.getAttribute('src')) return;
+      var id = voz.id;
+      voz.id = null;
+      voz.cargando = false;
+      pintarNota(id);
+      UI.avisar('aviso', T('c.chat.vozError'));
+    });
+
+    voz.audio = a;
+    return a;
+  }
+
+  /** Mientras suena, la burbuja se mueve con el sonido; parada, no gasta nada. */
+  function seguirBucle() {
+    if (voz.bucle) return;
+    var paso = function () {
+      voz.bucle = 0;
+      if (!voz.id) return;
+      pintarNota(voz.id);
+      if (voz.audio && !voz.audio.paused) voz.bucle = window.requestAnimationFrame(paso);
+    };
+    voz.bucle = window.requestAnimationFrame(paso);
+  }
+
+  /** La URL firmada de un archivo del chat (notas, fotos, documentos), guardada un rato. */
+  function firmarAdjunto(ruta) {
+    var f = voz.firmas[ruta];
+    if (f && f.hasta > Date.now()) return Promise.resolve(f.url);
+    return PFP.almacen.firmar('chat-attachments', ruta, 3600).then(function (url) {
+      // Se da por caducada antes que el servidor: una que vence a mitad de
+      // una nota larga, o de una descarga, la cortaría.
+      voz.firmas[ruta] = { url: url, hasta: Date.now() + 50 * 60000 };
+      return url;
+    });
+  }
+
+  function reproducirNota(m, desdeMs) {
+    var a = elAudio();
+    var anterior = voz.id;
+    // La que sonaba se queda donde estaba, como en WhatsApp.
+    if (anterior && anterior !== m.id) {
+      voz.pos[anterior] = a.currentTime * 1000;
+      a.pause();
+    }
+    voz.id = m.id;
+    voz.cargando = true;
+    delete voz.pos[m.id];
+    if (anterior && anterior !== m.id) pintarNota(anterior);
+    pintarNota(m.id);
+
+    firmarAdjunto(m.attachment_path)
+      .then(function (url) {
+        if (voz.id !== m.id) return;
+        a.src = url;
+        a.defaultPlaybackRate = voz.velocidad;
+        a.playbackRate = voz.velocidad;
+        if (desdeMs > 0) {
+          a.addEventListener('loadedmetadata', function una() {
+            a.removeEventListener('loadedmetadata', una);
+            a.currentTime = desdeMs / 1000;
+          });
+        }
+        return a.play();
+      })
+      .catch(function (e) {
+        if (voz.id !== m.id) return;
+        voz.id = null;
+        voz.cargando = false;
+        pintarNota(m.id);
+        // Que el navegador no deje sonar sin un clic no es un error de la nota.
+        if (!e || e.name !== 'NotAllowedError') UI.avisar('aviso', T('c.chat.vozError'));
+      });
+  }
+
+  function alternarNota(id) {
+    var m = buscarMensaje(id);
+    if (!m || !metaVoz(m)) return;
+    var a = elAudio();
+    if (voz.id === id) {
+      if (a.paused) {
+        a.playbackRate = voz.velocidad;
+        a.play().catch(function () {});
+      } else {
+        a.pause();
+      }
+      pintarNota(id);
+      return;
+    }
+    reproducirNota(m, voz.pos[id] || 0);
+  }
+
+  /** Ir a un punto de la nota, suene o no. */
+  function irEnNota(id, ms) {
+    var m = buscarMensaje(id);
+    var meta = metaVoz(m);
+    if (!meta) return;
+    var destino = Math.max(0, Math.min(meta.ms, ms));
+    if (voz.id === id && voz.audio) voz.audio.currentTime = destino / 1000;
+    else voz.pos[id] = destino;
+    pintarNota(id);
+  }
+
+  function cambiarVelocidad() {
+    var i = VELOCIDADES.indexOf(voz.velocidad);
+    voz.velocidad = VELOCIDADES[(i + 1) % VELOCIDADES.length];
+    if (voz.audio) {
+      voz.audio.defaultPlaybackRate = voz.velocidad;
+      voz.audio.playbackRate = voz.velocidad;
+    }
+    try { window.localStorage.setItem(CLAVE_VELOCIDAD, String(voz.velocidad)); } catch (e) { /* sin almacenamiento, solo esta vez */ }
+    if (voz.id) pintarNota(voz.id);
+  }
+
+  /** Al cambiar de conversación o cerrarla, lo que sonaba se para. */
+  function pararNota() {
+    if (voz.audio && !voz.audio.paused) voz.audio.pause();
+    voz.id = null;
+    voz.cargando = false;
+  }
+
+  function marcarEscuchada(id) {
+    var e = voz.escuchas[id];
+    if (e && e.yo) return;
+    voz.escuchas[id] = { yo: true, otros: e ? e.otros : 0 };
+    pintarNota(id);
+    PFP.db.rpc('mark_voice_played', { p_message: id }).catch(function () {});
+  }
+
+  /**
+   * Pregunta cómo están las notas de la conversación abierta. Con `soloMias`,
+   * solo las mías que aún no ha escuchado quien tenía que hacerlo: es lo único
+   * que puede cambiar sin que yo haga nada.
+   */
+  function refrescarEscuchas(soloMias) {
+    if (Date.now() < voz.escuchasPausa) return Promise.resolve();
+    var necesarios = oyentesNecesarios();
+    var ids = mensajes
+      .filter(function (m) {
+        if (!metaVoz(m) || String(m.id).indexOf('tmp-') === 0) return false;
+        if (!soloMias) return true;
+        var e = voz.escuchas[m.id];
+        return m.sender_id === yo && (!e || e.otros < necesarios);
+      })
+      .map(function (m) { return m.id; })
+      .slice(-200);
+    if (ids.length === 0) return Promise.resolve();
+
+    voz.escuchasDesde = Date.now();
+    return PFP.db
+      .rpc('voice_play_state', { p_ids: ids })
+      .then(function (filas) {
+        (filas || []).forEach(function (f) {
+          var antes = voz.escuchas[f.message_id];
+          voz.escuchas[f.message_id] = {
+            // Lo apuntado aquí no se deshace porque el servidor aún no lo tenga.
+            yo: !!f.played_by_me || !!(antes && antes.yo),
+            otros: Number(f.played_by_others) || 0,
+          };
+          pintarNota(f.message_id);
+        });
+      })
+      .catch(function () {
+        // Sin la 0060, o sin red: se vuelve a probar dentro de un minuto, no
+        // en cada vuelta del sondeo.
+        voz.escuchasPausa = Date.now() + 60000;
+      });
+  }
+
+  /** Clics, arrastre y teclado de las notas, para toda la conversación a la vez. */
+  function engancharNotas(caja) {
+    caja.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-voz-accion]');
+      if (!b) return;
+      var nota = b.closest('.voz');
+      if (!nota) return;
+      var accion = b.getAttribute('data-voz-accion');
+      if (accion === 'play') alternarNota(nota.dataset.voz);
+      else if (accion === 'velocidad') cambiarVelocidad();
+    });
+
+    // Arrastrar el punto, o hacer clic en cualquier sitio de la onda.
+    caja.addEventListener('pointerdown', function (ev) {
+      var onda = ev.target.closest('.voz__onda');
+      if (!onda || ev.button !== 0) return;
+      var id = onda.closest('.voz').dataset.voz;
+      var fraccion = function (e) {
+        var r = onda.getBoundingClientRect();
+        return r.width > 0 ? Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) : 0;
+      };
+      ev.preventDefault();
+      onda.setPointerCapture(ev.pointerId);
+      voz.arrastre = { id: id, fraccion: fraccion(ev) };
+      pintarNota(id);
+
+      var mover = function (e) {
+        voz.arrastre.fraccion = fraccion(e);
+        pintarNota(id);
+      };
+      var soltar = function (e) {
+        onda.removeEventListener('pointermove', mover);
+        onda.removeEventListener('pointerup', soltar);
+        onda.removeEventListener('pointercancel', soltar);
+        var f = e.type === 'pointercancel' ? null : fraccion(e);
+        voz.arrastre = null;
+        var meta = metaVoz(buscarMensaje(id));
+        if (f !== null && meta) irEnNota(id, f * meta.ms);
+        else pintarNota(id);
+      };
+      onda.addEventListener('pointermove', mover);
+      onda.addEventListener('pointerup', soltar);
+      onda.addEventListener('pointercancel', soltar);
+    });
+
+    caja.addEventListener('keydown', function (ev) {
+      var onda = ev.target.closest && ev.target.closest('.voz__onda');
+      if (!onda) return;
+      var id = onda.closest('.voz').dataset.voz;
+      var meta = metaVoz(buscarMensaje(id));
+      if (!meta) return;
+      var ahora = voz.id === id && voz.audio ? voz.audio.currentTime * 1000 : voz.pos[id] || 0;
+      var destino = null;
+      if (ev.key === 'ArrowRight' || ev.key === 'ArrowUp') destino = ahora + 5000;
+      else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown') destino = ahora - 5000;
+      else if (ev.key === 'Home') destino = 0;
+      else if (ev.key === 'End') destino = meta.ms;
+      else if (ev.key === ' ' || ev.key === 'Enter') {
+        ev.preventDefault();
+        alternarNota(id);
+        return;
+      }
+      if (destino === null) return;
+      ev.preventDefault();
+      irEnNota(id, destino);
+    });
+  }
+
+  /**
+   * Las columnas de las notas se piden solo si el servidor las tiene: sin la
+   * 0059, pedir `attachment_meta` tumbaba la conversación entera. Se intenta
+   * con ellas y, si la base no la conoce, se sigue sin ellas.
+   */
+  var COLUMNAS_ADJUNTO = ',attachment_path,attachment_name,attachment_mime,attachment_size';
+  var columnasVoz = COLUMNAS_ADJUNTO + ',attachment_meta';
+  function pedirConVoz(hacer) {
+    return hacer(columnasVoz).catch(function (e) {
+      var texto = (e && (e.detalle || e.message)) || '';
+      if (columnasVoz.indexOf('attachment_meta') >= 0 && /attachment_meta/.test(texto)) {
+        columnasVoz = COLUMNAS_ADJUNTO;
+        return hacer(columnasVoz);
+      }
+      throw e;
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     Fotos, vídeos y archivos
+     ---------------------------------------------------------------------
+     Se mandan desde la app; aquí se ven igual que allí. La foto, dentro de la
+     burbuja. El vídeo, un recuadro oscuro con el botón de reproducir. Los
+     documentos —y un audio que no es nota de voz—, una tarjeta con el nombre
+     y el tamaño: saber si son 200 KB o 20 MB decide si se abre ahora.
+
+     El almacén es privado: cada archivo lleva su URL firmada, que se pide al
+     pintar y se guarda un rato. Mientras llega, el enlace no lleva destino y
+     no hace nada.
+     --------------------------------------------------------------------- */
+
+  var ICONO_DOC =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 2.5L17.5 8H14zM8 13h8v1.5H8zm0 3h8v1.5H8zm0-6h4v1.5H8z"/></svg>';
+
+  function esAdjunto(m) {
+    return !!m.attachment_path && /^(image|video|audio|file)$/.test(m.kind) && !metaVoz(m);
+  }
+
+  /** «2,4 MB». */
+  function peso(bytes) {
+    var n = Number(bytes) || 0;
+    var fmt = function (v, d) {
+      return v.toLocaleString(idioma(), { minimumFractionDigits: d, maximumFractionDigits: d });
+    };
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return fmt(n / 1024, 0) + ' KB';
+    return fmt(n / (1024 * 1024), 1) + ' MB';
+  }
+
+  function adjuntoHTML(m) {
+    var ruta = esc(m.attachment_path);
+    var nombre = m.attachment_name || m.body || T('c.chat.archivo');
+    var enlace = ' data-ruta="' + ruta + '" target="_blank" rel="noopener noreferrer"';
+
+    if (m.kind === 'image') {
+      return (
+        '<a class="adjunto adjunto--foto"' + enlace +
+        ' aria-label="' + esc(T('c.chat.verFoto')) + '">' +
+        '<img alt="' + esc(nombre) + '" />' +
+        '</a>' +
+        '<span class="adjunto__pie">' + esc(nombre) + '</span>'
+      );
+    }
+
+    if (m.kind === 'video') {
+      return (
+        '<a class="adjunto adjunto--video"' + enlace +
+        ' aria-label="' + esc(T('c.chat.verVideo')) + '">' +
+        '<span class="adjunto__play">' + ICONO_PLAY + '</span>' +
+        '<span class="adjunto__peso">' + esc(peso(m.attachment_size)) + '</span>' +
+        '</a>' +
+        '<span class="adjunto__pie">' + esc(nombre) + '</span>'
+      );
+    }
+
+    return (
+      '<a class="adjunto adjunto--doc"' + enlace +
+      ' data-nombre="' + esc(nombre) + '" data-tipo="' + esc(m.attachment_mime || '') + '"' +
+      ' aria-label="' + esc(T('c.chat.abrirArchivo').replace('{n}', nombre)) + '">' +
+      '<span class="adjunto__icono">' + ICONO_DOC + '</span>' +
+      '<span class="adjunto__texto">' +
+      '<span class="adjunto__nombre">' + esc(nombre) + '</span>' +
+      '<span class="adjunto__peso">' + esc(peso(m.attachment_size)) + '</span>' +
+      '</span>' +
+      '</a>'
+    );
+  }
+
+  /**
+   * Pone a cada adjunto pintado su URL firmada. Un PDF se abre en el
+   * navegador; el resto se descarga con su nombre de verdad, no con el del
+   * almacén, que es un identificador.
+   */
+  function pintarAdjuntos() {
+    var caja = $('#chat-mensajes');
+    if (caja) firmarEnlaces(caja);
+  }
+
+  /* ---------------------------------------------------------------------
+     Ficha de contacto
+     ---------------------------------------------------------------------
+     La misma que en la app: se abre tocando el nombre de la persona en la
+     cabecera de una conversación de dos. Arriba quién es; después lo que os
+     habéis mandado y la ayuda; y abajo, en rojo y separado, lo serio:
+     bloquear, denunciar y eliminar la conversación, cada uno con su
+     confirmación antes.
+
+     Todo lo decide el servidor (migración 0058 de la app). Un bloqueo que
+     solo respetara la app no bloquearía a quien escribe desde aquí, y al
+     revés.
+     --------------------------------------------------------------------- */
+
+  var MOTIVOS = ['harassment', 'inappropriate', 'scam', 'spam', 'impersonation', 'other'];
+
+  var ficha = {
+    otro: null,        // id de la otra persona
+    nombre: '',
+    foto: null,
+    entidad: '',       // la entidad que compartís, si se sabe
+    bloqueada: null,   // ¿la he bloqueado yo? null mientras no se sabe
+    medios: null,      // { media, docs, links } o null
+    cargandoMedios: false,
+    pestanaMedios: 'media',
+    trabajando: false,
+  };
+
+  /** T con huecos: `{nombre}` → el nombre. */
+  function Tv(clave, vars) {
+    var s = T(clave);
+    Object.keys(vars || {}).forEach(function (k) {
+      s = s.split('{' + k + '}').join(vars[k]);
+    });
+    return s;
+  }
+
+  /** ¿La he bloqueado yo? Si me ha bloqueado ella, no se puede saber: a propósito. */
+  function consultarBloqueo(otro) {
+    return PFP.db
+      .select('peer_blocks', 'select=blocked_id&blocked_id=eq.' + encodeURIComponent(otro))
+      .then(function (filas) { return (filas || []).length > 0; })
+      .catch(function () { return false; });
+  }
+
+  /**
+   * Con la persona bloqueada, en vez de escribir, cómo deshacerlo. Como en la
+   * app: escribirle no serviría de nada y el servidor lo rechazaría igual.
+   */
+  function pintarBloqueo() {
+    var p = partes(abierta);
+    var si = !!(p && p.clase === 'peer' && p.otro === ficha.otro && ficha.bloqueada);
+    var aviso = $('#chat-bloqueada');
+    var escribir = $('.chat__escribir');
+    if (aviso) {
+      aviso.hidden = !si;
+      $('#chat-bloqueada-texto').textContent = si ? Tv('c.ficha.bloqueadaAviso', { nombre: ficha.nombre }) : '';
+    }
+    if (escribir && p && p.clase === 'peer') escribir.hidden = si;
+  }
+
+  /** Al abrir una conversación: la cabecera pulsable y si está bloqueada. */
+  function prepararFicha(id) {
+    var p = partes(id);
+    var boton = $('#chat-cab-ficha');
+    var av = $('#chat-cab-av');
+    var esPeer = !!(p && p.clase === 'peer');
+
+    if (boton) {
+      boton.disabled = !esPeer;
+      boton.setAttribute('aria-label', esPeer ? T('c.ficha.abrir') : '');
+    }
+
+    if (!esPeer) {
+      ficha.otro = null;
+      if (av) av.hidden = true;
+      pintarBloqueo();
+      return;
+    }
+
+    var h = hiloActual();
+    ficha.otro = p.otro;
+    ficha.nombre = (h && h.nombre) || T('c.chat.alguien');
+    ficha.foto = (h && h.foto) || null;
+    ficha.entidad = '';
+    ficha.bloqueada = null;
+    ficha.medios = null;
+    ficha.cargandoMedios = false;
+
+    if (av) {
+      av.hidden = false;
+      av.innerHTML = ficha.foto
+        ? '<img src="' + esc(ficha.foto) + '" alt="" />'
+        : esc(iniciales(ficha.nombre));
+    }
+    pintarBloqueo();
+
+    var otro = p.otro;
+    consultarBloqueo(otro).then(function (si) {
+      if (ficha.otro !== otro) return;
+      ficha.bloqueada = si;
+      pintarBloqueo();
+    });
+  }
+
+  // ---- El diálogo ----------------------------------------------------------
+
+  function dialogoFicha() { return $('#chat-ficha'); }
+
+  function abrirFicha() {
+    if (!ficha.otro) return;
+    var dlg = dialogoFicha();
+    vistaInicio();
+    if (dlg.showModal && !dlg.open) dlg.showModal();
+
+    var otro = ficha.otro;
+    // Lo que os habéis mandado, para el número de la fila, y la entidad que
+    // compartís, que es lo que dice quién es esta persona para ti.
+    cargarMedios(otro).then(function () {
+      if (ficha.otro !== otro) return;
+      var v = dialogoFicha().dataset.vista;
+      if (v === 'inicio') vistaInicio();
+      else if (v === 'medios') vistaMedios();
+    });
+    PFP.db.rpc('contactable_people').then(function (gente) {
+      (gente || []).forEach(function (g) {
+        if (g.id === otro && !ficha.entidad) ficha.entidad = g.org_name || '';
+      });
+      if (ficha.otro === otro && dialogoFicha().dataset.vista === 'inicio') vistaInicio();
+    }).catch(function () {});
+  }
+
+  function cerrarFicha() {
+    var dlg = dialogoFicha();
+    if (dlg && dlg.open) dlg.close();
+  }
+
+  /** Cambia lo que enseña el diálogo: título, contenido y el «volver». */
+  function vista(nombre, titulo, html) {
+    var dlg = dialogoFicha();
+    dlg.dataset.vista = nombre;
+    $('#chat-ficha-t').textContent = titulo;
+    $('#chat-ficha-volver').hidden = nombre === 'inicio';
+    $('#chat-ficha-cuerpo').innerHTML = html;
+    var foco = $('#chat-ficha-cuerpo [data-foco]');
+    if (foco) foco.focus();
+  }
+
+  /**
+   * Una fila de la ficha. `tono`: sin él, lleva a otra vista y lleva flecha;
+   * 'peligro' (rojo) y 'accion' (azul) hacen algo —con su confirmación— y no
+   * llevan flecha, como en la app.
+   */
+  function fila(accion, icono, texto, detalle, tono) {
+    return (
+      '<button type="button" class="ficha__fila' + (tono ? ' ficha__fila--' + tono : '') + '"' +
+      ' data-ficha="' + accion + '"' + (ficha.trabajando ? ' disabled' : '') + '>' +
+      '<span class="ficha__icono" aria-hidden="true">' + icono + '</span>' +
+      '<span class="ficha__texto">' + esc(texto) + '</span>' +
+      (detalle ? '<span class="ficha__detalle">' + esc(detalle) + '</span>' : '') +
+      (tono ? '' : '<span class="ficha__flecha" aria-hidden="true">›</span>') +
+      '</button>'
+    );
+  }
+
+  function vistaInicio() {
+    var n = ficha.medios
+      ? ficha.medios.media.length + ficha.medios.docs.length + ficha.medios.links.length
+      : null;
+    var bloqueada = ficha.bloqueada === true;
+
+    vista(
+      'inicio',
+      T('c.ficha.titulo'),
+      '<div class="ficha__quien">' +
+        '<span class="chat__av ficha__av" aria-hidden="true">' +
+        (ficha.foto ? '<img src="' + esc(ficha.foto) + '" alt="" />' : esc(iniciales(ficha.nombre))) +
+        '</span>' +
+        '<strong class="ficha__nombre">' + esc(ficha.nombre) + '</strong>' +
+        (ficha.entidad ? '<span class="ficha__entidad">' + esc(Tv('c.ficha.deEntidad', { entidad: ficha.entidad })) + '</span>' : '') +
+      '</div>' +
+      (bloqueada
+        ? '<p class="ficha__aviso">' + esc(Tv('c.ficha.bloqueadaAviso', { nombre: ficha.nombre })) + '</p>'
+        : '') +
+      '<div class="ficha__grupo">' +
+        fila('medios', '▦', T('c.ficha.medios'), n === null ? '' : n === 0 ? T('c.ficha.ninguno') : String(n)) +
+      '</div>' +
+      '<div class="ficha__grupo">' + fila('ayuda', '?', T('c.ficha.ayuda')) + '</div>' +
+      // Lo serio, abajo y separado: se lee antes de tocarlo.
+      '<div class="ficha__grupo">' +
+        fila(
+          'bloquear',
+          bloqueada ? '✓' : '⊘',
+          Tv(bloqueada ? 'c.ficha.desbloquear' : 'c.ficha.bloquear', { nombre: ficha.nombre }),
+          '',
+          bloqueada ? 'accion' : 'peligro',
+        ) +
+        fila('denunciar', '⚑', Tv('c.ficha.denunciar', { nombre: ficha.nombre }), '', 'peligro') +
+        fila('eliminar', '🗑', T('c.ficha.eliminar'), '', 'peligro') +
+      '</div>' +
+      '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>',
+    );
+  }
+
+  function errorFicha(e) {
+    var p = $('#chat-ficha-error');
+    var texto = (e && (e.detalle || UI.explicar(e))) || T('c.ficha.fallo');
+    if (p) p.textContent = texto;
+    else UI.avisar('aviso', texto);
+  }
+
+  // ---- Confirmar lo serio ------------------------------------------------
+
+  function vistaConfirmar(tipo) {
+    var datos = {
+      bloquear: { t: 'c.ficha.bloquearTitulo', c: 'c.ficha.bloquearCuerpo', a: 'c.ficha.bloquearAccion', peligro: true },
+      desbloquear: { t: 'c.ficha.desbloquearTitulo', c: 'c.ficha.desbloquearCuerpo', a: 'c.ficha.desbloquearAccion', peligro: false },
+      eliminar: { t: 'c.ficha.eliminarTitulo', c: 'c.ficha.eliminarCuerpo', a: 'c.ficha.eliminarAccion', peligro: true },
+    }[tipo];
+    var vars = { nombre: ficha.nombre };
+    vista(
+      'confirmar',
+      Tv(datos.t, vars),
+      '<p class="ficha__parrafo">' + esc(Tv(datos.c, vars)) + '</p>' +
+      '<div class="ficha__botones">' +
+        '<button type="button" class="btn btn--ghost" data-ficha="inicio">' + esc(T('c.ficha.cancelar')) + '</button>' +
+        '<button type="button" class="btn ' + (datos.peligro ? 'ficha__btnPeligro' : 'btn--primary') + '"' +
+        ' data-ficha="hacer-' + tipo + '" data-foco>' + esc(T(datos.a)) + '</button>' +
+      '</div>' +
+      '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>',
+    );
+  }
+
+  /** Mientras se hace algo, los botones no se pueden volver a pulsar. */
+  function ocupado(si) {
+    ficha.trabajando = si;
+    Array.prototype.forEach.call(document.querySelectorAll('#chat-ficha-cuerpo button'), function (b) {
+      b.disabled = si;
+    });
+  }
+
+  function bloquear(si) {
+    var otro = ficha.otro;
+    ocupado(true);
+    PFP.db
+      .rpc(si ? 'block_peer' : 'unblock_peer', { p_other: otro })
+      .then(function () {
+        ocupado(false);
+        if (ficha.otro !== otro) return;
+        ficha.bloqueada = si;
+        pintarBloqueo();
+        vistaInicio();
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+      });
+  }
+
+  /**
+   * Elimina la conversación de mi vista: de mi lista y de todos mis
+   * dispositivos. La otra persona la conserva entera.
+   */
+  function eliminarConversacion() {
+    var otro = ficha.otro;
+    var id = 'peer:' + otro;
+    ocupado(true);
+    PFP.db
+      .rpc('clear_conversation', { p_key: id })
+      .then(function () {
+        ocupado(false);
+        cerrarFicha();
+        hilos = hilos.filter(function (h) { return h.id !== id; });
+        if (abierta === id) cerrarPanel();
+        pintarLista();
+        pintarTotal();
+        cargarHilos().catch(function () {});
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+      });
+  }
+
+  // ---- Ayuda ---------------------------------------------------------------
+
+  function vistaAyuda() {
+    var punto = function (clave, icono) {
+      return '<li><span aria-hidden="true">' + icono + '</span>' + esc(T(clave)) + '</li>';
+    };
+    vista(
+      'ayuda',
+      T('c.ficha.ayudaTitulo'),
+      '<ul class="ficha__puntos">' +
+        punto('c.ficha.ayudaPrivada', '🔒') +
+        punto('c.ficha.ayudaNunca', '🛡') +
+        punto('c.ficha.ayudaBloquear', '⊘') +
+        punto('c.ficha.ayuda112', '☎') +
+      '</ul>' +
+      '<div class="ficha__botones">' +
+        '<button type="button" class="btn btn--primary" data-ficha="soporte" data-foco>' +
+        esc(T('c.ficha.ayudaEquipo')) + '</button>' +
+      '</div>',
+    );
+  }
+
+  /** Al chat con el equipo. Si aún no tiene mensajes, no está en la lista: se añade. */
+  function irASoporte() {
+    var id = 'support:' + yo;
+    cerrarFicha();
+    if (!hilos.some(function (h) { return h.id === id; })) {
+      hilos.push({
+        id: id,
+        clase: 'directo',
+        nombre: T('c.chat.soporte'),
+        subtitulo: T('c.chat.soporteSub'),
+        previo: null,
+        fecha: null,
+        sinLeer: 0,
+      });
+    }
+    abrir(id);
+  }
+
+  // ---- Denunciar -----------------------------------------------------------
+
+  function vistaDenuncia() {
+    var vars = { nombre: ficha.nombre };
+    vista(
+      'denunciar',
+      Tv('c.ficha.denunciaTitulo', vars),
+      '<form class="ficha__form" id="chat-denuncia" novalidate>' +
+        '<p class="ficha__parrafo">' + esc(Tv('c.ficha.denunciaCuerpo', vars)) + '</p>' +
+        '<fieldset class="ficha__motivos">' +
+          '<legend>' + esc(T('c.ficha.denunciaMotivo')) + '</legend>' +
+          MOTIVOS.map(function (m) {
+            return (
+              '<label class="ficha__motivo"><input type="radio" name="motivo" value="' + m + '" /> ' +
+              esc(T('c.ficha.motivo.' + m)) + '</label>'
+            );
+          }).join('') +
+        '</fieldset>' +
+        '<label class="ficha__etiqueta" for="chat-denuncia-detalle">' + esc(T('c.ficha.denunciaDetalle')) + '</label>' +
+        '<textarea id="chat-denuncia-detalle" rows="3" maxlength="1000"' +
+        ' placeholder="' + esc(T('c.ficha.denunciaDetalleHint')) + '"></textarea>' +
+        '<label class="ficha__casilla"><input type="checkbox" id="chat-denuncia-bloquear"' +
+        (ficha.bloqueada ? ' checked disabled' : '') + ' /> ' +
+        esc(Tv('c.ficha.denunciaBloquear', vars)) + '</label>' +
+        '<div class="ficha__botones">' +
+          '<button type="submit" class="btn ficha__btnPeligro" disabled>' + esc(T('c.ficha.denunciaEnviar')) + '</button>' +
+        '</div>' +
+        '<p class="ficha__error" id="chat-ficha-error" role="alert"></p>' +
+      '</form>',
+    );
+  }
+
+  function enviarDenuncia(form) {
+    var elegido = form.querySelector('input[name="motivo"]:checked');
+    if (!elegido) return;
+    var otro = ficha.otro;
+    var bloquearTambien = $('#chat-denuncia-bloquear').checked && !ficha.bloqueada;
+    var detalle = $('#chat-denuncia-detalle').value.trim();
+
+    ocupado(true);
+    PFP.db
+      .rpc('report_peer', {
+        p_other: otro,
+        p_reason: elegido.value,
+        p_details: detalle || null,
+        p_block: bloquearTambien,
+      })
+      .then(function () {
+        ocupado(false);
+        if (ficha.otro !== otro) return;
+        if (bloquearTambien) {
+          ficha.bloqueada = true;
+          pintarBloqueo();
+        }
+        vista(
+          'enviada',
+          T('c.ficha.denunciaEnviada'),
+          '<p class="ficha__parrafo">' + esc(T('c.ficha.denunciaGracias')) + '</p>' +
+          '<div class="ficha__botones"><button type="button" class="btn btn--primary" data-ficha="inicio" data-foco>' +
+          esc(T('c.ficha.volverFicha')) + '</button></div>',
+        );
+      })
+      .catch(function (e) {
+        ocupado(false);
+        errorFicha(e);
+        // Con un motivo elegido el botón vuelve a valer.
+        form.querySelector('button[type="submit"]').disabled = false;
+      });
+  }
+
+  // ---- Archivos, enlaces y documentos ---------------------------------------
+
+  /** Los enlaces de un texto, sin la puntuación que cierra la frase. Como en la app. */
+  function enlacesDe(texto) {
+    var encontrados = String(texto || '').match(/https?:\/\/[^\s<>"']+/gi) || [];
+    return encontrados
+      .map(function (u) { return u.replace(/[.,;:!?)\]}»”’]+$/, ''); })
+      .filter(function (u) { return u.length > 8; });
+  }
+
+  function dominio(url) {
+    var m = /^https?:\/\/([^/?#:]+)/i.exec(url);
+    return ((m && m[1]) || url).replace(/^www\./i, '').toLowerCase();
+  }
+
+  function cargarMedios(otro) {
+    ficha.cargandoMedios = true;
+    return PFP.db
+      .rpc('peer_media', { p_other: otro })
+      .then(function (filas) {
+        var r = { media: [], docs: [], links: [] };
+        (filas || []).forEach(function (f) {
+          if (f.attachment_path) {
+            var item = {
+              id: f.id,
+              mio: f.sender_id === yo,
+              kind: f.kind || 'file',
+              path: f.attachment_path,
+              name: f.attachment_name || String(f.attachment_path).split('/').pop(),
+              mime: f.attachment_mime || '',
+              size: f.attachment_size,
+              sentAt: f.sent_at,
+            };
+            (item.kind === 'image' || item.kind === 'video' ? r.media : r.docs).push(item);
+          }
+          enlacesDe(f.body).forEach(function (url) {
+            r.links.push({ url: url, host: dominio(url), mio: f.sender_id === yo, sentAt: f.sent_at });
+          });
+        });
+        if (ficha.otro === otro) ficha.medios = r;
+      })
+      .catch(function () {
+        if (ficha.otro === otro) ficha.medios = null;
+      })
+      .then(function () {
+        if (ficha.otro === otro) ficha.cargandoMedios = false;
+      });
+  }
+
+  function fechaCorta(iso) {
+    return new Date(iso).toLocaleDateString(idioma(), { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function vistaMedios() {
+    var m = ficha.medios;
+    var pestana = ficha.pestanaMedios;
+    var tabs = [
+      ['media', T('c.ficha.tabMedia')],
+      ['links', T('c.ficha.tabEnlaces')],
+      ['docs', T('c.ficha.tabDocs')],
+    ];
+
+    var cuerpo;
+    if (!m) {
+      cuerpo = '<p class="chat__dlgVacio">' + esc(T(ficha.cargandoMedios ? 'c.cargando' : 'c.ficha.mediosFallo')) + '</p>';
+    } else if (pestana === 'media') {
+      cuerpo = m.media.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinMedia')) + '</p>'
+        : '<div class="ficha__rejilla">' + m.media.map(function (x) {
+            return (
+              '<a class="ficha__miniatura adjunto' + (x.kind === 'video' ? ' ficha__miniatura--video' : '') + '"' +
+              ' data-ruta="' + esc(x.path) + '" target="_blank" rel="noopener noreferrer"' +
+              ' aria-label="' + esc(Tv(x.kind === 'video' ? 'c.ficha.videoDel' : 'c.ficha.fotoDel', { fecha: fechaCorta(x.sentAt) })) + '">' +
+              (x.kind === 'video' ? '<span class="adjunto__play">' + ICONO_PLAY + '</span>' : '<img alt="" />') +
+              '</a>'
+            );
+          }).join('') + '</div>';
+    } else if (pestana === 'links') {
+      cuerpo = m.links.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinEnlaces')) + '</p>'
+        : '<ul class="ficha__lista">' + m.links.map(function (x) {
+            return (
+              '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' +
+              '<strong>' + esc(x.host) + '</strong>' +
+              '<span>' + esc(x.url) + '</span>' +
+              '<small>' + esc((x.mio ? T('c.ficha.tu') : ficha.nombre) + ' · ' + fechaCorta(x.sentAt)) + '</small>' +
+              '</a></li>'
+            );
+          }).join('') + '</ul>';
+    } else {
+      cuerpo = m.docs.length === 0
+        ? '<p class="chat__dlgVacio">' + esc(T('c.ficha.sinDocs')) + '</p>'
+        : '<ul class="ficha__lista">' + m.docs.map(function (x) {
+            return (
+              '<li><a class="adjunto" data-ruta="' + esc(x.path) + '" data-nombre="' + esc(x.name) + '"' +
+              ' data-tipo="' + esc(x.mime) + '" target="_blank" rel="noopener noreferrer">' +
+              '<strong>' + esc(x.name) + '</strong>' +
+              '<small>' + esc((x.size != null ? peso(x.size) + ' · ' : '') + fechaCorta(x.sentAt)) + '</small>' +
+              '</a></li>'
+            );
+          }).join('') + '</ul>';
+    }
+
+    vista(
+      'medios',
+      T('c.ficha.medios'),
+      '<div class="ficha__tabs" role="tablist">' +
+        tabs.map(function (tb) {
+          return (
+            '<button type="button" role="tab" data-ficha="tab-' + tb[0] + '"' +
+            ' aria-selected="' + (tb[0] === pestana) + '">' + esc(tb[1]) + '</button>'
+          );
+        }).join('') +
+      '</div>' +
+      '<div class="ficha__medios">' + cuerpo + '</div>',
+    );
+    firmarEnlaces($('#chat-ficha-cuerpo'));
+  }
+
+  /** Pone su URL firmada a cada archivo de un trozo de página. */
+  function firmarEnlaces(raiz) {
+    Array.prototype.forEach.call(raiz.querySelectorAll('.adjunto[data-ruta]'), function (a) {
+      firmarAdjunto(a.getAttribute('data-ruta'))
+        .then(function (url) {
+          if (!a.isConnected) return;
+          var tipo = a.getAttribute('data-tipo') || '';
+          var nombre = a.getAttribute('data-nombre');
+          a.href = nombre && tipo !== 'application/pdf'
+            ? url + (url.indexOf('?') >= 0 ? '&' : '?') + 'download=' + encodeURIComponent(nombre)
+            : url;
+          var img = a.querySelector('img');
+          if (img && !img.getAttribute('src')) img.src = url;
+        })
+        .catch(function () {
+          if (a.isConnected) a.classList.add('adjunto--fallo');
+        });
+    });
+  }
+
+  // ---- Lo que se pulsa dentro --------------------------------------------
+
+  function engancharFicha() {
+    var dlg = dialogoFicha();
+    if (!dlg) return;
+
+    $('#chat-cab-ficha').addEventListener('click', abrirFicha);
+    $('#chat-ficha-cerrar').addEventListener('click', cerrarFicha);
+    $('#chat-ficha-volver').addEventListener('click', vistaInicio);
+    $('#chat-desbloquear').addEventListener('click', function () {
+      abrirFicha();
+      vistaConfirmar('desbloquear');
+    });
+
+    dlg.addEventListener('click', function (ev) {
+      // Un clic en el fondo, fuera de la caja, cierra: es lo que espera todo el mundo.
+      if (ev.target === dlg) { cerrarFicha(); return; }
+      var b = ev.target.closest('[data-ficha]');
+      if (!b || b.disabled) return;
+      var a = b.getAttribute('data-ficha');
+      if (a === 'inicio') vistaInicio();
+      else if (a === 'medios') {
+        // Si aún no ha llegado, se enseña «cargando» y se pinta al llegar.
+        if (!ficha.medios && !ficha.cargandoMedios) {
+          cargarMedios(ficha.otro).then(function () {
+            if (dialogoFicha().dataset.vista === 'medios') vistaMedios();
+          });
+        }
+        vistaMedios();
+      } else if (a.indexOf('tab-') === 0) {
+        ficha.pestanaMedios = a.slice(4);
+        vistaMedios();
+      } else if (a === 'ayuda') vistaAyuda();
+      else if (a === 'soporte') irASoporte();
+      else if (a === 'denunciar') vistaDenuncia();
+      else if (a === 'bloquear') vistaConfirmar(ficha.bloqueada ? 'desbloquear' : 'bloquear');
+      else if (a === 'eliminar') vistaConfirmar('eliminar');
+      else if (a === 'hacer-bloquear') bloquear(true);
+      else if (a === 'hacer-desbloquear') bloquear(false);
+      else if (a === 'hacer-eliminar') eliminarConversacion();
+    });
+
+    // El botón de enviar la denuncia vale en cuanto hay un motivo elegido.
+    dlg.addEventListener('change', function (ev) {
+      if (ev.target.name === 'motivo') {
+        var form = ev.target.form;
+        form.querySelector('button[type="submit"]').disabled = false;
+      }
+    });
+    dlg.addEventListener('submit', function (ev) {
+      if (ev.target.id !== 'chat-denuncia') return;
+      ev.preventDefault();
+      enviarDenuncia(ev.target);
+    });
   }
 
   /* ---------------------------------------------------------------------
@@ -1132,6 +2297,9 @@
     if (abierta) {
       // Solo lo nuevo: se pide desde el último que ya tengo.
       tareas.push(traerNuevos());
+      // ¿Han escuchado ya mis notas? Más despacio que los mensajes, y fuera
+      // de las tareas: que falle no es perder la conexión.
+      if (Date.now() - voz.escuchasDesde > ESCUCHAS_CADA_MS) refrescarEscuchas(true);
     }
 
     Promise.all(tareas)
@@ -1170,24 +2338,29 @@
       // pide la última página y se descarta lo que ya se tiene.
       peticion = PFP.db.rpc('peer_messages', { p_other: p.otro, p_before: null, p_limit: PAGINA });
     } else if (p.clase === 'directo') {
-      peticion = PFP.db.select(
-        'messages',
-        'select=id,sender_id,kind,body,sent_at' +
-          '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
-          '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
-          '&sent_at=gt.' + encodeURIComponent(ultimo) +
-          '&order=sent_at.asc&limit=' + PAGINA,
-      );
+      peticion = pedirConVoz(function (cols) {
+        return PFP.db.select(
+          'messages',
+          'select=id,sender_id,kind,body,sent_at' + cols +
+            '&thread_owner=eq.' + encodeURIComponent(p.duenyo) +
+            '&thread_kind=eq.' + encodeURIComponent(p.clase2) +
+            '&sent_at=gt.' + encodeURIComponent(ultimo) +
+            '&order=sent_at.asc&limit=' + PAGINA,
+        );
+      });
     } else {
-      var q =
-        'select=id,sender_id,kind,body,sent_at,public_profiles!messages_sender_id_fkey!inner(full_name)' +
-        '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
-        '&sent_at=gt.' + encodeURIComponent(ultimo) +
-        '&order=sent_at.asc&limit=' + PAGINA;
-      if (p.columna === 'organization_id') {
-        q += '&admin_only=is.' + (p.soloResponsables ? 'true' : 'false');
-      }
-      peticion = PFP.db.select('messages', q);
+      peticion = pedirConVoz(function (cols) {
+        var q =
+          'select=id,sender_id,kind,body,sent_at' + cols +
+          ',public_profiles!messages_sender_id_fkey!inner(full_name)' +
+          '&' + p.columna + '=eq.' + encodeURIComponent(p.ref) +
+          '&sent_at=gt.' + encodeURIComponent(ultimo) +
+          '&order=sent_at.asc&limit=' + PAGINA;
+        if (p.columna === 'organization_id') {
+          q += '&admin_only=is.' + (p.soloResponsables ? 'true' : 'false');
+        }
+        return PFP.db.select('messages', q);
+      });
     }
 
     return peticion.then(function (filas) {
@@ -1208,6 +2381,7 @@
 
       if (!añadidos) return;
       pintarMensajes(pegadoAbajo);
+      refrescarEscuchas(false);
       if (pegadoAbajo) marcarLeida();
       else pintarNuevosAbajo(añadidos);
     });
@@ -1314,11 +2488,14 @@
     if (!UI.exigirSesion()) return;
 
     var caja = $('#chat-mensajes');
+    engancharNotas(caja);
+    engancharFicha();
 
     UI.cargarEstado()
       .then(function (e) {
         yo = e.perfil.id;
         miNombre = String(e.perfil.full_name || '').trim().split(/\s+/)[0] || '';
+        miFoto = e.perfil.photo_url || null;
         return cargarHilos();
       })
       .then(function () {
