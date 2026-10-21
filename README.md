@@ -27,6 +27,21 @@ python _herramientas/seo.py --check   # avisa si algo está desfasado
 
 `_herramientas/` empieza por guion bajo para que GitHub Pages no la publique.
 
+## Analítica
+
+Google Analytics 4 (`G-BNMCSPGJ4B`) lo carga `js/analitica.js`, y **solo si la
+persona acepta** en el aviso de cookies: no pegar la etiqueta de Google en el
+`<head>`, porque se cargaría antes del consentimiento (art. 22.2 LSSI).
+
+- Solo en las páginas públicas y solo en `peopleforpeople.es`: en local el
+  aviso sale, pero no se envía nada.
+- Eventos: `volunteer_signup_click`, `organization_signup_click`,
+  `lead_b2b_submit`, `contact_submit` y `resource_download`. Se detectan solos
+  por el enlace (alta o documento) o por el aviso `pfp:contacto-enviado` de
+  `site.js`. Un evento nuevo se añade en `analitica.js`, sin datos personales.
+- Si cambian las cookies, el proveedor o lo que se mide, hay que cambiar
+  también «Cookies y analítica» en `privacidad.html`.
+
 ## Fuentes
 
 Poppins se sirve desde `fuentes/poppins/` (`css/fuentes.css`), no desde Google
