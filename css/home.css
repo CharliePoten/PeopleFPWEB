@@ -202,7 +202,7 @@
 .home .horas__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
 .home .horas__pasos { display: grid; gap: var(--s-md); margin: 0; padding: 0; list-style: none; }
 .home .horas__doc { margin: 0; text-align: center; }
-.home .horas__doc img { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 20, 51, .08), 0 30px 70px rgba(0, 20, 51, .18); transform: rotate(1.5deg); }
+.home .horas__doc img { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 20, 51, .08), 0 30px 70px rgba(0, 20, 51, .18); transform: rotate(1.5deg); }
 .home .horas__doc figcaption { max-width: 40ch; margin: 22px auto 0; color: var(--text-mute); font-size: .86rem; }
 .home .horas .card { padding: 28px; box-shadow: none; }
 .home .horas__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }

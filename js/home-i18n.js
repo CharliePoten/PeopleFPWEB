@@ -107,8 +107,8 @@
     'hours.s3b': 'Las validadas forman tu historial, que puedes imprimir, y son la base del certificado de voluntariado que emite la entidad.',
     'hours.more': 'Más sobre las horas en las preguntas frecuentes →',
     'hours.docSrc': 'imagenes/certificado-ejemplo-es.webp',
-    'hours.docAlt': 'Ejemplo de certificado de voluntariado con las misiones, las horas validadas de cada una y la firma de la entidad',
-    'hours.docPie': 'Un certificado de ejemplo. Lo emite y firma la entidad, con tus horas validadas.',
+    'hours.docAlt': 'Ejemplo de certificado de voluntariado con las misiones, las horas validadas de cada una y el sello de la entidad',
+    'hours.docPie': 'Un certificado de ejemplo. Lo emite y sella la entidad, con tus horas validadas.',
 
     'trust.eyebrow': 'Privacidad y confianza',
     'trust.title': 'Ayudar no debería exponer a nadie.',
@@ -239,8 +239,8 @@
     'hours.s3b': 'Die bestätigten Stunden bilden deinen Verlauf, den du ausdrucken kannst, und sind die Grundlage für die Freiwilligenbescheinigung der Organisation.',
     'hours.more': 'Mehr zu den Stunden in den häufigen Fragen →',
     'hours.docSrc': 'imagenes/certificado-ejemplo-de.webp',
-    'hours.docAlt': 'Beispiel einer Freiwilligenbescheinigung mit den Einsätzen, den bestätigten Stunden und der Unterschrift der Organisation',
-    'hours.docPie': 'Eine Beispielbescheinigung. Sie wird von der Organisation mit deinen bestätigten Stunden ausgestellt und unterschrieben.',
+    'hours.docAlt': 'Beispiel einer Freiwilligenbescheinigung mit den Einsätzen, den bestätigten Stunden und dem Stempel der Organisation',
+    'hours.docPie': 'Eine Beispielbescheinigung. Sie wird von der Organisation mit deinen bestätigten Stunden ausgestellt und gestempelt.',
 
     'trust.eyebrow': 'Datenschutz und Vertrauen',
     'trust.title': 'Helfen sollte niemanden bloßstellen.',
