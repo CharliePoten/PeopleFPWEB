@@ -39,21 +39,30 @@
     });
   }
 
-  /* El progreso del primer scroll encadena tres estados de una sola marca:
-     logotipo horizontal -> icono de la app -> icono de cabecera. */
+  /* Al llegar, una sola marca encadena tres estados —logotipo horizontal ->
+     icono de la app -> icono de cabecera— y debajo aparecen el mensaje y los
+     botones.
+
+     Antes lo movía el scroll, y la primera pantalla era solo el logotipo: ni
+     qué es esto ni qué hacer hasta bajar unos 500 px por una pantalla azul.
+     La coreografía es la misma, pero la mueve el reloj y dura dos segundos.
+     Se ve una vez por visita: quien vuelve a la portada, llega con un ancla
+     o tiene la página ya bajada la encuentra hecha, y quien toca algo
+     mientras dura no tiene que esperar a que acabe. */
   if (header && hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var wordmark = hero.querySelector('.hero__lockup--wordmark');
     var appIcon = hero.querySelector('.hero__lockup--app-icon');
     var brand = header.querySelector('.brand');
-    var ticking = false;
+    var ESPERA_MS = 600;
+    var DURACION_MS = 1800;
+    var CLAVE_INTRO = 'pfp.introVista';
+    var progreso = 1;
+    var animacion = null;
 
     function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
     function ease(value) { return 1 - Math.pow(1 - value, 3); }
 
-    function paintHero() {
-      ticking = false;
-      var total = Math.max(1, hero.offsetHeight - window.innerHeight);
-      var progress = clamp(window.scrollY / total, 0, 1);
+    function paintHero(progress) {
       var wordmarkFade = ease(clamp((progress - 0.07) / 0.22, 0, 1));
       var iconEmergence = ease(clamp((progress - 0.05) / 0.25, 0, 1));
       var movement = ease(clamp((progress - 0.3) / 0.35, 0, 1));
@@ -77,18 +86,40 @@
       hero.style.setProperty('--hero-icon-y', (startY + (targetY - startY) * movement).toFixed(2) + 'px');
       header.style.setProperty('--header-bg', headerBackground.toFixed(4));
       header.style.setProperty('--header-brand-opacity', headerBrandOpacity.toFixed(4));
-      header.classList.toggle('is-solid', progress > 0.46 || window.scrollY >= total);
+      header.classList.toggle('is-solid', progress > 0.46);
     }
 
-    function requestPaint() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(paintHero);
+    function terminar() {
+      if (animacion) window.cancelAnimationFrame(animacion);
+      animacion = null;
+      if (progreso === 1) return;
+      progreso = 1;
+      paintHero(1);
     }
 
-    window.addEventListener('scroll', requestPaint, { passive: true });
-    window.addEventListener('resize', requestPaint);
-    if (wordmark && appIcon) paintHero();
+    if (wordmark && appIcon) {
+      var vista = false;
+      try { vista = sessionStorage.getItem(CLAVE_INTRO) === '1'; } catch (e) { /* sin almacenamiento */ }
+      if (!vista && window.scrollY === 0 && !window.location.hash) progreso = 0;
+      paintHero(progreso);
+
+      if (progreso < 1) {
+        try { sessionStorage.setItem(CLAVE_INTRO, '1'); } catch (e) { /* modo privado */ }
+        var inicio = null;
+        var paso = function (t) {
+          if (inicio === null) inicio = t;
+          progreso = clamp((t - inicio - ESPERA_MS) / DURACION_MS, 0, 1);
+          paintHero(progreso);
+          animacion = progreso < 1 ? window.requestAnimationFrame(paso) : null;
+        };
+        animacion = window.requestAnimationFrame(paso);
+        ['wheel', 'touchstart', 'keydown', 'pointerdown', 'scroll'].forEach(function (evento) {
+          window.addEventListener(evento, terminar, { passive: true, once: true });
+        });
+      }
+
+      window.addEventListener('resize', function () { paintHero(progreso); });
+    }
   } else if (header) {
     header.classList.add('is-solid');
     header.style.setProperty('--header-bg', '1');

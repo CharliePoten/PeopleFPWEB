@@ -97,8 +97,11 @@
 .home .nav__backdrop.is-visible { opacity: 1; visibility: visible; transition-delay: 0s; }
 .home.menu-open { overflow: hidden; }
 
-/* El primer scroll extrae el símbolo del centro del logotipo y lo lleva a la cabecera. */
-.home .hero { height: 185svh; min-height: 960px; overflow: visible; background: var(--navy-700); }
+/* Al llegar, el símbolo sale del centro del logotipo y se va a la cabecera
+   (lo mueve `home.js` con el reloj). Ya no hace falta recorrido de scroll
+   para la animación: la portada ocupa una pantalla, como con «menos
+   movimiento». */
+.home .hero { height: 100svh; min-height: 680px; overflow: visible; background: var(--navy-700); }
 .home .hero__stage { position: sticky; top: 0; height: 100svh; min-height: 620px; overflow: hidden; isolation: isolate; }
 .home .hero__stage::before { content: ''; position: absolute; inset: 0; z-index: -2; background: linear-gradient(135deg, #001636 0%, #002557 54%, #0b417c 100%); }
 .home .hero__stage::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .28; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 54px 54px; mask-image: linear-gradient(to bottom, #000, transparent 86%); }
@@ -240,7 +243,6 @@
   .home .lang img { display: none; }
   .home .header__actions { gap: 8px; }
   .home .nav { padding: 24px; }
-  .home .hero { height: 175svh; }
   .home .hero__stage { min-height: 560px; }
   .home .hero__lockup--wordmark { width: min(82vw, 420px); }
   .home .hero__lockup--app-icon { width: min(30vw, 118px); }
