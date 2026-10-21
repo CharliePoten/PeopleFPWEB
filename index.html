@@ -53,6 +53,8 @@
     </nav>
     <button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button>
 
+    <nav class="menu-ancho" aria-label="Secciones" data-i18n-aria="nav.desktopAria"><ul class="menu-ancho__lista"><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-para-quien"><span data-i18n="nav.who">Para quién</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-para-quien"><li><a href="ongs/index.html" data-i18n="nav.whoNgo">ONG y asociaciones</a></li><li><a href="comunidades/index.html" data-i18n="nav.whoMuni">Ayuntamientos</a></li><li><a href="empresas/index.html" data-i18n="nav.whoCorp">Empresas RSC</a></li><li><a href="voluntarios/index.html" data-i18n="nav.whoVol">Voluntarios</a></li></ul></li><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-recursos"><span data-i18n="nav.resources">Recursos</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-recursos"><li><a href="ayuda.html" data-i18n="nav.faq">Preguntas frecuentes</a></li><li><a href="documentos.html" data-i18n="footer.docs">Documentos</a></li><li><span class="menu-ancho__pronto"><span data-i18n="nav.blog">Blog</span><small data-i18n="nav.soon">Próximamente</small></span></li></ul></li><li><a class="menu-ancho__enlace" href="#contacto" data-i18n="nav.contact">Contacto</a></li></ul></nav>
+
     <div class="header__actions">
       <div class="lang" role="group" aria-label="Idioma">
         <button type="button" data-lang="es" aria-pressed="true"><img src="imagenes/marca/bandera-es.svg" alt="" width="20" height="14" /> ES</button>
@@ -85,6 +87,15 @@
     </div>
   </section>
 
+  <!-- Qué hacemos, justo después de la portada: quien llega sabe en tres
+       líneas qué es esto antes de ver la app o la prensa. -->
+  <section class="section what" id="que-hacemos">
+    <div class="container what__rejilla">
+      <div class="what__cabeza reveal"><span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span><h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2><p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p></div>
+      <ol class="what__lista"><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><span class="what__num">01</span><h3 data-i18n="what.c1t">Oportunidades cerca de ti</h3><p data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</p></div></li><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z"/></svg></span><div><span class="what__num">02</span><h3 data-i18n="what.c2t">Movilización en minutos</h3><p data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</p></div></li><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><span class="what__num">03</span><h3 data-i18n="what.c3t">Seguimiento con datos</h3><p data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</p></div></li></ol>
+    </div>
+  </section>
+
   <section class="section section--navy app-showcase" id="app">
     <div class="container">
       <div class="app-intro reveal">
@@ -97,9 +108,9 @@
         <article class="app-step reveal"><span>03</span><h3 data-i18n="app.step3t">Coordina la misión</h3><p data-i18n="app.step3b">Publica, habla con el equipo y sigue las plazas cubiertas de cada misión.</p></article>
       </div>
       <div class="app-gallery reveal">
-        <figure class="app-shot app-shot--side"><div class="iphone-17"><i class="iphone-17__button iphone-17__button--action" aria-hidden="true"></i><i class="iphone-17__button iphone-17__button--volume" aria-hidden="true"></i><div class="iphone-17__screen"><span class="iphone-17__island" aria-hidden="true"></span><img src="imagenes/app-bienvenida.svg" alt="" data-i18n-alt="app.shot1" /></div></div><figcaption data-i18n="app.caption1">Elige cómo quieres participar</figcaption></figure>
-        <figure class="app-shot app-shot--main"><div class="iphone-17"><i class="iphone-17__button iphone-17__button--action" aria-hidden="true"></i><i class="iphone-17__button iphone-17__button--volume" aria-hidden="true"></i><div class="iphone-17__screen"><span class="iphone-17__island" aria-hidden="true"></span><img src="imagenes/app-misiones.svg" alt="" data-i18n-alt="app.shot2" /></div></div><figcaption data-i18n="app.caption2">Misiones claras y cercanas</figcaption></figure>
-        <figure class="app-shot app-shot--side"><div class="iphone-17"><i class="iphone-17__button iphone-17__button--action" aria-hidden="true"></i><i class="iphone-17__button iphone-17__button--volume" aria-hidden="true"></i><div class="iphone-17__screen"><span class="iphone-17__island" aria-hidden="true"></span><img src="imagenes/app-organizaciones.svg" alt="" data-i18n-alt="app.shot3" /></div></div><figcaption data-i18n="app.caption3">Control para quien coordina</figcaption></figure>
+        <figure class="app-shot app-shot--side"><img class="app-shot__movil" src="imagenes/app/movil-bienvenida.webp" width="740" height="1530" loading="lazy" alt="" data-i18n-alt="app.shot1" /><figcaption data-i18n="app.caption1">Elige cómo quieres participar</figcaption></figure>
+        <figure class="app-shot app-shot--main"><img class="app-shot__movil" src="imagenes/app/movil-misiones.webp" width="740" height="1530" loading="lazy" alt="" data-i18n-alt="app.shot2" /><figcaption data-i18n="app.caption2">Misiones claras y cercanas</figcaption></figure>
+        <figure class="app-shot app-shot--side"><img class="app-shot__movil" src="imagenes/app/movil-organizaciones.webp" width="740" height="1530" loading="lazy" alt="" data-i18n-alt="app.shot3" /><figcaption data-i18n="app.caption3">Control para quien coordina</figcaption></figure>
       </div>
       <div class="store-links reveal" id="descargar-app" aria-label="La app, próximamente en las tiendas" data-i18n-aria="app.storeAria">
         <a class="store-badge" role="link" aria-disabled="true" tabindex="-1">
@@ -119,30 +130,16 @@
     </div>
   </section>
 
-  <!-- El problema, contado por la prensa de aquellos días. Titulares tal
-       cual, con medio, fecha y enlace: es una cita que se puede comprobar,
-       no una captura de otra web. -->
+  <!-- El problema, contado por la prensa de aquellos días: lo que dijeron
+       los voluntarios, tal cual, con medio, fecha, enlace y la foto con su
+       autor. Las fotos son de los periódicos: antes de publicar hace falta
+       su permiso o licencia. -->
   <section class="section section--sunken porque" id="por-que">
     <div class="container">
       <div class="section-head reveal"><span class="eyebrow" data-i18n="why.eyebrow">Por qué existimos</span><h2 data-i18n="why.title">En la DANA sobraban voluntarios. Faltaba coordinación.</h2><p data-i18n="why.lead">El 2 de noviembre de 2024, unas 15.000 personas se presentaron en la Ciudad de las Artes y las Ciencias de Valencia para ayudar. Solo un tercio cupo en los autobuses, y muchos de los que subieron pasaron la mañana parados, sin llegar a nadie.</p></div>
-      <div class="grid grid--3">
-        <figure class="quote prensa reveal"><blockquote><p data-i18n="why.q1">«No hem pogut fer res útil»: voluntaris denuncien desorganització i un matí perdut a l'autocar</p></blockquote><figcaption><strong>3Cat</strong><time datetime="2024-11-02" data-i18n="why.f1">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.3cat.cat/3catinfo/queixes-de-voluntaris-per-falta-de-coordinacio-hem-passat-hores-parats-a-lautocar/noticia/3319661/" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></figcaption></figure>
-        <figure class="quote prensa reveal"><blockquote><p data-i18n="why.q2">Caos en la plataforma de voluntarios: «Nos llevaron a Chiva y no salimos del autobús»</p></blockquote><figcaption><strong>The Objective</strong><time datetime="2024-11-03" data-i18n="why.f2">3 de noviembre de 2024</time><a class="prensa__enlace" href="https://theobjective.com/espana/2024-11-03/caos-plataforma-voluntarios-mazon-chiva-no-salimos-bus/" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></figcaption></figure>
-        <figure class="quote prensa reveal"><blockquote><p data-i18n="why.q3">El voluntariado convocado por la Generalitat denuncia caos y descoordinación</p></blockquote><figcaption><strong>El Salto</strong><time datetime="2024-11-04" data-i18n="why.f3">4 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.elsaltodiario.com/valencia/voluntariado-convocado-generalitat-denuncia-caos-descoordinacion" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></figcaption></figure>
-      </div>
+      <div class="prensa-rejilla"><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elpais-ciudad-ciencias.webp" width="800" height="519" loading="lazy" alt="" data-i18n-alt="why.alt1" /><div class="prensa__cuerpo"><p class="prensa__medio">EL PAÍS</p><blockquote><p data-i18n="why.q1">«Nadie nos ha dicho qué tenemos que hacer y hemos tenido que autoorganizarnos como hemos podido»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie1">Una voluntaria en Sedaví</span> · <span data-i18n="why.foto">Foto</span>: Albert Garcia</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f1">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://elpais.com/espana/2024-11-02/masiva-respuesta-de-voluntarios-y-numerosas-criticas-a-la-organizacion-hemos-visto-a-gente-sufriendo-mucho.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/levante-algemesi.webp" width="800" height="450" loading="lazy" alt="" data-i18n-alt="why.alt2" /><div class="prensa__cuerpo"><p class="prensa__medio">Levante-EMV</p><blockquote><p data-i18n="why.q2">«Mano de obra hay de sobra, pero falta organizar»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie2">Voluntarios llegados a Algemesí</span> · <span data-i18n="why.foto">Foto</span>: Saray Fajardo</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f2">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.levante-emv.com/ribera/2024/11/02/hay-voluntarios-algemesi-falta-coordinacion-111221998.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elsalto-chiva.webp" width="800" height="543" loading="lazy" alt="" data-i18n-alt="why.alt3" /><div class="prensa__cuerpo"><p class="prensa__medio">El Salto</p><blockquote><p data-i18n="why.q3">«Nos invitaron a irnos a otra zona, Calicanto, porque en el pueblo no éramos útiles»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie3">Voluntarios parados en Chiva, esperando órdenes</span> · <span data-i18n="why.foto">Foto</span>: El Salto</p><p class="prensa__fuente"><time datetime="2024-11-04" data-i18n="why.f3">4 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.elsaltodiario.com/valencia/voluntariado-convocado-generalitat-denuncia-caos-descoordinacion" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article></div>
       <p class="prensa__nota" data-i18n="why.nota">Titulares tal como se publicaron.</p>
       <p class="porque__cierre reveal" data-i18n="why.cierre">PeopleForPeople nace de ahí: que quien quiere ayudar sepa adónde ir, cuándo y para qué antes de salir de casa, y que quien coordina sepa con cuántas personas cuenta.</p>
-    </div>
-  </section>
-
-  <section class="section what" id="que-hacemos">
-    <div class="container">
-      <div class="section-head reveal"><span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span><h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2><p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p></div>
-      <div class="grid grid--3">
-        <article class="card reveal"><div class="card__icon" aria-hidden="true">⌖</div><h3 data-i18n="what.c1t">Oportunidades cerca de ti</h3><p data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</p></article>
-        <article class="card reveal"><div class="card__icon" aria-hidden="true">↗</div><h3 data-i18n="what.c2t">Movilización en minutos</h3><p data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</p></article>
-        <article class="card reveal"><div class="card__icon" aria-hidden="true">✓</div><h3 data-i18n="what.c3t">Seguimiento con datos</h3><p data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</p></article>
-      </div>
     </div>
   </section>
 
@@ -189,11 +186,16 @@
   <section class="section horas" id="horas">
     <div class="container">
       <div class="section-head reveal"><span class="eyebrow" data-i18n="hours.eyebrow">Tus horas, acreditadas</span><h2 data-i18n="hours.title">Lo que haces queda registrado, y alguien lo ha comprobado.</h2><p data-i18n="hours.lead">Las horas de voluntariado solo valen si se pueden demostrar. Por eso no las apunta nadie a mano: se fichan sobre el terreno y las valida la entidad.</p></div>
+      <div class="horas__rejilla">
       <ol class="horas__pasos">
         <li class="card reveal"><span class="horas__num">01</span><h3 data-i18n="hours.s1t">Se cuentan solas</h3><p data-i18n="hours.s1b">Quien coordina marca en la app que has llegado y, al cerrar la operación, se calculan tus horas. No tienes que apuntar nada.</p></li>
         <li class="card reveal"><span class="horas__num">02</span><h3 data-i18n="hours.s2t">La entidad las valida</h3><p data-i18n="hours.s2b">Alguien de la entidad las confirma o las ajusta. Si cambia algo tiene que decir por qué, y tú lo lees en tu historial.</p></li>
         <li class="card reveal"><span class="horas__num">03</span><h3 data-i18n="hours.s3t">Te sirven fuera</h3><p data-i18n="hours.s3b">Las validadas forman tu historial, que puedes imprimir, y son la base del certificado de voluntariado que emite la entidad.</p></li>
       </ol>
+      <!-- Imagen de ejemplo, con datos ficticios y el sello «Ejemplo»: se
+           genera desde _herramientas/certificado-ejemplo.html. -->
+      <figure class="horas__doc reveal"><img src="imagenes/certificado-ejemplo-es.webp" data-i18n-src="hours.docSrc" width="1440" height="1792" loading="lazy" alt="Ejemplo de certificado de voluntariado con las misiones, las horas validadas de cada una y la firma de la entidad" data-i18n-alt="hours.docAlt" /><figcaption data-i18n="hours.docPie">Un certificado de ejemplo. Lo emite y firma la entidad, con tus horas validadas.</figcaption></figure>
+      </div>
       <p class="horas__mas reveal"><a class="text-link" href="ayuda.html" data-i18n="hours.more">Más sobre las horas en las preguntas frecuentes →</a></p>
     </div>
   </section>

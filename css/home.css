@@ -136,16 +136,12 @@
 .home .app-step p { margin: 0; font-size: .92rem; }
 .home .app-gallery { display: grid; grid-template-columns: .86fr 1fr .86fr; gap: clamp(18px, 4vw, 54px); align-items: center; max-width: 980px; margin: 0 auto; }
 .home .app-shot { margin: 0; text-align: center; }
-.home .iphone-17 { position: relative; width: 100%; aspect-ratio: 1206 / 2622; padding: 7px; border: 1px solid rgba(255,255,255,.38); border-radius: 48px; background: linear-gradient(135deg, #d7d9dc 0%, #686c73 18%, #f3f3f1 49%, #5f6369 82%, #c9cbd0 100%); box-shadow: 0 34px 76px rgba(0,0,0,.38), inset 0 0 0 1px rgba(255,255,255,.45); }
-.home .iphone-17__screen { position: relative; width: 100%; height: 100%; overflow: hidden; border: 2px solid #0b0d10; border-radius: 40px; background: #0b0d10; }
-.home .iphone-17__screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.home .iphone-17__island { position: absolute; z-index: 3; left: 50%; top: 12px; width: 28%; height: 24px; border-radius: 999px; background: #050608; box-shadow: 0 1px 2px rgba(255,255,255,.08) inset; transform: translateX(-50%); }
-.home .iphone-17__button { position: absolute; z-index: -1; left: -4px; width: 4px; border-radius: 3px 0 0 3px; background: #85898f; }
-.home .iphone-17__button--action { top: 16%; height: 6%; }
-.home .iphone-17__button--volume { top: 26%; height: 13%; }
 .home .app-shot--side { transform: scale(.9); opacity: .9; }
 .home .app-shot--side:first-child { transform: scale(.9) rotate(-3deg); }
 .home .app-shot--side:last-child { transform: scale(.9) rotate(3deg); }
+/* Las capturas ya vienen montadas en el móvil (imagenes/app). El borde
+   claro de la sombra es para que el marco negro no se pierda sobre el azul. */
+.home .app-shot__movil { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 1px rgba(255,255,255,.55)) drop-shadow(0 30px 50px rgba(0,0,0,.35)); }
 .home .app-shot figcaption { margin-top: 20px; color: rgba(255,255,255,.7); font-size: .86rem; }
 .home .store-links { scroll-margin-top: calc(var(--header-h) + 28px); display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin: 56px auto 0; }
 .home .store-badge { min-width: 226px; display: inline-flex; align-items: center; gap: 13px; padding: 12px 18px; border: 1px solid rgba(255,255,255,.3); border-radius: 12px; background: rgba(255,255,255,.08); color: #fff; text-decoration: none; transition: transform .2s ease, background-color .2s ease, border-color .2s ease; }
@@ -164,22 +160,37 @@
 .home .store-cuenta { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 46ch; margin: 28px auto 0; text-align: center; }
 .home .store-cuenta p { margin: 0; }
 
-/* Qué hacemos. */
-.home .what .section-head { max-width: 760px; }
-.home .what .card { min-height: 260px; padding: 32px; box-shadow: none; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.home .what .card:hover { transform: translateY(-7px); border-color: var(--navy-200); box-shadow: var(--shadow-raised); }
-.home .what .card__icon { font-size: 1.8rem; background: var(--amber-50); color: var(--navy-600); }
+/* Qué hacemos: el titular a un lado y las tres ideas en lista al otro.
+   Antes eran tres tarjetas iguales a las de otras secciones, y justo debajo
+   de la portada pedían una forma propia. */
+.home .what__rejilla { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 96px); align-items: start; }
+.home .what__cabeza h2 { text-wrap: balance; }
+.home .what__cabeza p { margin: 0; color: var(--text-soft); font-size: 1.06rem; }
+.home .what__lista { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--border); }
+.home .what__item { display: grid; grid-template-columns: 56px 1fr; gap: 22px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+.home .what__icono { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 16px; background: var(--amber-50); color: var(--navy-600); }
+.home .what__icono svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.home .what__num { display: block; margin-bottom: 4px; color: var(--amber-700); font-size: .74rem; font-weight: 700; letter-spacing: .08em; }
+.home .what__item h3 { margin-bottom: 6px; }
+.home .what__item p { margin: 0; color: var(--text-soft); }
 
 /* Por qué existimos: titulares de prensa, como citas. Sin cursiva: son
    titulares, y en cursiva tres líneas seguidas se leen peor. */
 .home .porque .section-head { max-width: 760px; }
 /* Sin esto, «nadie.» se quedaba sola en la segunda línea del de confianza. */
 .home :is(.porque, .horas, .confianza) h2 { text-wrap: balance; }
-.home .prensa { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 24px 24px 22px 26px; background: var(--surface); border-radius: 0 var(--r-lg) var(--r-lg) 0; }
-.home .prensa blockquote { margin: 0; }
-.home .prensa p { margin: 0; color: var(--navy-700); font-size: 1.05rem; font-style: normal; font-weight: 600; line-height: 1.45; }
-.home .prensa figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; color: var(--text-mute); font-size: .84rem; }
-.home .prensa figcaption strong { color: var(--text); }
+/* Cada noticia en su tarjeta: foto arriba, cabecera del periódico, lo que
+   dijeron los voluntarios y la fuente. Las fotos se recortan a la misma
+   proporción para que las tres tarjetas queden parejas. */
+.home .prensa-rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s-lg); }
+.home .prensa { display: flex; flex-direction: column; margin: 0; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: 0 10px 30px rgba(0, 37, 87, .07); }
+.home .prensa__foto { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.home .prensa__cuerpo { display: flex; flex: 1; flex-direction: column; padding: 20px 22px 22px; }
+.home .prensa__medio { margin: 0 0 10px; color: var(--navy-800, #001433); font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 700; }
+.home .prensa blockquote { flex: 1; margin: 0 0 14px; }
+.home .prensa blockquote p { margin: 0; color: var(--navy-700); font-size: 1.05rem; font-style: normal; font-weight: 600; line-height: 1.45; }
+.home .prensa__pie { margin: 0 0 6px; color: var(--text-mute); font-size: .8rem; }
+.home .prensa__fuente { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0; color: var(--text-mute); font-size: .84rem; }
 .home .prensa__enlace { margin-left: auto; color: var(--navy-600); font-weight: 600; }
 /* La flecha va aparte: el texto del enlace lo cambia el traductor. */
 .home .prensa__enlace::after { content: ' ↗'; }
@@ -187,7 +198,12 @@
 .home .porque__cierre { max-width: 62ch; margin: 36px 0 0; color: var(--navy-700); font-size: clamp(1.05rem, 1.6vw, 1.25rem); font-weight: 500; }
 
 /* Tus horas, acreditadas. */
-.home .horas__pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s-lg); margin: 0; padding: 0; list-style: none; }
+/* Los tres pasos a la izquierda y, a la derecha, cómo queda el papel. */
+.home .horas__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.home .horas__pasos { display: grid; gap: var(--s-md); margin: 0; padding: 0; list-style: none; }
+.home .horas__doc { margin: 0; text-align: center; }
+.home .horas__doc img { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 20, 51, .08), 0 30px 70px rgba(0, 20, 51, .18); transform: rotate(1.5deg); }
+.home .horas__doc figcaption { max-width: 40ch; margin: 22px auto 0; color: var(--text-mute); font-size: .86rem; }
 .home .horas .card { padding: 28px; box-shadow: none; }
 .home .horas__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .horas__mas { margin: 22px 0 0; }
@@ -256,6 +272,7 @@
 .home .footer__brand img { width: 220px; height: auto; margin-bottom: 16px; }
 
 @media (max-width: 900px) {
+  .home .what__rejilla, .home .horas__rejilla { grid-template-columns: 1fr; }
   .home .app-intro { grid-template-columns: 1fr; gap: 22px; }
   .home .app-flow { grid-template-columns: 1fr; }
   .home .app-step { padding: 24px 0; }
@@ -282,9 +299,6 @@
   .home .app-gallery { grid-template-columns: repeat(3, 72vw); gap: 22px; overflow-x: auto; justify-content: start; scroll-snap-type: x mandatory; margin-inline: -24px; padding: 18px 24px 36px; scrollbar-width: none; }
   .home .app-gallery::-webkit-scrollbar { display: none; }
   .home .app-shot, .home .app-shot--side, .home .app-shot--side:first-child, .home .app-shot--side:last-child { transform: none; opacity: 1; scroll-snap-align: center; }
-  .home .iphone-17 { padding: 6px; border-radius: 42px; }
-  .home .iphone-17__screen { border-radius: 35px; }
-  .home .iphone-17__island { top: 10px; height: 21px; }
   .home .store-links { align-items: stretch; flex-direction: column; }
   .home .store-badge { width: 100%; }
   .home .store-cuenta { align-items: stretch; }
@@ -533,4 +547,48 @@
     opacity: 0 !important;
     pointer-events: none;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Menú de escritorio
+   --------------------------------------------------------------------------
+   En pantalla ancha las secciones van a la vista en la cabecera y el botón
+   de las tres rayas desaparece; por debajo de 1024 px sigue el menú lateral
+   de siempre. Los desplegables se abren al pasar el ratón (solo donde hay
+   ratón: en una tableta el :hover se queda pegado) y al pulsar, que lo
+   gestiona `site.js`. */
+.menu-ancho { display: none; }
+@media (min-width: 1024px) {
+  .home .nav-toggle { display: none; }
+  .menu-ancho { display: block; margin-left: auto; }
+  .home .menu-ancho ~ .header__actions { margin-left: clamp(16px, 2vw, 32px); }
+  .menu-ancho__lista { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .menu-ancho__grupo { position: relative; }
+  .menu-ancho__boton, .menu-ancho__enlace {
+    display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 0; border-radius: 999px;
+    background: transparent; color: var(--navy-600); font: inherit; font-size: .94rem; font-weight: 500;
+    text-decoration: none; cursor: pointer; white-space: nowrap; transition: background-color .2s ease, color .2s ease;
+  }
+  .menu-ancho__boton svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s ease; }
+  .menu-ancho__boton:hover, .menu-ancho__enlace:hover, .menu-ancho__boton[aria-expanded="true"] { background: var(--navy-50, #E8EEF6); color: var(--navy-600); }
+  /* Sobre la portada azul, antes de bajar, el texto va en blanco. */
+  .home:not(.detail-page) .header:not(.is-solid) :is(.menu-ancho__boton, .menu-ancho__enlace) { color: #fff; }
+  .home:not(.detail-page) .header:not(.is-solid) :is(.menu-ancho__boton:hover, .menu-ancho__enlace:hover, .menu-ancho__boton[aria-expanded="true"]) { background: rgba(255,255,255,.12); color: #fff; }
+  .menu-ancho__desplegable {
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 140; min-width: 240px; margin: 0; padding: 8px; list-style: none;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 18px 50px rgba(0, 20, 51, .16);
+    opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  }
+  /* Puente invisible para que el ratón no cierre el menú al bajar hasta él. */
+  .menu-ancho__desplegable::before { content: ''; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+  .menu-ancho__grupo.is-open .menu-ancho__desplegable { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .menu-ancho__grupo.is-open .menu-ancho__boton svg { transform: rotate(180deg); }
+  .menu-ancho__desplegable a, .menu-ancho__pronto { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 9px; color: var(--navy-700); font-size: .92rem; text-decoration: none; }
+  .menu-ancho__desplegable a:hover, .menu-ancho__desplegable a:focus-visible { background: var(--navy-50, #E8EEF6); color: var(--navy-600); }
+  .menu-ancho__pronto { color: var(--text-mute); cursor: default; }
+  .menu-ancho__pronto small { padding: 2px 8px; border-radius: 999px; background: var(--amber-50); color: var(--amber-700); font-size: .7rem; font-weight: 600; }
+}
+@media (min-width: 1024px) and (hover: hover) {
+  .menu-ancho__grupo:hover .menu-ancho__desplegable { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .menu-ancho__grupo:hover .menu-ancho__boton svg { transform: rotate(180deg); }
 }

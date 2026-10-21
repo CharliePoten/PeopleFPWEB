@@ -46,7 +46,7 @@
        solo tiene un icono. Traducir el `alt` y dejar sin traducir el
        `aria-label` deja a quien usa lector de pantalla navegando la mitad
        del sitio en español. */
-    var ATRIBUTOS = { placeholder: 'placeholder', title: 'title', aria: 'aria-label' };
+    var ATRIBUTOS = { placeholder: 'placeholder', title: 'title', aria: 'aria-label', src: 'src' };
     Object.keys(ATRIBUTOS).forEach(function (sufijo) {
       document.querySelectorAll('[data-i18n-' + sufijo + ']').forEach(function (el) {
         var key = el.getAttribute('data-i18n-' + sufijo);
@@ -107,6 +107,46 @@
       }
     });
   }
+
+  /* ---------------------------------------------------------------------
+     Desplegables del menú de escritorio
+     ---------------------------------------------------------------------
+     Con ratón se abren al pasar por encima (eso es CSS); aquí está lo que
+     hace falta para el teclado y las pantallas táctiles: abrir y cerrar al
+     pulsar, uno solo a la vez, y cerrarlo con Escape, al pulsar fuera o al
+     salir de él con el tabulador. */
+
+  var grupos = document.querySelectorAll('.menu-ancho__grupo');
+
+  function cerrarGrupo(grupo) {
+    grupo.classList.remove('is-open');
+    grupo.querySelector('.menu-ancho__boton').setAttribute('aria-expanded', 'false');
+  }
+
+  grupos.forEach(function (grupo) {
+    var boton = grupo.querySelector('.menu-ancho__boton');
+    boton.addEventListener('click', function () {
+      var abrir = !grupo.classList.contains('is-open');
+      grupos.forEach(cerrarGrupo);
+      if (abrir) {
+        grupo.classList.add('is-open');
+        boton.setAttribute('aria-expanded', 'true');
+      }
+    });
+    grupo.addEventListener('focusout', function (e) {
+      if (!grupo.contains(e.relatedTarget)) cerrarGrupo(grupo);
+    });
+    grupo.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && grupo.classList.contains('is-open')) {
+        cerrarGrupo(grupo);
+        boton.focus();
+      }
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    grupos.forEach(function (grupo) { if (!grupo.contains(e.target)) cerrarGrupo(grupo); });
+  });
 
   /* ---------------------------------------------------------------------
      Apariciones al desplazar

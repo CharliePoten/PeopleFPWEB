@@ -26,6 +26,11 @@ window.I18N = {
     'nav.impact': 'Impacto',
     'nav.team': 'Equipo',
     'nav.contact': 'Contacto',
+    'nav.desktopAria': 'Secciones',
+    'nav.resources': 'Recursos',
+    'nav.faq': 'Preguntas frecuentes',
+    'nav.blog': 'Blog',
+    'nav.soon': 'Próximamente',
     'nav.account': 'Mi cuenta',
     'nav.menu': 'Menú',
 
@@ -290,6 +295,11 @@ window.I18N = {
     'nav.impact': 'Wirkung',
     'nav.team': 'Team',
     'nav.contact': 'Kontakt',
+    'nav.desktopAria': 'Bereiche',
+    'nav.resources': 'Ressourcen',
+    'nav.faq': 'Häufige Fragen',
+    'nav.blog': 'Blog',
+    'nav.soon': 'Demnächst',
     'nav.account': 'Mein Konto',
     'nav.menu': 'Menü',
 
