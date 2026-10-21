@@ -645,6 +645,43 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
   font-size: 0.86rem;
 }
 
+/* «Configurar cookies» del pie (lo pone `analitica.js`). Es un botón —abre
+   el aviso, no lleva a otra página—, pero se ve como los enlaces de al lado. */
+.pie-cookies { padding: 0; border: 0; background: none; color: rgba(255,255,255,0.86); font: inherit; text-align: left; cursor: pointer; }
+.pie-cookies:hover { color: var(--amber-500); text-decoration: underline; }
+
+/* --------------------------------------------------------------------------
+   Aviso de cookies (`analitica.js`)
+   --------------------------------------------------------------------------
+   Abajo y sin tapar la página: se puede seguir leyendo sin contestar, y
+   mientras no se conteste no se carga nada. Los dos botones son iguales a
+   propósito: rechazar no puede costar más que aceptar. */
+
+.aviso-cookies {
+  position: fixed; z-index: 110; left: 50%; bottom: 16px;
+  width: min(720px, calc(100% - 32px)); transform: translateX(-50%);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  background: var(--surface); color: var(--text);
+  box-shadow: 0 18px 50px rgba(0, 14, 35, 0.22);
+}
+.aviso-cookies__texto { flex: 1 1 320px; margin: 0; color: var(--text-soft); font-size: 0.9rem; }
+.aviso-cookies__texto a { color: var(--navy-600); font-weight: 600; }
+.aviso-cookies__botones { display: flex; flex: 0 0 auto; gap: 10px; }
+.aviso-cookies__boton {
+  min-width: 116px; padding: 10px 16px;
+  border: 1px solid var(--navy-600); border-radius: 8px;
+  background: var(--navy-600); color: #fff;
+  font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.aviso-cookies__boton:hover { background: var(--navy-700); border-color: var(--navy-700); }
+@media (max-width: 520px) {
+  .aviso-cookies__botones { width: 100%; }
+  .aviso-cookies__boton { flex: 1; }
+}
+@media print { .aviso-cookies { display: none; } }
+
 /* --------------------------------------------------------------------------
    Página de documento legal
    -------------------------------------------------------------------------- */

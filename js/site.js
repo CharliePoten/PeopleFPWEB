@@ -323,6 +323,9 @@
              exactamente el fallo que esto viene a arreglar. */
           status.textContent = (r && r.acuse) ? (d['contact.okAcuse'] || '') : (d['contact.ok'] || '');
           status.setAttribute('data-state', 'ok');
+          // Para `analitica.js`, que solo lo cuenta si se aceptaron las
+          // cookies. Va el tipo de perfil, nunca lo que se ha escrito.
+          document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: role } }));
           form.reset();
         })
         .catch(function (err) {

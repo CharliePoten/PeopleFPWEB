@@ -153,6 +153,14 @@ window.I18N = {
     'footer.imprint': 'Aviso legal · Impressum',
     'footer.privacy': 'Política de privacidad',
     'footer.terms': 'Términos y condiciones',
+
+    // Aviso de cookies (`analitica.js`).
+    'cookies.aria': 'Aviso de cookies',
+    'cookies.texto': 'Usamos cookies de Google Analytics para saber cómo se usa la web y mejorarla, solo si las aceptas. Puedes cambiar de idea cuando quieras desde el pie de página.',
+    'cookies.mas': 'Más información',
+    'cookies.rechazar': 'Rechazar',
+    'cookies.aceptar': 'Aceptar',
+    'cookies.ajustes': 'Configurar cookies',
     'footer.rights': '© 2025 People for People. Todos los derechos reservados.',
     'footer.madein': 'Hecho en Madrid, con la DANA de Valencia en la cabeza.',
 
@@ -409,6 +417,14 @@ window.I18N = {
     'footer.imprint': 'Impressum',
     'footer.privacy': 'Datenschutzerklärung',
     'footer.terms': 'AGB',
+
+    // Cookie-Hinweis (`analitica.js`).
+    'cookies.aria': 'Cookie-Hinweis',
+    'cookies.texto': 'Wir verwenden Cookies von Google Analytics, um zu verstehen, wie die Website genutzt wird, und sie zu verbessern – nur wenn du zustimmst. Du kannst deine Wahl jederzeit unten auf der Seite ändern.',
+    'cookies.mas': 'Mehr erfahren',
+    'cookies.rechazar': 'Ablehnen',
+    'cookies.aceptar': 'Akzeptieren',
+    'cookies.ajustes': 'Cookie-Einstellungen',
     'footer.rights': '© 2025 People for People. Alle Rechte vorbehalten.',
     'footer.madein': 'Gemacht in Madrid, mit der DANA von Valencia im Kopf.',
 
