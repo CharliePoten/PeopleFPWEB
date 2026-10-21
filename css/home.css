@@ -170,6 +170,34 @@
 .home .what .card:hover { transform: translateY(-7px); border-color: var(--navy-200); box-shadow: var(--shadow-raised); }
 .home .what .card__icon { font-size: 1.8rem; background: var(--amber-50); color: var(--navy-600); }
 
+/* Por qué existimos: titulares de prensa, como citas. Sin cursiva: son
+   titulares, y en cursiva tres líneas seguidas se leen peor. */
+.home .porque .section-head { max-width: 760px; }
+/* Sin esto, «nadie.» se quedaba sola en la segunda línea del de confianza. */
+.home :is(.porque, .horas, .confianza) h2 { text-wrap: balance; }
+.home .prensa { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 24px 24px 22px 26px; background: var(--surface); border-radius: 0 var(--r-lg) var(--r-lg) 0; }
+.home .prensa blockquote { margin: 0; }
+.home .prensa p { margin: 0; color: var(--navy-700); font-size: 1.05rem; font-style: normal; font-weight: 600; line-height: 1.45; }
+.home .prensa figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; color: var(--text-mute); font-size: .84rem; }
+.home .prensa figcaption strong { color: var(--text); }
+.home .prensa__enlace { margin-left: auto; color: var(--navy-600); font-weight: 600; }
+/* La flecha va aparte: el texto del enlace lo cambia el traductor. */
+.home .prensa__enlace::after { content: ' ↗'; }
+.home .prensa__nota { margin: 14px 0 0; color: var(--text-mute); font-size: .8rem; }
+.home .porque__cierre { max-width: 62ch; margin: 36px 0 0; color: var(--navy-700); font-size: clamp(1.05rem, 1.6vw, 1.25rem); font-weight: 500; }
+
+/* Tus horas, acreditadas. */
+.home .horas__pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s-lg); margin: 0; padding: 0; list-style: none; }
+.home .horas .card { padding: 28px; box-shadow: none; }
+.home .horas__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.home .horas__mas { margin: 22px 0 0; }
+
+/* Privacidad y confianza. */
+.home .confianza .card { box-shadow: none; }
+.home .confianza .card__icon { background: var(--amber-50); }
+.home .confianza__ley { max-width: 70ch; margin: 26px 0 0; color: var(--text-soft); font-size: .92rem; }
+.home .confianza__ley .text-link { display: inline-block; margin-right: 14px; }
+
 /* Públicos: dos grupos, con tres tipos dentro de organizaciones. */
 .home .audience-layout { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; align-items: stretch; }
 .home .audience-card, .home .organization-group { border-radius: 24px; padding: clamp(26px,4vw,44px); }
