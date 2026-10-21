@@ -703,3 +703,158 @@
 /* Soporte y asistente: ni una persona ni un grupo, asi que ni foto ni
    iniciales. Un simbolo sobre el azul de marca los distingue de un vistazo. */
 .chat__av--directo { background: var(--navy-500); font-size: 1.05rem; }
+
+/* --------------------------------------------------------------------------
+   Notas de voz
+   --------------------------------------------------------------------------
+   Como en WhatsApp: reproducir, la onda con lo escuchado coloreado y un punto
+   que se arrastra, la duración, y la cara de quien habla con un micrófono
+   —verde sin escuchar, azul escuchada—. Mientras suena, la cara se cambia
+   por la velocidad. La cara va del lado de quien habla: a la izquierda en
+   lo que te mandan, a la derecha en lo tuyo. */
+.chat__msg--voz { width: min(78%, 21rem); }
+
+.voz {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.voz__play {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+}
+.voz__play svg { width: 28px; height: 28px; fill: currentColor; }
+.voz__play:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.chat__msg--mio .voz__play { color: #fff; }
+.voz--cargando .voz__play svg { animation: voz-carga 0.9s ease-in-out infinite alternate; }
+@keyframes voz-carga { from { opacity: 1; } to { opacity: 0.3; } }
+
+.voz__centro {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.voz__onda {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  cursor: pointer;
+  /* Arrastrar el punto con el dedo no puede desplazar la conversación. */
+  touch-action: none;
+}
+.voz__onda:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 4px; }
+.chat__msg--mio .voz__onda:focus-visible { outline-color: #fff; }
+
+.voz__barra {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--n-300);
+}
+.voz__barra--hecha { background: var(--brand); }
+.chat__msg--mio .voz__barra { background: rgba(255, 255, 255, 0.38); }
+.chat__msg--mio .voz__barra--hecha { background: #fff; }
+
+.voz__punto {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--brand);
+  pointer-events: none;
+}
+.chat__msg--mio .voz__punto { background: #fff; }
+
+.voz__tiempo {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-mute);
+}
+.chat__msg--mio .voz__tiempo { color: var(--navy-100); }
+
+.voz__lado {
+  flex: none;
+  order: -1;
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+.chat__msg--mio .voz__lado { order: 3; }
+
+.voz__cara {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--navy-200);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  user-select: none;
+}
+.voz__cara img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+.voz__micro {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+}
+.voz__micro svg { width: 14px; height: 14px; fill: currentColor; }
+.chat__msg--mio .voz__micro { background: var(--brand); color: #fff; }
+.voz__micro--nueva { color: var(--green-600); }
+/* El azul de «escuchada» de WhatsApp: se lee igual sobre blanco y sobre el
+   azul marino de lo propio. */
+.voz__micro--escuchada,
+.chat__msg--mio .voz__micro--escuchada { color: #53BDEB; }
+
+.voz__velocidad {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 26px;
+  margin-top: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--text-mute);
+  color: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat__msg--mio .voz__velocidad { background: rgba(255, 255, 255, 0.22); }
+.voz__velocidad:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.voz--activa .voz__cara { display: none; }
+.voz--activa .voz__velocidad { display: grid; }
+
+@media (prefers-reduced-motion: reduce) {
+  .voz--cargando .voz__play svg { animation: none; opacity: 0.5; }
+}
