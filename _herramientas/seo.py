@@ -77,6 +77,11 @@ PAGINAS = [
      'Cómo funciona PeopleForPeople: darse de alta, apuntarse a una misión, acreditar horas, '
      'pedir ayuda a tus vecinos y coordinar el voluntariado de una entidad.',
      'Preguntas frecuentes', None),
+    ('contacto.html', '/contacto.html',
+     'Contacto',
+     'Escríbenos si quieres hacer voluntariado o coordinarlo desde tu empresa, ayuntamiento u ONG. '
+     'Elige qué necesitas y te respondemos en un par de días.',
+     'Contacto', None),
     ('documentos.html', '/documentos.html',
      'Guías y documentos de voluntariado',
      'Guías para participar como voluntario, ONG, ayuntamiento o empresa, y la documentación '

@@ -53,7 +53,7 @@
     </nav>
     <button class="nav__backdrop" type="button" tabindex="-1" aria-label="Cerrar menú"></button>
 
-    <nav class="menu-ancho" aria-label="Secciones" data-i18n-aria="nav.desktopAria"><ul class="menu-ancho__lista"><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-para-quien"><span data-i18n="nav.who">Para quién</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-para-quien"><li><a href="ongs/index.html" data-i18n="nav.whoNgo">ONG y asociaciones</a></li><li><a href="comunidades/index.html" data-i18n="nav.whoMuni">Ayuntamientos</a></li><li><a href="empresas/index.html" data-i18n="nav.whoCorp">Empresas RSC</a></li><li><a href="voluntarios/index.html" data-i18n="nav.whoVol">Voluntarios</a></li></ul></li><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-recursos"><span data-i18n="nav.resources">Recursos</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-recursos"><li><a href="casos/index.html" data-i18n="nav.cases">Casos de impacto</a></li><li><a href="ayuda.html" data-i18n="nav.faq">Preguntas frecuentes</a></li><li><a href="documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></li><li><a class="menu-ancho__enlace" href="#contacto" data-i18n="nav.contact">Contacto</a></li></ul></nav>
+    <nav class="menu-ancho" aria-label="Secciones" data-i18n-aria="nav.desktopAria"><ul class="menu-ancho__lista"><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-para-quien"><span data-i18n="nav.who">Para quién</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-para-quien"><li><a href="ongs/index.html" data-i18n="nav.whoNgo">ONG y asociaciones</a></li><li><a href="comunidades/index.html" data-i18n="nav.whoMuni">Ayuntamientos</a></li><li><a href="empresas/index.html" data-i18n="nav.whoCorp">Empresas RSC</a></li><li><a href="voluntarios/index.html" data-i18n="nav.whoVol">Voluntarios</a></li></ul></li><li class="menu-ancho__grupo"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-recursos"><span data-i18n="nav.resources">Recursos</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-recursos"><li><a href="casos/index.html" data-i18n="nav.cases">Casos de impacto</a></li><li><a href="ayuda.html" data-i18n="nav.faq">Preguntas frecuentes</a></li><li><a href="documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></li><li class="menu-ancho__grupo menu-ancho__grupo--derecha"><button class="menu-ancho__boton" type="button" aria-expanded="false" aria-controls="menu-contacto"><span data-i18n="nav.contact">Contacto</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="menu-ancho__desplegable" id="menu-contacto"><li><a href="contacto.html?role=empresa" data-i18n="contact.oE">Empresas (RSC)</a></li><li><a href="contacto.html?role=ayuntamiento" data-i18n="contact.oM">Ayuntamientos</a></li><li><a href="contacto.html?role=ong" data-i18n="contact.oO">ONG y asociaciones</a></li><li><a href="contacto.html?role=voluntario" data-i18n="contact.oV">Ayuda con la app</a></li><li><a href="contacto.html?role=otro" data-i18n="contact.oX">Otra consulta</a></li></ul></li></ul></nav>
 
     <div class="header__actions">
       <div class="lang" role="group" aria-label="Idioma">
@@ -71,6 +71,10 @@
 <main id="main">
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero__stage">
+      <!-- La DANA de fondo, tapada de azul: se adivina, no compite con el
+           mensaje. Es decorativa (alt vacío); el crédito va abajo. -->
+      <img class="hero__foto" src="imagenes/casos/dana-barro.webp" width="1200" height="675" alt="" fetchpriority="high" />
+      <p class="hero__credito">DANA, Valencia, 2024 · Foto: [crédito pendiente]</p>
       <div class="hero__orb hero__orb--one" aria-hidden="true"></div>
       <div class="hero__orb hero__orb--two" aria-hidden="true"></div>
       <div class="hero__lockup hero__lockup--wordmark" aria-hidden="true"><img src="imagenes/marca/logotipo-transparente.svg" alt="" /></div>
@@ -87,12 +91,28 @@
     </div>
   </section>
 
-  <!-- Qué hacemos, justo después de la portada: quien llega sabe en tres
-       líneas qué es esto antes de ver la app o la prensa. -->
+  <!-- Qué hacemos, justo después de la portada. A la izquierda lo que es,
+       con las tres ideas como cifras (sin cifras inventadas: son palabras);
+       a la derecha la foto en un círculo rodeada de lo que hace la
+       plataforma: misiones cerca, entidades verificadas, panel, avisos,
+       mensajes y horas. -->
   <section class="section what" id="que-hacemos">
     <div class="container what__rejilla">
-      <div class="what__cabeza reveal"><span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span><h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2><p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p></div>
-      <ol class="what__lista"><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><span class="what__num">01</span><h3 data-i18n="what.c1t">Oportunidades cerca de ti</h3><p data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</p></div></li><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z"/></svg></span><div><span class="what__num">02</span><h3 data-i18n="what.c2t">Movilización en minutos</h3><p data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</p></div></li><li class="what__item reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><span class="what__num">03</span><h3 data-i18n="what.c3t">Seguimiento con datos</h3><p data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</p></div></li></ol>
+      <div class="what__cabeza reveal">
+        <span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span>
+        <h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2>
+        <p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p>
+        <ul class="what__claves">
+          <li><strong data-i18n="what.k1">Cerca de ti</strong><span data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</span></li>
+          <li><strong data-i18n="what.k2">En minutos</strong><span data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</span></li>
+          <li><strong data-i18n="what.k3">Con datos</strong><span data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</span></li>
+        </ul>
+      </div>
+      <div class="what__orbita reveal" aria-hidden="true">
+        <span class="what__anillo"></span><span class="what__banda"></span>
+        <img class="what__foto" src="imagenes/que-hacemos-equipo.webp" width="600" height="600" loading="lazy" alt="" />
+        <span class="what__burbuja what__burbuja--1"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span class="what__burbuja what__burbuja--2"><svg viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/></svg></span><span class="what__burbuja what__burbuja--3"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="what__burbuja what__burbuja--4"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="what__burbuja what__burbuja--5"><svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9Z"/></svg></span><span class="what__burbuja what__burbuja--6"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
+      </div>
     </div>
   </section>
 
@@ -216,35 +236,13 @@
     </div>
   </section>
 
+  <!-- Contacto en la portada: solo el menú de «¿Cómo podemos ayudarte?».
+       Cada opción lleva a contacto.html con esa opción ya elegida, donde
+       está el formulario. -->
   <section class="section section--navy" id="contacto">
     <div class="container"><div class="split">
       <div class="reveal"><span class="eyebrow" data-i18n="contact.eyebrow">Contacto</span><h2 data-i18n="contact.title">Hagamos que la ayuda llegue más lejos.</h2><p data-i18n="contact.lead">Cuéntanos si quieres participar como voluntario o incorporar PeopleForPeople a tu organización.</p><p><a href="mailto:peopleforpeopleofficial@gmail.com" class="contact-email">peopleforpeopleofficial@gmail.com</a></p><p class="field__hint contact-note" data-i18n="contact.note">Respondemos en un par de días laborables.</p></div>
-      <!-- Primero «¿cómo podemos ayudarte?» y después solo los campos de esa
-           respuesta: a una empresa se le pide la empresa y su tamaño, a un
-           ayuntamiento la institución, y a quien necesita ayuda con la app se
-           le señalan antes las preguntas frecuentes. Todo acaba en el mismo
-           envío de siempre (función `contacto`), con los datos de más dentro
-           del mensaje, así que el servidor no cambia. -->
-      <form class="form contacto reveal" id="contact-form" novalidate>
-        <fieldset class="contacto__opciones">
-          <legend data-i18n="contact.q">¿Cómo podemos ayudarte?</legend>
-          <label class="contacto__opcion"><input type="radio" name="role" value="empresa" /><span><strong data-i18n="contact.oE">Empresas (RSC)</strong><small data-i18n="contact.oEb">Quiero gestionar el impacto social de mi empresa.</small></span></label><label class="contacto__opcion"><input type="radio" name="role" value="ayuntamiento" /><span><strong data-i18n="contact.oM">Ayuntamientos</strong><small data-i18n="contact.oMb">Represento a una institución pública.</small></span></label><label class="contacto__opcion"><input type="radio" name="role" value="ong" /><span><strong data-i18n="contact.oO">ONG y asociaciones</strong><small data-i18n="contact.oOb">Quiero coordinar a nuestro voluntariado.</small></span></label><label class="contacto__opcion"><input type="radio" name="role" value="voluntario" /><span><strong data-i18n="contact.oV">Ayuda con la app</strong><small data-i18n="contact.oVb">Soy voluntario o ya uso la plataforma.</small></span></label><label class="contacto__opcion"><input type="radio" name="role" value="otro" /><span><strong data-i18n="contact.oX">Otra consulta</strong><small data-i18n="contact.oXb">Prensa, colaboraciones o cualquier otra cosa.</small></span></label>
-        </fieldset>
-        <div class="contacto__campos" id="cf-campos" hidden>
-          <p class="contacto__faq" data-para="voluntario"><span data-i18n="contact.faqHint">Muchas dudas ya están resueltas en las</span> <a href="ayuda.html" data-i18n="contact.faqLink">preguntas frecuentes</a>. <span data-i18n="contact.faqHint2">Si no está ahí, escríbenos:</span></p>
-          <div class="field"><label for="cf-name" data-i18n="contact.name">Nombre</label><input id="cf-name" name="name" type="text" autocomplete="name" required /></div>
-          <div class="field"><label for="cf-email" data-i18n="contact.email">Correo electrónico</label><input id="cf-email" name="email" type="email" autocomplete="email" required /></div>
-          <div class="field" data-para="empresa"><label for="cf-empresa" data-i18n="contact.empresa">Empresa</label><input id="cf-empresa" name="empresa" type="text" autocomplete="organization" required /></div>
-          <div class="field" data-para="empresa"><label for="cf-plantilla" data-i18n="contact.plantilla">Número de empleados</label><select id="cf-plantilla" name="plantilla"><option value="1-49">1–49</option><option value="50-249">50–249</option><option value="250-999">250–999</option><option value="1000+" data-i18n="contact.plantillaMax">1.000 o más</option></select></div>
-          <div class="field" data-para="ayuntamiento"><label for="cf-institucion" data-i18n="contact.institucion">Institución o municipio</label><input id="cf-institucion" name="institucion" type="text" autocomplete="organization" required /></div>
-          <div class="field" data-para="ayuntamiento"><label for="cf-cargo" data-i18n="contact.cargo">Cargo o área</label><input id="cf-cargo" name="cargo" type="text" autocomplete="organization-title" /></div>
-          <div class="field" data-para="ong"><label for="cf-entidad" data-i18n="contact.entidad">Nombre de la entidad</label><input id="cf-entidad" name="entidad" type="text" autocomplete="organization" required /></div>
-          <div class="field"><label for="cf-msg"><span data-i18n="contact.msg">Mensaje</span> <small class="contacto__opcional" data-para="empresa ayuntamiento ong" data-i18n="contact.opcional">(opcional)</small></label><textarea id="cf-msg" name="message"></textarea></div>
-          <div class="consent"><input id="cf-consent" name="consent" type="checkbox" required /><label for="cf-consent"><span data-i18n="contact.consent">He leído y acepto la</span> <a href="privacidad.html" data-i18n="contact.consentLink">política de privacidad</a>.</label></div>
-          <button class="btn btn--primary" type="submit" data-i18n="contact.send">Enviar mensaje</button><div class="trampa" aria-hidden="true"><label for="cf-web">No rellenes este campo</label><input id="cf-web" name="web" type="text" tabindex="-1" autocomplete="off" /></div>
-        </div>
-        <p class="form-status" id="form-status" role="status" aria-live="polite"></p><div class="plan-b" id="plan-b" hidden><p class="plan-b__texto" data-i18n="contact.planB">Copia el mensaje y envíanoslo a:</p><div class="plan-b__acciones"><button class="btn btn--primary btn--small" type="button" id="cf-copiar" data-i18n="contact.copiar">Copiar el mensaje</button><a class="btn btn--ghost btn--small" id="cf-abrir" href="mailto:peopleforpeopleofficial@gmail.com" data-i18n="contact.abrir">Abrir mi correo</a></div><p class="plan-b__dir"><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></p><textarea class="plan-b__copia" id="cf-copia" rows="7" readonly hidden></textarea></div>
-      </form>
+      <nav class="contacto-menu reveal" aria-labelledby="contacto-menu-titulo"><h3 id="contacto-menu-titulo" data-i18n="contact.q">¿Cómo podemos ayudarte?</h3><ul><li><a class="contacto-menu__opcion" href="contacto.html?role=empresa"><span><strong data-i18n="contact.oE">Empresas (RSC)</strong><small data-i18n="contact.oEb">Quiero gestionar el impacto social de mi empresa.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=ayuntamiento"><span><strong data-i18n="contact.oM">Ayuntamientos</strong><small data-i18n="contact.oMb">Represento a una institución pública.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=ong"><span><strong data-i18n="contact.oO">ONG y asociaciones</strong><small data-i18n="contact.oOb">Quiero coordinar a nuestro voluntariado.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=voluntario"><span><strong data-i18n="contact.oV">Ayuda con la app</strong><small data-i18n="contact.oVb">Soy voluntario o ya uso la plataforma.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=otro"><span><strong data-i18n="contact.oX">Otra consulta</strong><small data-i18n="contact.oXb">Prensa, colaboraciones o cualquier otra cosa.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li></ul></nav>
     </div></div>
   </section>
 </main>
