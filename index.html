@@ -79,28 +79,33 @@
     </div>
   </section>
 
-  <!-- Qué hacemos, justo después de la portada. A la izquierda lo que es,
-       con las tres ideas como cifras (sin cifras inventadas: son palabras);
-       a la derecha la foto en un círculo rodeada de lo que hace la
-       plataforma: misiones cerca, entidades verificadas, panel, avisos,
-       mensajes y horas. -->
+  <!-- Qué hacemos, justo después de la portada: el titular y la foto lado a
+       lado y, debajo, las tres ideas con su icono. -->
   <section class="section what" id="que-hacemos">
-    <div class="container what__rejilla">
-      <div class="what__cabeza reveal">
-        <span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span>
-        <h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2>
-        <p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p>
-        <ul class="what__claves">
-          <li><strong data-i18n="what.k1">Cerca de ti</strong><span data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</span></li>
-          <li><strong data-i18n="what.k2">En minutos</strong><span data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</span></li>
-          <li><strong data-i18n="what.k3">Con datos</strong><span data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</span></li>
-        </ul>
+    <div class="container">
+      <div class="what__rejilla">
+        <div class="what__cabeza reveal">
+          <span class="eyebrow" data-i18n="what.eyebrow">Qué hacemos</span>
+          <h2 data-i18n="what.title">Convertimos las ganas de ayudar en ayuda que llega.</h2>
+          <p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p>
+          <a class="text-link what__mas" href="plataforma/centro-de-coordinacion.html" data-i18n="what.more">Conoce la plataforma →</a>
+        </div>
+        <figure class="what__foto reveal"><img src="imagenes/que-hacemos-equipo.webp" width="1200" height="675" loading="lazy" alt="" /></figure>
       </div>
-      <div class="what__orbita reveal" aria-hidden="true">
-        <span class="what__anillo"></span><span class="what__banda"></span>
-        <img class="what__foto" src="imagenes/que-hacemos-equipo.webp" width="600" height="600" loading="lazy" alt="" />
-        <span class="what__burbuja what__burbuja--1"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span class="what__burbuja what__burbuja--2"><svg viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/></svg></span><span class="what__burbuja what__burbuja--3"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="what__burbuja what__burbuja--4"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="what__burbuja what__burbuja--5"><svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9Z"/></svg></span><span class="what__burbuja what__burbuja--6"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
-      </div>
+      <ul class="what__claves"><li class="what__clave reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><h3 data-i18n="what.k1">Cerca de ti</h3><p data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</p></li><li class="what__clave reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z"/></svg></span><h3 data-i18n="what.k2">En minutos</h3><p data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</p></li><li class="what__clave reveal"><span class="what__icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3 data-i18n="what.k3">Con datos</h3><p data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</p></li></ul>
+    </div>
+  </section>
+
+  <!-- El problema, contado por la prensa de aquellos días: lo que dijeron
+       los voluntarios, tal cual, con medio, fecha, enlace y la foto con su
+       autor. Las fotos son de los periódicos: antes de publicar hace falta
+       su permiso o licencia. -->
+  <section class="section section--sunken porque" id="por-que">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow" data-i18n="why.eyebrow">Por qué existimos</span><h2 data-i18n="why.title">En la DANA sobraban voluntarios. Faltaba coordinación.</h2><p data-i18n="why.lead">El 2 de noviembre de 2024, unas 15.000 personas se presentaron en la Ciudad de las Artes y las Ciencias de Valencia para ayudar. Solo un tercio cupo en los autobuses, y muchos de los que subieron pasaron la mañana parados, sin llegar a nadie.</p></div>
+      <div class="prensa-rejilla"><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elpais-ciudad-ciencias.webp" width="800" height="519" loading="lazy" alt="" data-i18n-alt="why.alt1" /><div class="prensa__cuerpo"><p class="prensa__medio">EL PAÍS</p><blockquote><p data-i18n="why.q1">«Nadie nos ha dicho qué tenemos que hacer y hemos tenido que autoorganizarnos como hemos podido»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie1">Una voluntaria en Sedaví</span> · <span data-i18n="why.foto">Foto</span>: Albert Garcia</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f1">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://elpais.com/espana/2024-11-02/masiva-respuesta-de-voluntarios-y-numerosas-criticas-a-la-organizacion-hemos-visto-a-gente-sufriendo-mucho.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/levante-algemesi.webp" width="800" height="450" loading="lazy" alt="" data-i18n-alt="why.alt2" /><div class="prensa__cuerpo"><p class="prensa__medio">Levante-EMV</p><blockquote><p data-i18n="why.q2">«Mano de obra hay de sobra, pero falta organizar»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie2">Voluntarios llegados a Algemesí</span> · <span data-i18n="why.foto">Foto</span>: Saray Fajardo</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f2">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.levante-emv.com/ribera/2024/11/02/hay-voluntarios-algemesi-falta-coordinacion-111221998.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elsalto-chiva.webp" width="800" height="543" loading="lazy" alt="" data-i18n-alt="why.alt3" /><div class="prensa__cuerpo"><p class="prensa__medio">El Salto</p><blockquote><p data-i18n="why.q3">«Nos invitaron a irnos a otra zona, Calicanto, porque en el pueblo no éramos útiles»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie3">Voluntarios parados en Chiva, esperando órdenes</span> · <span data-i18n="why.foto">Foto</span>: El Salto</p><p class="prensa__fuente"><time datetime="2024-11-04" data-i18n="why.f3">4 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.elsaltodiario.com/valencia/voluntariado-convocado-generalitat-denuncia-caos-descoordinacion" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article></div>
+      <p class="prensa__nota" data-i18n="why.nota">Titulares tal como se publicaron.</p>
+      <p class="porque__cierre reveal" data-i18n="why.cierre">PeopleForPeople nace de ahí: que quien quiere ayudar sepa adónde ir, cuándo y para qué antes de salir de casa, y que quien coordina sepa con cuántas personas cuenta.</p><p class="porque__casos reveal"><a class="text-link" href="casos/index.html" data-i18n="why.casos">Lee los casos de impacto: la DANA, Filomena, La Palma y las personas mayores →</a></p>
     </div>
   </section>
 
@@ -135,19 +140,6 @@
            que una lista de espera aparte, que pediría guardar correos para
            avisar y luego volver a pedirlos para dar de alta. -->
       <div class="store-cuenta reveal"><p data-i18n="app.storeAccount">Mientras llega a las tiendas, crea tu cuenta en la web: es la misma con la que entrarás en la app.</p><a class="btn btn--primary" href="cuenta/registro.html" data-i18n="app.storeSignup">Crear mi cuenta</a></div>
-    </div>
-  </section>
-
-  <!-- El problema, contado por la prensa de aquellos días: lo que dijeron
-       los voluntarios, tal cual, con medio, fecha, enlace y la foto con su
-       autor. Las fotos son de los periódicos: antes de publicar hace falta
-       su permiso o licencia. -->
-  <section class="section section--sunken porque" id="por-que">
-    <div class="container">
-      <div class="section-head reveal"><span class="eyebrow" data-i18n="why.eyebrow">Por qué existimos</span><h2 data-i18n="why.title">En la DANA sobraban voluntarios. Faltaba coordinación.</h2><p data-i18n="why.lead">El 2 de noviembre de 2024, unas 15.000 personas se presentaron en la Ciudad de las Artes y las Ciencias de Valencia para ayudar. Solo un tercio cupo en los autobuses, y muchos de los que subieron pasaron la mañana parados, sin llegar a nadie.</p></div>
-      <div class="prensa-rejilla"><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elpais-ciudad-ciencias.webp" width="800" height="519" loading="lazy" alt="" data-i18n-alt="why.alt1" /><div class="prensa__cuerpo"><p class="prensa__medio">EL PAÍS</p><blockquote><p data-i18n="why.q1">«Nadie nos ha dicho qué tenemos que hacer y hemos tenido que autoorganizarnos como hemos podido»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie1">Una voluntaria en Sedaví</span> · <span data-i18n="why.foto">Foto</span>: Albert Garcia</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f1">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://elpais.com/espana/2024-11-02/masiva-respuesta-de-voluntarios-y-numerosas-criticas-a-la-organizacion-hemos-visto-a-gente-sufriendo-mucho.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/levante-algemesi.webp" width="800" height="450" loading="lazy" alt="" data-i18n-alt="why.alt2" /><div class="prensa__cuerpo"><p class="prensa__medio">Levante-EMV</p><blockquote><p data-i18n="why.q2">«Mano de obra hay de sobra, pero falta organizar»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie2">Voluntarios llegados a Algemesí</span> · <span data-i18n="why.foto">Foto</span>: Saray Fajardo</p><p class="prensa__fuente"><time datetime="2024-11-02" data-i18n="why.f2">2 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.levante-emv.com/ribera/2024/11/02/hay-voluntarios-algemesi-falta-coordinacion-111221998.html" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article><article class="prensa reveal"><img class="prensa__foto" src="imagenes/prensa/elsalto-chiva.webp" width="800" height="543" loading="lazy" alt="" data-i18n-alt="why.alt3" /><div class="prensa__cuerpo"><p class="prensa__medio">El Salto</p><blockquote><p data-i18n="why.q3">«Nos invitaron a irnos a otra zona, Calicanto, porque en el pueblo no éramos útiles»</p></blockquote><p class="prensa__pie"><span data-i18n="why.pie3">Voluntarios parados en Chiva, esperando órdenes</span> · <span data-i18n="why.foto">Foto</span>: El Salto</p><p class="prensa__fuente"><time datetime="2024-11-04" data-i18n="why.f3">4 de noviembre de 2024</time><a class="prensa__enlace" href="https://www.elsaltodiario.com/valencia/voluntariado-convocado-generalitat-denuncia-caos-descoordinacion" target="_blank" rel="noopener noreferrer" data-i18n="why.leer">Leer la noticia</a></p></div></article></div>
-      <p class="prensa__nota" data-i18n="why.nota">Titulares tal como se publicaron.</p>
-      <p class="porque__cierre reveal" data-i18n="why.cierre">PeopleForPeople nace de ahí: que quien quiere ayudar sepa adónde ir, cuándo y para qué antes de salir de casa, y que quien coordina sepa con cuántas personas cuenta.</p><p class="porque__casos reveal"><a class="text-link" href="casos/index.html" data-i18n="why.casos">Lee los casos de impacto: la DANA, Filomena, La Palma y las personas mayores →</a></p>
     </div>
   </section>
 

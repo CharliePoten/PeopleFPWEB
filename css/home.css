@@ -178,31 +178,22 @@
 .home .store-cuenta { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 46ch; margin: 28px auto 0; text-align: center; }
 .home .store-cuenta p { margin: 0; }
 
-/* Qué hacemos, a la manera de Benevity: texto y tres claves a la izquierda,
-   y a la derecha una foto en círculo con lo que hace la plataforma
-   alrededor, en burbujas sobre un anillo. */
-.home .what { overflow: hidden; background: var(--navy-50, #E8EEF6); }
-.home .what__rejilla { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
-.home .what__cabeza h2 { max-width: 16ch; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.08; text-wrap: balance; }
-.home .what__cabeza > p { margin: 0; max-width: 52ch; color: var(--text-soft); font-size: 1.08rem; }
-.home .what__claves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 40px 0 0; padding: 0; list-style: none; }
-.home .what__claves li { display: grid; align-content: start; gap: 8px; padding-left: 16px; border-left: 3px solid var(--navy-600); }
-.home .what__claves strong { color: var(--navy-700); font-size: clamp(1.15rem, 1.6vw, 1.4rem); line-height: 1.15; }
-.home .what__claves span { color: var(--text-soft); font-size: .88rem; line-height: 1.5; }
-
-.home .what__orbita { position: relative; width: min(100%, 540px); aspect-ratio: 1; margin-inline: auto; }
-.home .what__anillo { position: absolute; inset: 5%; border: 2px dashed rgba(0, 37, 87, .28); border-radius: 50%; }
-.home .what__banda { position: absolute; inset: 16%; border-radius: 50%; background: rgba(0, 37, 87, .07); }
-.home .what__foto { position: absolute; inset: 24%; width: 52%; height: 52%; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 6px #fff, 0 0 0 7px rgba(0, 37, 87, .25), 0 24px 50px rgba(0, 20, 51, .18); }
-.home .what__burbuja { position: absolute; width: 18%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: var(--navy-600); color: #fff; box-shadow: 0 12px 28px rgba(0, 37, 87, .28); transform: translate(-50%, -50%); }
-.home .what__burbuja svg { width: 44%; height: 44%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-/* Seis posiciones sobre el anillo (radio 45 %): arriba, a los lados y abajo. */
-.home .what__burbuja--1 { left: 27.5%; top: 11%; }
-.home .what__burbuja--2 { left: 72.5%; top: 11%; }
-.home .what__burbuja--3 { left: 5%; top: 50%; }
-.home .what__burbuja--4 { left: 95%; top: 50%; }
-.home .what__burbuja--5 { left: 27.5%; top: 89%; }
-.home .what__burbuja--6 { left: 72.5%; top: 89%; background: var(--amber-500); color: var(--navy-800); }
+/* Qué hacemos: titular y foto lado a lado, y debajo las tres ideas.
+   La foto va entera y rectangular, con un bloque ámbar detrás que la
+   despega del fondo. */
+.home .what__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 88px); align-items: center; }
+.home .what__cabeza h2 { max-width: 18ch; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.08; text-wrap: balance; }
+.home .what__cabeza > p { margin: 0; max-width: 46ch; color: var(--text-soft); font-size: 1.08rem; }
+.home .what__mas { display: inline-block; margin-top: 22px; }
+.home .what__foto { position: relative; z-index: 0; margin: 0 0 18px 18px; }
+.home .what__foto::before { content: ''; position: absolute; z-index: -1; left: -18px; bottom: -18px; width: 46%; height: 62%; border-radius: 24px; background: var(--amber-500); }
+.home .what__foto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 72% 50%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0, 20, 51, .16); }
+.home .what__claves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; list-style: none; }
+.home .what__clave { padding: 24px 0; border-top: 1px solid var(--border); }
+.home .what__icono { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 16px; border-radius: 14px; background: var(--amber-50); color: var(--navy-600); }
+.home .what__icono svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.home .what__clave h3 { margin: 0 0 8px; color: var(--navy-700); font-size: 1.2rem; }
+.home .what__clave p { margin: 0; color: var(--text-soft); }
 
 /* Por qué existimos: titulares de prensa, como citas. Sin cursiva: son
    titulares, y en cursiva tres líneas seguidas se leen peor. */
@@ -340,7 +331,8 @@
 
 @media (max-width: 900px) {
   .home .what__rejilla, .home .horas__rejilla { grid-template-columns: 1fr; }
-  .home .what__orbita { width: min(100%, 420px); }
+  .home .what__claves { grid-template-columns: 1fr; gap: 0; }
+  .home .what__foto img { aspect-ratio: 16 / 10; }
   .home .app-intro { grid-template-columns: 1fr; gap: 22px; }
   .home .app-flow { grid-template-columns: 1fr; }
   .home .app-step { padding: 24px 0; }
@@ -350,7 +342,6 @@
 }
 
 @media (max-width: 640px) {
-  .home .what__claves { grid-template-columns: 1fr; gap: 18px; }
   .home .header { height: 64px; }
   .home .brand__logo--icon { width: 38px; height: 38px; }
   .home .lang button { padding: 6px 8px; }
@@ -365,9 +356,9 @@
   .home .hero__actions { flex-direction: column; align-items: stretch; width: min(100%, 340px); margin-inline: auto; }
   .home .hero__scroll span { display: none; }
   .home .app-showcase { padding-top: 80px; }
-  .home .app-gallery { grid-template-columns: repeat(3, 72vw); gap: 22px; overflow-x: auto; justify-content: start; scroll-snap-type: x mandatory; margin-inline: -24px; padding: 18px 24px 36px; scrollbar-width: none; }
-  .home .app-gallery::-webkit-scrollbar { display: none; }
-  .home .app-shot, .home .app-shot--side, .home .app-shot--side:first-child, .home .app-shot--side:last-child { transform: none; opacity: 1; scroll-snap-align: center; }
+  .home .app-gallery { grid-template-columns: .86fr 1fr .86fr; gap: 10px; align-items: end; }
+  .home .app-shot, .home .app-shot--side, .home .app-shot--side:first-child, .home .app-shot--side:last-child { transform: none; opacity: 1; }
+  .home .app-shot figcaption { margin-top: 10px; font-size: .74rem; line-height: 1.3; }
   .home .store-links { align-items: stretch; flex-direction: column; }
   .home .store-badge { width: 100%; }
   .home .store-cuenta { align-items: stretch; }
