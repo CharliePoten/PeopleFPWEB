@@ -82,7 +82,7 @@
    empresas dentro son ocho enlaces, y a ese tamano no entraban ni de lejos.
    Bajarlos ademas hace que el menu se lea como un indice del sitio y no como
    un cartel. */
-.home .nav__link strong { font-size: clamp(1.1rem, 2.8vw, 1.45rem); font-weight: 500; transition: transform .2s ease, color .2s ease; }
+.home .nav__link strong { font-family: var(--tipo-titulos); font-size: clamp(1.1rem, 2.8vw, 1.45rem); font-weight: 500; transition: transform .2s ease, color .2s ease; }
 
 /* Las paginas de cada perfil, colgando de «Para quien».
    Van sin numero y algo mas pequenas: son ramas de una entrada, no
@@ -634,7 +634,7 @@
   .menu-ancho__grupo { position: relative; }
   .menu-ancho__boton, .menu-ancho__enlace {
     display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 0; border-radius: 999px;
-    background: transparent; color: var(--navy-600); font: inherit; font-size: .94rem; font-weight: 500;
+    background: transparent; color: var(--navy-600); font: inherit; font-family: var(--tipo-titulos); font-size: .94rem; font-weight: 500;
     text-decoration: none; cursor: pointer; white-space: nowrap; transition: background-color .2s ease, color .2s ease;
   }
   .menu-ancho__boton svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s ease; }
