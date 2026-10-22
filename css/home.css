@@ -280,7 +280,6 @@
 
 /* Contacto y pie. */
 .home #contacto { position: relative; }
-.home #contacto::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(120deg, transparent 45%, rgba(11,65,124,.4)); }
 .home #contacto .split { position: relative; }
 .home #contacto h2 { max-width: 14ch; font-size: clamp(2rem,4vw,3.3rem); }
 .home .contact-email { color: var(--amber-300); font-weight: 600; }
@@ -310,7 +309,12 @@
 
 /* Cierre de la portada: una llamada y dos botones. */
 .home .cta-final { position: relative; overflow: hidden; }
-.home .cta-final::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 85% 20%, rgba(252, 175, 23, .14), transparent 40%); }
+.home .cta-final { isolation: isolate; }
+/* La foto de las manos al fondo, tapada de azul como la de la portada: se
+   adivina, no compite con el titular. */
+.home .cta-final__foto { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
+.home .cta-final::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 85% 20%, rgba(252, 175, 23, .14), transparent 40%), linear-gradient(135deg, rgba(0, 22, 54, .9) 0%, rgba(0, 37, 87, .84) 60%, rgba(11, 65, 124, .8) 100%); }
+.home .cta-final .cta-final__credito { position: absolute; right: 18px; bottom: 12px; margin: 0; color: rgba(255, 255, 255, .5); font-size: .7rem; }
 .home .cta-final__dentro { position: relative; display: grid; justify-items: center; gap: 18px; max-width: 760px; text-align: center; }
 .home .cta-final h2 { margin: 0; color: #fff; font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.08; text-wrap: balance; }
 .home .cta-final p { margin: 0; max-width: 52ch; color: rgba(255, 255, 255, .82); font-size: 1.1rem; }
