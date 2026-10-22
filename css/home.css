@@ -608,6 +608,12 @@
   }
 }
 
+/* Botón «Solicitar presentación» de la cabecera: solo en pantallas anchas,
+   donde cabe junto a los cuatro menús sin apretarlos. */
+.header__demo { display: none; white-space: nowrap; }
+.home .header .lang, .home .header .header__cuenta { flex-shrink: 0; }
+@media (min-width: 1280px) { .header__demo { display: inline-flex; } }
+
 /* --------------------------------------------------------------------------
    Menú de escritorio
    --------------------------------------------------------------------------
@@ -622,6 +628,17 @@
   .menu-ancho { display: block; margin-left: auto; }
   .home .menu-ancho ~ .header__actions { margin-left: clamp(16px, 2vw, 32px); }
   .menu-ancho__lista { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+}
+/* Con cuatro menús, idioma, cuenta y presentación no cabe también el
+   nombre de la marca (el contenedor no pasa de 1140 px): en escritorio
+   queda el icono, que ya la identifica. */
+@media (min-width: 1024px) {
+  .home .header .brand__name { display: none; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .menu-ancho__boton, .menu-ancho__enlace { padding-inline: 10px; }
+}
+@media (min-width: 1024px) {
   .menu-ancho__grupo { position: relative; }
   .menu-ancho__boton, .menu-ancho__enlace {
     display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 0; border-radius: 999px;
