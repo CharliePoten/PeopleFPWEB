@@ -144,3 +144,113 @@
   .detail-page .legal-shell dl { grid-template-columns: 1fr; gap: 2px; }
   .detail-page .legal-shell dd { margin-bottom: 12px; }
 }
+
+/* ==========================================================================
+   Cabeceras con imagen
+   --------------------------------------------------------------------------
+   Todas las páginas de los menús llevan su imagen junto al título, sobre el
+   azul. Una sola regla de diseño para todas: esquinas rectas, la imagen
+   llega hasta el borde de la pantalla y se funde con el azul por la
+   izquierda, y una barra ámbar la ancla abajo, como el subrayado del
+   antetítulo. Variantes:
+     --foto      foto a la derecha (soporte, ONG, ayuntamientos, empresas,
+                 voluntarios, actualidad)
+     --fondo     foto de fondo tapada de azul (casos de impacto)
+     --pantalla  una captura del panel en su ventana de navegador
+     --flota     un objeto que cruza del azul al blanco (el móvil, el
+                 certificado)
+     --panel     una pieza propia en la columna derecha (la ficha de
+                 verificación, el gráfico de la calculadora)
+   ========================================================================== */
+
+.detail-page .detail-hero__foto,
+.detail-page .detail-hero__fondo { margin: 0; }
+.detail-page .detail-hero__foto img,
+.detail-page .detail-hero__fondo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--foco, 50% 50%); }
+
+/* Foto de fondo, como la de la portada: se adivina, no compite. */
+.detail-page .detail-hero--fondo .detail-hero__fondo { position: absolute; inset: 0; z-index: 0; }
+.detail-page .detail-hero--fondo .detail-hero__fondo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0, 22, 54, .92) 0%, rgba(0, 30, 71, .86) 55%, rgba(11, 65, 124, .8) 100%); }
+.detail-page .detail-hero--fondo .container { z-index: 1; }
+
+@media (min-width: 900px) {
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) .container > * { max-width: min(560px, 46vw); }
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) h1 { font-size: clamp(2.3rem, 4.4vw, 3.8rem); }
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--panel) { min-height: 540px; display: flex; align-items: center; }
+  /* El hero es flex para centrar en vertical; el contenedor conserva su ancho
+     limitado y su margen automático. */
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--panel) .container { flex: none; }
+
+  /* Foto a la derecha, hasta el borde. */
+  .detail-page .detail-hero--foto .detail-hero__foto { position: absolute; top: 0; right: 0; bottom: 0; width: min(44vw, 780px); }
+  .detail-page .detail-hero--foto .detail-hero__foto::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--navy-700) 0%, rgba(0, 30, 71, .5) 16%, rgba(0, 30, 71, 0) 42%); }
+  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: 0; width: 38%; height: 10px; background: var(--amber-500); }
+
+  /* La captura del panel, en su ventana, saliéndose por la derecha. */
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla { position: absolute; top: 50%; left: calc(50% + 20px); right: 0; margin: 0; transform: translateY(-46%); box-shadow: 0 40px 90px rgba(0, 0, 0, .45); }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla .navegador { border-radius: 0; }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla img { display: block; width: 100%; height: auto; }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla::after { content: ''; position: absolute; left: 0; bottom: -10px; width: 38%; height: 10px; background: var(--amber-500); }
+
+  /* Un objeto que cruza del azul al blanco. */
+  .detail-page .detail-hero--flota { overflow: visible; padding-bottom: 110px; }
+  .detail-page .detail-hero--flota .detail-hero__flota { position: absolute; z-index: 3; right: max(32px, calc(50% - 570px + 40px)); bottom: -190px; width: min(330px, 26vw); margin: 0; }
+  .detail-page .detail-hero--flota + .detail-section { padding-top: 120px; }
+  .detail-page .detail-hero--flota + .detail-section .detail-heading { max-width: 58%; }
+
+  /* Una pieza propia en la columna de la derecha. */
+  .detail-page .detail-hero--panel .detail-hero__panel { position: absolute; top: 50%; right: max(24px, calc(50% - 570px)); width: min(500px, 40vw); margin: 0; transform: translateY(-50%); }
+}
+
+@media (max-width: 899px) {
+  .detail-page .detail-hero--foto { padding-bottom: 0; }
+  .detail-page .detail-hero--foto .detail-hero__foto { position: relative; height: 260px; margin-top: 40px; }
+  .detail-page .detail-hero--foto .detail-hero__foto::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--navy-700) 0%, rgba(0, 30, 71, 0) 30%); }
+  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40%; height: 8px; background: var(--amber-500); }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla { width: calc(100% - 48px); margin: 36px 24px 0; }
+  .detail-page .detail-hero--flota { overflow: visible; padding-bottom: 0; }
+  .detail-page .detail-hero--flota .detail-hero__flota { position: relative; z-index: 3; width: min(62vw, 280px); margin: 36px auto -150px; }
+  .detail-page .detail-hero--flota + .detail-section { padding-top: 190px; }
+  .detail-page .detail-hero--panel .detail-hero__panel { width: calc(100% - 48px); margin: 36px 24px 0; }
+}
+
+/* El móvil y el papel. */
+.detail-page .detail-hero__flota img { display: block; width: 100%; height: auto; }
+.detail-page .detail-hero__flota--movil img { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .5)) drop-shadow(0 40px 60px rgba(0, 10, 30, .45)); }
+.detail-page .detail-hero__flota--papel img { transform: rotate(2deg); box-shadow: 0 2px 6px rgba(0, 20, 51, .12), 0 40px 80px rgba(0, 10, 30, .45); }
+
+/* La ficha de verificación (seguridad). Es un esquema del proceso, no los
+   datos de nadie. */
+.detail-page .ficha { position: relative; padding: 26px 28px 24px; background: #fff; color: var(--text); border-top: 8px solid var(--amber-500); box-shadow: 0 40px 90px rgba(0, 0, 0, .4); }
+.detail-page .ficha__titulo { margin: 0 0 4px; color: var(--navy-700); font-family: var(--tipo-titulos); font-size: 1.15rem; font-weight: 700; }
+.detail-page .ficha__sub { margin: 0 0 18px; color: var(--text-mute); font-size: .85rem; }
+.detail-page .ficha ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--border); }
+.detail-page .ficha li { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: .92rem; }
+.detail-page .ficha li > span { color: var(--amber-700); font-size: .76rem; font-weight: 700; letter-spacing: .06em; }
+.detail-page .ficha li strong { color: var(--navy-700); font-weight: 600; }
+.detail-page .ficha li em { color: #1F7A4D; font-style: normal; font-size: .82rem; font-weight: 600; text-align: right; }
+.detail-page .ficha__sello { position: absolute; right: 22px; bottom: -20px; margin: 0; padding: 10px 16px; background: var(--navy-600); color: #fff; font-family: var(--tipo-titulos); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+/* El gráfico de la calculadora, sobre el azul. Colores comprobados con el
+   validador de la guía de gráficos sobre #001E47 (también con daltonismo). */
+.detail-page .grafico { padding: 24px 24px 18px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .14); border-bottom: 10px solid var(--amber-500); }
+.detail-page .grafico__titulo { margin: 0; color: #fff; font-family: var(--tipo-titulos); font-size: 1.05rem; font-weight: 700; }
+.detail-page .grafico__sub { margin: 4px 0 14px; color: rgba(255, 255, 255, .72); font-size: .85rem; }
+.detail-page .grafico__cuerpo { position: relative; }
+.detail-page .grafico svg { display: block; width: 100%; height: auto; overflow: visible; }
+.detail-page .grafico__eje { fill: rgba(255, 255, 255, .62); font-size: 13px; font-family: var(--tipo-texto); }
+.detail-page .grafico__rejilla { stroke: rgba(255, 255, 255, .12); stroke-width: 1; }
+.detail-page .grafico__barra { fill: #4A84CF; transition: fill .15s ease; }
+.detail-page .grafico__barra--tu { fill: #C4800E; }
+.detail-page .grafico__barra.is-encima:not(.grafico__barra--tu) { fill: #6A9BDB; }
+.detail-page .grafico__valor { fill: #fff; font-size: 13px; font-weight: 600; font-family: var(--tipo-titulos); }
+.detail-page .grafico__tu { fill: #FDCB4E; font-size: 12px; font-weight: 600; font-family: var(--tipo-texto); }
+.detail-page .grafico__zona { fill: transparent; }
+.detail-page .grafico__globo { position: absolute; z-index: 5; padding: 8px 10px; background: #fff; color: var(--navy-700); font-size: .82rem; line-height: 1.4; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); pointer-events: none; white-space: nowrap; transform: translate(-50%, -100%); }
+
+/* Pasos sobre blanco (seguridad): la página no encadena dos azules. */
+.detail-page .detail-section--white .step { border-top-color: var(--border); }
+.detail-page .detail-section--white .step + .step { border-left-color: var(--border); }
+.detail-page .detail-section--white .step::before { color: var(--amber-700); }
+.detail-page .detail-section--white .step h3 { color: var(--navy-700); }
+.detail-page .detail-section--white .step p { color: var(--text-soft); }

@@ -58,6 +58,8 @@ COLECCIONES = [
         'volver_clave': 'cases.back', 'volver': '← Casos de impacto',
         'leer_clave': 'cases.read', 'leer': 'Leer el caso →',
         'mas_clave': 'cases.more', 'mas': 'Otros casos',
+        # La foto de la cabecera de la lista: de fondo, tapada de azul.
+        'cabecera': ('fondo', 'casos/dana-calle.webp', 640, 360, '50% 45%'),
     },
     {
         'md': '_actualidad', 'carpeta': 'actualidad', 'imagenes': 'actualidad', 'nombre': 'Actualidad',
@@ -70,6 +72,8 @@ COLECCIONES = [
         'volver_clave': 'news.back', 'volver': '← Actualidad',
         'leer_clave': 'news.read', 'leer': 'Leer el artículo →',
         'mas_clave': 'news.more', 'mas': 'Más artículos',
+        # La foto de la cabecera de la lista: a la derecha del título.
+        'cabecera': ('foto', 'paginas/actualidad.webp', 1400, 788, '70% 35%'),
     },
 ]
 C = COLECCIONES[0]
@@ -274,6 +278,12 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
     ])
 
 
+def figura_cabecera():
+    tipo, img, w, h, foco = C['cabecera']
+    return ('<figure class="detail-hero__%s" style="--foco: %s"><img src="../imagenes/%s" width="%d" height="%d" alt="" /></figure>'
+            % (tipo, foco, img, w, h))
+
+
 def pagina_indice(todos, estilos, cabecera, pie):
     url = '%s/%s/' % (DOMINIO, C['carpeta'])
     datos = jsonld(
@@ -296,12 +306,12 @@ def pagina_indice(todos, estilos, cabecera, pie):
         estilos,
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
-        '  <section class="detail-hero"><div class="container reveal">'
-        '<a class="breadcrumb" href="../index.html">← PeopleForPeople</a>'
+        '  <section class="detail-hero detail-hero--%s"><div class="container reveal">' % C['cabecera'][0]
+        + '<a class="breadcrumb" href="../index.html">← PeopleForPeople</a>'
         '<span class="eyebrow" data-i18n="nav.resources">Recursos</span><h1 data-i18n="%s">%s</h1>'
         '<p class="detail-hero__lead" data-i18n="%s">%s</p>'
-        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>'
-        % (C['titulo_clave'], C['nombre'], C['entrada_clave'], C['entrada']),
+        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div>%s</section>'
+        % (C['titulo_clave'], C['nombre'], C['entrada_clave'], C['entrada'], figura_cabecera()),
         '  <section class="detail-section"><div class="container"><div class="casos-rejilla casos-rejilla--indice">%s</div></div></section>'
         % ''.join(tarjeta(c) for c in todos),
         '  <section class="detail-section detail-section--white"><div class="container">%s</div></section>'

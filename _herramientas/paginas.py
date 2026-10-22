@@ -49,12 +49,28 @@ def txt(etiqueta, clave, es, de, clase='', extra=''):
 
 # ---------------------------------------------------------------- bloques
 
-def cabecera_azul(pre, eyebrow, titulo, entrada, botones):
-    return ('  <section class="detail-hero"><div class="container reveal">'
-            '<a class="breadcrumb" href="%sindex.html">← PeopleForPeople</a>' % pre
+def cabecera_azul(pre, eyebrow, titulo, entrada, botones, clase='', figura=''):
+    """La cabecera azul. `clase` elige cómo va la imagen junto al título
+    (ver «Cabeceras con imagen» en css/detail.css) y `figura` es esa imagen."""
+    return ('  <section class="detail-hero%s"><div class="container reveal">' % (' ' + clase if clase else '')
+            + '<a class="breadcrumb" href="%sindex.html">← PeopleForPeople</a>' % pre
             + txt('span', *eyebrow, clase='eyebrow') + txt('h1', *titulo)
             + txt('p', *entrada, clase='detail-hero__lead')
-            + '<div class="detail-hero__actions">' + ''.join(botones) + '</div></div></section>')
+            + '<div class="detail-hero__actions">' + ''.join(botones) + '</div></div>' + figura + '</section>')
+
+
+def foto(src, ancho, alto, foco='50% 50%'):
+    """Foto junto al título, hasta el borde derecho. Es decorativa: el
+    título ya dice de qué va la página."""
+    return ('<figure class="detail-hero__foto" style="--foco: %s"><img src="%s" width="%d" height="%d" alt="" /></figure>'
+            % (foco, src, ancho, alto))
+
+
+def ventana(src, url, alt_clave):
+    """Una captura del panel dentro de su ventana de navegador."""
+    return ('<div class="navegador"><div class="navegador__barra" aria-hidden="true"><span class="navegador__punto"></span>'
+            '<span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__url">%s</span></div>'
+            '<img src="%s" width="1600" height="1000" alt="" data-i18n-alt="%s" /></div>' % (url, src, alt_clave))
 
 
 def boton(href, clave, es, de, primario=True):
@@ -77,10 +93,10 @@ def tarjetas(eyebrow, titulo, items, fondo='detail-section--white', entrada=None
             % (fondo, encabezado(eyebrow, titulo, entrada), cuerpo))
 
 
-def pasos(eyebrow, titulo, items):
+def pasos(eyebrow, titulo, items, fondo='detail-section--navy'):
     cuerpo = ''.join('<article class="step reveal">%s%s</article>' % (txt('h3', *a), txt('p', *b)) for a, b in items)
-    return ('  <section class="detail-section detail-section--navy"><div class="container">%s<div class="steps">%s</div></div></section>'
-            % (encabezado(eyebrow, titulo), cuerpo))
+    return ('  <section class="detail-section %s"><div class="container">%s<div class="steps">%s</div></div></section>'
+            % (fondo, encabezado(eyebrow, titulo), cuerpo))
 
 
 def con_imagen(eyebrow, titulo, entrada, imagen, fondo='detail-section'):
@@ -121,13 +137,14 @@ def centro():
                       ('pl.c.hero', 'Centro de coordinación', 'Koordinationszentrale'),
                       ('pl.c.lead', 'Todo lo que necesita quien coordina, en un mismo sitio y sin grupos de mensajería: lanzar una operación, saber quién va, quién ha llegado y cuántas horas se han hecho.',
                        'Alles, was Koordinierende brauchen, an einem Ort und ohne Messenger-Gruppen: einen Einsatz starten, wissen, wer kommt, wer angekommen ist und wie viele Stunden geleistet wurden.'),
-                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)]),
+                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)],
+                      clase='detail-hero--pantalla',
+                      figura='<figure class="detail-hero__pantalla">' + ventana('../imagenes/consola-panel.webp', 'peopleforpeople.es/cuenta', 'panel.alt1') + '</figure>'),
         con_imagen(('pl.c.panelEy', 'El panel web', 'Das Web-Dashboard'),
                    ('pl.c.panelT', 'Abre por lo que hay que resolver hoy.', 'Es beginnt mit dem, was heute erledigt werden muss.'),
                    ('pl.c.panelP', 'Se usa en el navegador, sin instalar nada. Al entrar no ves gráficas: ves las altas que esperan respuesta, las horas por validar y las misiones a medio cubrir. Si hay una emergencia activa, aparece arriba del todo.',
                     'Es läuft im Browser, ohne Installation. Beim Öffnen siehst du keine Diagramme, sondern offene Registrierungen, zu bestätigende Stunden und halb besetzte Einsätze. Läuft gerade ein Notfall, steht er ganz oben.'),
-                   '<div class="navegador"><div class="navegador__barra" aria-hidden="true"><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__url">peopleforpeople.es/cuenta</span></div>'
-                   '<img src="../imagenes/consola-panel.webp" width="1600" height="1000" loading="lazy" alt="" data-i18n-alt="panel.alt1" /></div>',
+                   ventana('../imagenes/consola-voluntariado.webp', 'peopleforpeople.es/cuenta/voluntariado', 'panel.alt2'),
                    'detail-section--white'),
         tarjetas(('pl.c.qEy', 'Qué puedes hacer', 'Was du tun kannst'),
                  ('pl.c.qT', 'Coordinar sin perder el hilo.', 'Koordinieren, ohne den Überblick zu verlieren.'), [
@@ -166,19 +183,21 @@ def centro():
 def app():
     pre = '../'
     cuenta = boton(pre + 'cuenta/registro.html?rol=volunteer', 'pl.crear', 'Crear mi cuenta', 'Konto erstellen')
+    # La de misiones va grande en la cabecera; aquí, las otras dos.
     moviles = ''.join('<img src="../imagenes/app/movil-%s.webp" width="740" height="1530" loading="lazy" alt="" data-i18n-alt="%s" />' % (n, a)
-                      for n, a in (('bienvenida', 'app.shot1'), ('misiones', 'app.shot2'), ('organizaciones', 'app.shot3')))
+                      for n, a in (('bienvenida', 'app.shot1'), ('organizaciones', 'app.shot3')))
+    asi = con_imagen(('pl.a.verEy', 'Así se ve', 'So sieht sie aus'),
+                     ('pl.a.verT', 'Clara, directa y sin pasos de más.', 'Klar, direkt und ohne überflüssige Schritte.'),
+                     ('pl.a.verP', 'Una misión se entiende de un vistazo: qué hace falta, dónde, cuándo y en qué punto está. Las pantallas son de la app real.',
+                      'Ein Einsatz ist auf einen Blick verständlich: was gebraucht wird, wo, wann und wie weit er ist. Die Bildschirme stammen aus der echten App.'),
+                     '<div class="pag-moviles">' + moviles + '</div>', 'detail-section--white')
     return [
         cabecera_azul(pre, ('pl.eyebrow', 'La plataforma', 'Die Plattform'),
                       ('pl.a.hero', 'App de voluntariado', 'Freiwilligen-App'),
                       ('pl.a.lead', 'Para quien quiere ayudar: las misiones de cerca, un aviso cuando de verdad hace falta y tus horas siempre a mano.',
                        'Für alle, die helfen wollen: Einsätze in der Nähe, eine Meldung, wenn es wirklich nötig ist, und deine Stunden immer griffbereit.'),
-                      [cuenta]),
-        con_imagen(('pl.a.verEy', 'Así se ve', 'So sieht sie aus'),
-                   ('pl.a.verT', 'Clara, directa y sin pasos de más.', 'Klar, direkt und ohne überflüssige Schritte.'),
-                   ('pl.a.verP', 'Una misión se entiende de un vistazo: qué hace falta, dónde, cuándo y en qué punto está. Las pantallas son de la app real.',
-                    'Ein Einsatz ist auf einen Blick verständlich: was gebraucht wird, wo, wann und wie weit er ist. Die Bildschirme stammen aus der echten App.'),
-                   '<div class="pag-moviles">' + moviles + '</div>', 'detail-section--white'),
+                      [cuenta], clase='detail-hero--flota',
+                      figura='<figure class="detail-hero__flota detail-hero__flota--movil"><img src="../imagenes/app/movil-misiones.webp" width="740" height="1530" alt="" data-i18n-alt="app.shot2" /></figure>'),
         tarjetas(('pl.a.qEy', 'Lo que hace por ti', 'Was sie für dich tut'),
                  ('pl.a.qT', 'Ayudar sin estar pendiente del móvil.', 'Helfen, ohne ständig aufs Handy zu schauen.'), [
             (('pl.a.q1t', 'Avisos que suenan', 'Meldungen, die klingeln'),
@@ -200,6 +219,7 @@ def app():
              ('pl.a.q6b', 'Las horas validadas forman tu historial, que puedes imprimir. Son la base del certificado de voluntariado que emite la entidad.',
               'Die bestätigten Stunden bilden deinen Verlauf, den du ausdrucken kannst. Sie sind die Grundlage für die Freiwilligenbescheinigung der Organisation.')),
         ], fondo=''),
+        asi,
         llamada(('pl.a.ctaT', 'Empieza a ayudar cerca de ti.', 'Fang an, in deiner Nähe zu helfen.'),
                 ('app.storeAccount', 'Mientras llega a las tiendas, crea tu cuenta en la web: es la misma con la que entrarás en la app.',
                  'Bis sie in den Stores ist, erstelle dein Konto im Web: Es ist dasselbe, mit dem du dich in der App anmeldest.'), cuenta),
@@ -214,14 +234,9 @@ def informes():
                       ('pl.i.lead', 'Cada hora se ficha sobre el terreno y la valida la entidad. De ahí salen la memoria de actividad, los datos para tu informe de RSC o ESG y la base del certificado de cada voluntario.',
                        'Jede Stunde wird vor Ort erfasst und von der Organisation bestätigt. Daraus entstehen der Tätigkeitsbericht, die Daten für deinen CSR- oder ESG-Bericht und die Grundlage für die Bescheinigung jeder freiwilligen Person.'),
                       [boton(pre + 'cuenta/registro.html?rol=organization', 'pl.altaOrg', 'Dar de alta mi organización', 'Organisation registrieren'),
-                       boton(pre + 'calculadora.html', 'pl.i.calc', 'Probar la calculadora', 'Rechner ausprobieren', False)]),
-        con_imagen(('pl.i.vEy', 'Validar', 'Bestätigen'),
-                   ('pl.i.vT', 'Ninguna hora cuenta sin que alguien la mire.', 'Keine Stunde zählt, ohne dass jemand sie geprüft hat.'),
-                   ('pl.i.vP', 'Las horas llegan de la app con el fichaje de cada persona. Se validan una a una o en tanda; si alguien las ajusta, tiene que decir por qué, y la persona voluntaria lo lee en su historial.',
-                    'Die Stunden kommen mit der Erfassung jeder Person aus der App. Sie werden einzeln oder gesammelt bestätigt; wer sie korrigiert, muss einen Grund angeben, und die freiwillige Person liest ihn in ihrem Verlauf.'),
-                   '<div class="navegador"><div class="navegador__barra" aria-hidden="true"><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__url">peopleforpeople.es/cuenta/horas</span></div>'
-                   '<img src="../imagenes/consola-horas.webp" width="1600" height="1000" loading="lazy" alt="" data-i18n-alt="panel.alt3" /></div>',
-                   'detail-section--white'),
+                       boton(pre + 'calculadora.html', 'pl.i.calc', 'Probar la calculadora', 'Rechner ausprobieren', False)],
+                      clase='detail-hero--flota',
+                      figura='<figure class="detail-hero__flota detail-hero__flota--papel"><img src="../imagenes/certificado-ejemplo-es.webp" data-i18n-src="pl.i.docSrc" width="765" height="1024" alt="" data-i18n-alt="hours.docAlt" /></figure>'),
         tarjetas(('pl.i.qEy', 'Informes', 'Berichte'),
                  ('pl.i.qT', 'Datos que se pueden defender.', 'Daten, die man vertreten kann.'), [
             (('pl.i.q1t', 'Solo cuentan las validadas', 'Nur bestätigte Stunden zählen'),
@@ -237,11 +252,12 @@ def informes():
              ('pl.i.q4b', 'La Ley 45/2015 da a cada voluntario derecho a un certificado con la fecha de incorporación, la duración, las tareas y el lugar (art. 24.1). Lo expide y firma la entidad, sobre las horas validadas.',
               'Das spanische Freiwilligengesetz (Ley 45/2015, Art. 24.1) gibt jeder freiwilligen Person das Recht auf eine Bescheinigung mit Eintrittsdatum, Dauer, Aufgaben und Ort. Sie wird von der Organisation auf Basis der bestätigten Stunden ausgestellt.')),
         ], fondo=''),
-        con_imagen(('pl.i.cEy', 'Certificado', 'Bescheinigung'),
-                   ('pl.i.cT', 'Así puede quedar el certificado de un voluntario.', 'So kann die Bescheinigung einer freiwilligen Person aussehen.'),
-                   ('pl.i.cP', 'Un ejemplo con datos ficticios. Cada entidad lo emite y lo sella con las horas que ha validado.',
-                    'Ein Beispiel mit erfundenen Daten. Jede Organisation stellt sie mit den von ihr bestätigten Stunden aus und stempelt sie.'),
-                   '<img class="pag-papel" src="../imagenes/certificado-ejemplo-es.webp" data-i18n-src="pl.i.docSrc" width="765" height="1024" loading="lazy" alt="" data-i18n-alt="hours.docAlt" />',
+        con_imagen(('pl.i.vEy', 'Validar', 'Bestätigen'),
+                   ('pl.i.vT', 'Ninguna hora cuenta sin que alguien la mire.', 'Keine Stunde zählt, ohne dass jemand sie geprüft hat.'),
+                   ('pl.i.vP', 'Las horas llegan de la app con el fichaje de cada persona. Se validan una a una o en tanda; si alguien las ajusta, tiene que decir por qué, y la persona voluntaria lo lee en su historial.',
+                    'Die Stunden kommen mit der Erfassung jeder Person aus der App. Sie werden einzeln oder gesammelt bestätigt; wer sie korrigiert, muss einen Grund angeben, und die freiwillige Person liest ihn in ihrem Verlauf.'),
+                   '<div class="navegador"><div class="navegador__barra" aria-hidden="true"><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__url">peopleforpeople.es/cuenta/horas</span></div>'
+                   '<img src="../imagenes/consola-horas.webp" width="1600" height="1000" loading="lazy" alt="" data-i18n-alt="panel.alt3" /></div>',
                    'detail-section--white'),
         pasos(('pl.pasoEy', 'Paso a paso', 'Schritt für Schritt'),
               ('pl.i.pT', 'De la llegada al certificado.', 'Von der Ankunft zur Bescheinigung.'), [
@@ -254,6 +270,19 @@ def informes():
                  'Der Rechner schätzt Personen, Stunden und den Wert der gespendeten Zeit – mit Annahmen, die du ändern kannst.'),
                 boton(pre + 'calculadora.html', 'pl.i.calcAbrir', 'Abrir la calculadora', 'Rechner öffnen')),
     ]
+
+
+def ficha():
+    """La ficha de verificación de la cabecera de Seguridad: un esquema del
+    proceso (no los datos de ninguna entidad), con el sello al final."""
+    filas = ''.join('<li><span>%02d</span>%s%s</li>' % (n, txt('strong', a, b, c), txt('em', d, e, f))
+                    for n, (a, b, c, d, e, f) in enumerate([('pl.s.f1', 'Razón social y CIF', 'Firmenname und Steuernummer', 'pl.s.f1e', 'Dígito de control válido', 'Prüfziffer gültig'), ('pl.s.f2', 'Representación', 'Vertretung', 'pl.s.f2e', 'Declarada', 'Erklärt'), ('pl.s.f3', 'Revisión del equipo', 'Prüfung durch das Team', 'pl.s.f3e', 'Hecha a mano', 'Von Hand'), ('pl.s.f4', 'Publicar misiones', 'Einsätze veröffentlichen', 'pl.s.f4e', 'Permitido', 'Erlaubt')], 1))
+    return ('<figure class="detail-hero__panel ficha" aria-label="Proceso de verificación de una entidad">'
+            + txt('p', 'pl.s.fT', 'Alta de una entidad', 'Anmeldung einer Organisation', clase='ficha__titulo')
+            + txt('p', 'pl.s.fS', 'Lo que se comprueba antes de que pueda publicar.', 'Was geprüft wird, bevor sie veröffentlichen kann.', clase='ficha__sub')
+            + '<ol>' + filas + '</ol>'
+            + txt('p', 'pl.s.fSello', 'Entidad verificada', 'Geprüfte Organisation', clase='ficha__sello')
+            + '</figure>')
 
 
 def seguridad():
@@ -271,7 +300,7 @@ def seguridad():
                       ('pl.s.hero', 'Seguridad y verificación', 'Sicherheit und Prüfung'),
                       ('pl.s.lead', 'Publicar en PeopleForPeople moviliza a personas que se van a presentar en un sitio. Por eso ninguna entidad publica hasta que comprobamos que existe y que quien la registra la representa.',
                        'Eine Veröffentlichung auf PeopleForPeople bringt Menschen dazu, an einen Ort zu kommen. Deshalb veröffentlicht keine Organisation etwas, bevor wir geprüft haben, dass es sie gibt und dass die anmeldende Person sie vertritt.'),
-                      [alta]),
+                      [alta], clase='detail-hero--panel', figura=ficha()),
         pasos(('pl.s.vEy', 'Verificación', 'Prüfung'),
               ('pl.s.vT', 'Cómo comprobamos una entidad.', 'Wie wir eine Organisation prüfen.'), [
             (('pl.s.v1t', 'Alta con sus datos', 'Anmeldung mit ihren Daten'),
@@ -286,7 +315,7 @@ def seguridad():
             (('pl.s.v4t', 'Bloqueo en el servidor', 'Sperre auf dem Server'),
              ('pl.s.v4b', 'Mientras no está verificada, la base de datos no le deja publicar misiones ni coordinar operaciones, aunque alguien lo intente fuera de la app. Y si cambia la razón social o el CIF, hay que verificarla de nuevo.',
               'Solange sie nicht geprüft ist, lässt die Datenbank sie keine Einsätze veröffentlichen oder koordinieren – auch nicht an der App vorbei. Ändern sich Firmenname oder Steuernummer, wird sie erneut geprüft.')),
-        ]),
+        ], fondo='detail-section--white'),
         '  <section class="detail-section detail-section--white"><div class="container">'
         + encabezado(('pl.s.pEy', 'Para quien ayuda', 'Für alle, die helfen'), ('trust.title', 'Ayudar no debería exponer a nadie.', 'Helfen sollte niemanden bloßstellen.'))
         + '<div class="benefit-grid">'
@@ -309,6 +338,19 @@ def seguridad():
     ]
 
 
+def grafico():
+    """El gráfico de la cabecera de la calculadora. Lo dibuja calculadora.js
+    con los datos del formulario: horas al año según qué parte de la
+    plantilla participe, con el caso de quien lo mira resaltado."""
+    return ('<figure class="detail-hero__panel grafico" id="calc-grafico">'
+            + txt('p', 'pl.k.gT', 'Horas al año según la participación', 'Stunden pro Jahr nach Beteiligung', clase='grafico__titulo')
+            + '<p class="grafico__sub" id="calc-grafico-sub"></p>'
+            + '<div class="grafico__cuerpo"><svg id="calc-svg" viewBox="0 0 460 270" role="img" aria-labelledby="calc-grafico-sub"></svg>'
+            + '<div class="grafico__globo" id="calc-globo" hidden></div></div>'
+            + '<table class="sr-only" id="calc-tabla"></table>'
+            + '</figure>')
+
+
 def calculadora():
     def campo(ident, clave, es, de, valor, minimo, maximo, paso, ayuda):
         k, v = t(clave, es, de)
@@ -326,7 +368,7 @@ def calculadora():
                       ('pl.k.hero', 'Calculadora de impacto', 'Wirkungsrechner'),
                       ('pl.k.lead', '¿Cuántas personas de tu plantilla podrían hacer voluntariado, cuántas horas sumarían y cuánto vale ese tiempo? Una estimación con supuestos que puedes cambiar.',
                        'Wie viele Menschen aus deinem Team könnten sich engagieren, wie viele Stunden kämen zusammen und was ist diese Zeit wert? Eine Schätzung mit Annahmen, die du ändern kannst.'),
-                      []),
+                      [], clase='detail-hero--panel', figura=grafico()),
         '  <section class="detail-section detail-section--white"><div class="container calc">'
         '<form class="calc__datos reveal" id="calc" novalidate>'
         + txt('h2', 'pl.k.datos', 'Tus datos', 'Deine Angaben')
@@ -436,7 +478,7 @@ def ayuda():
                       ('faq.title', 'Preguntas frecuentes', 'Häufige Fragen'),
                       ('faq.lead', 'Lo que más nos preguntáis, ordenado por temas. Pulsa una pregunta para ver la respuesta.',
                        'Die häufigsten Fragen, nach Themen sortiert. Tippe auf eine Frage, um die Antwort zu sehen.'),
-                      []).replace('<div class="detail-hero__actions"></div>', '<p class="pag-idioma" data-i18n="cases.soloEs"></p>', 1),
+                      [], clase='detail-hero--foto', figura=foto('imagenes/paginas/soporte.webp', 1400, 788, '62% 40%')).replace('<div class="detail-hero__actions"></div>', '<p class="pag-idioma" data-i18n="cases.soloEs"></p>', 1),
         '  <section class="detail-section detail-section--white"><div class="container faq">'
         '<nav class="faq__indice" aria-label="Temas">' + indice + '</nav>'
         '<div class="faq__grupos">' + grupos + '</div></div></section>',
@@ -463,6 +505,11 @@ t('pl.k.fuente', 'Fuente del coste por hora:', 'Quelle der Stundenkosten:')
 t('pl.k.fuenteFecha', '(publicada el 17 de marzo de 2026).', '(veröffentlicht am 17. März 2026).')
 t('pl.k.plan', 'Plan de PeopleForPeople para una empresa de ese tamaño:', 'PeopleForPeople-Tarif für ein Unternehmen dieser Größe:')
 t('pl.k.mes', '{n} € al mes', '{n} € pro Monat')
+t('pl.k.gColH', 'Horas al año', 'Stunden pro Jahr')
+t('pl.k.gColP', 'Participación', 'Beteiligung')
+t('pl.k.gTip', '{pct} % de la plantilla · {horas} h · {valor}', '{pct} % der Belegschaft · {horas} Std. · {valor}')
+t('pl.k.gTu', 'tu caso', 'dein Fall')
+t('pl.k.gS', 'Con {p} personas en plantilla y {h} h por persona.', 'Bei {p} Beschäftigten und {h} Std. pro Person.')
 
 ATRIBUTO_RELATIVO = re.compile(r'((?:href|src)=")(?!https?:|mailto:|#|/|\.\./|data:)([^"]*")')
 
