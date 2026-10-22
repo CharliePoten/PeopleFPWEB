@@ -179,19 +179,19 @@
 .home .store-cuenta p { margin: 0; }
 
 /* Qué hacemos: titular y foto lado a lado, y debajo las tres ideas.
-   La foto va entera y rectangular, con un bloque ámbar detrás que la
-   despega del fondo. */
-.home .what__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 88px); align-items: center; }
+   La foto, entera y con esquinas rectas; en su borde derecho, como en
+   Benevity, una franja azul translúcida encima y otra ámbar al lado. */
+.home .what__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(36px, 6vw, 88px); align-items: center; }
 .home .what__cabeza h2 { max-width: 18ch; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.08; text-wrap: balance; }
 .home .what__cabeza > p { margin: 0; max-width: 46ch; color: var(--text-soft); font-size: 1.08rem; }
 .home .what__mas { display: inline-block; margin-top: 22px; }
-.home .what__foto { position: relative; z-index: 0; margin: 0 0 18px 18px; }
-.home .what__foto::before { content: ''; position: absolute; z-index: -1; left: -18px; bottom: -18px; width: 46%; height: 62%; border-radius: 24px; background: var(--amber-500); }
-.home .what__foto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 72% 50%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0, 20, 51, .16); }
+.home .what__foto { position: relative; margin: 0 4.5% 0 0; }
+.home .what__foto img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: 70% 50%; }
+.home .what__foto::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 13%; background: rgba(0, 37, 87, .78); }
+.home .what__foto::after { content: ''; position: absolute; top: 0; bottom: 0; right: -4.5%; width: 4.5%; background: var(--amber-500); }
 .home .what__claves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; list-style: none; }
 .home .what__clave { padding: 24px 0; border-top: 1px solid var(--border); }
-.home .what__icono { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 16px; border-radius: 14px; background: var(--amber-50); color: var(--navy-600); }
-.home .what__icono svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.home .what__num { display: block; margin-bottom: 12px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .what__clave h3 { margin: 0 0 8px; color: var(--navy-700); font-size: 1.2rem; }
 .home .what__clave p { margin: 0; color: var(--text-soft); }
 
@@ -231,7 +231,8 @@
 
 /* Privacidad y confianza. */
 .home .confianza .card { box-shadow: none; }
-.home .confianza .card__icon { background: var(--amber-50); }
+/* Números en lugar de iconos: los símbolos sueltos parecían de plantilla. */
+.home .card__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .confianza__ley { max-width: 70ch; margin: 26px 0 0; color: var(--text-soft); font-size: .92rem; }
 .home .confianza__ley .text-link { display: inline-block; margin-right: 14px; }
 
@@ -244,7 +245,8 @@
 .home .audience-card--volunteer::after { content: ''; position: absolute; width: 240px; height: 240px; right: -90px; bottom: -90px; border: 1px solid rgba(252,175,23,.24); border-radius: 50%; box-shadow: 0 0 0 38px rgba(252,175,23,.04), 0 0 0 76px rgba(252,175,23,.03); }
 .home .audience-card__number { color: var(--amber-600); font-size: .75rem; font-weight: 700; letter-spacing: .09em; }
 .home .audience-choice:is(:hover,:focus,:focus-within) .audience-card__number { color: var(--amber-300); }
-.home .audience-card__icon { width: 64px; height: 64px; display: grid; place-items: center; margin: 70px 0 24px; border-radius: 50%; background: var(--amber-500); color: var(--navy-700); font-size: 2rem; }
+/* Sin icono: el número de arriba ya marca la tarjeta; el aire se queda. */
+.home .audience-card > h3 { margin-top: 70px; }
 .home .audience-card h3 { color: var(--navy-600); font-size: clamp(1.8rem,3vw,2.6rem); transition: color .3s ease; }
 .home .audience-card p { color: var(--text-soft); transition: color .3s ease; }
 .home .audience-points { position: relative; z-index: 1; display: grid; gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
@@ -264,13 +266,13 @@
 .home .organization-card { padding: 24px; border: 1px solid var(--border); border-radius: 16px; background: var(--n-50); transition: background-color .2s ease, border-color .2s ease; }
 .home .organization-card:hover { background: #fff; border-color: var(--navy-200); }
 .home .organization-card__top { display: flex; align-items: center; gap: 12px; }
-.home .organization-card__top > span { width: 38px; height: 38px; display: grid; place-items: center; flex: none; border-radius: 10px; background: var(--navy-50); color: var(--navy-600); font-size: 1.2rem; }
+.home .organization-card__top > .organization-card__punto { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--amber-500); }
 .home .organization-card h4 { color: var(--navy-600); font-size: 1.06rem; }
-.home .organization-card p { margin: 10px 0 17px 50px; color: var(--text-soft); font-size: .92rem; }
-.home .organization-card > div:last-child { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-left: 50px; }
+.home .organization-card p { margin: 10px 0 17px 22px; color: var(--text-soft); font-size: .92rem; }
+.home .organization-card > div:last-child { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-left: 22px; }
 .home .organization-group:is(:hover,:focus,:focus-within) .organization-card { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); }
 .home .organization-group:is(:hover,:focus,:focus-within) .organization-card:hover { background: rgba(255,255,255,.13); }
-.home .organization-group:is(:hover,:focus,:focus-within) .organization-card__top > span { background: rgba(252,175,23,.16); color: var(--amber-300); }
+.home .organization-group:is(:hover,:focus,:focus-within) .organization-card__top > .organization-card__punto { background: var(--amber-300); }
 .home .organization-group:is(:hover,:focus,:focus-within) .btn--navy { background: var(--amber-500); color: var(--navy-800); }
 .home .btn--small { padding: 9px 14px; border-radius: 8px; font-size: .86rem; }
 .home .text-link { color: var(--navy-600); font-size: .85rem; font-weight: 600; text-decoration: none; }
@@ -332,13 +334,12 @@
 @media (max-width: 900px) {
   .home .what__rejilla, .home .horas__rejilla { grid-template-columns: 1fr; }
   .home .what__claves { grid-template-columns: 1fr; gap: 0; }
-  .home .what__foto img { aspect-ratio: 16 / 10; }
   .home .app-intro { grid-template-columns: 1fr; gap: 22px; }
   .home .app-flow { grid-template-columns: 1fr; }
   .home .app-step { padding: 24px 0; }
   .home .app-step + .app-step { padding-left: 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.16); }
   .home .audience-layout { grid-template-columns: 1fr; }
-  .home .audience-card__icon { margin-top: 38px; }
+  .home .audience-card > h3 { margin-top: 38px; }
 }
 
 @media (max-width: 640px) {

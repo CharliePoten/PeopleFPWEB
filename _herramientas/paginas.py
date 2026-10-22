@@ -368,8 +368,88 @@ def calculadora():
     ]
 
 
+FAQ = [
+    ('quien-ayuda', 'Para quien ayuda', [
+        ('¿Cuánto cuesta usar la app?',
+         'Nada. Para los voluntarios es gratuita y siempre lo será. Quien paga es la entidad que coordina.'),
+        ('¿Tengo que estar disponible siempre?',
+         'No. En tu perfil dices cuándo puedes y hasta dónde te desplazarías, y solo te avisamos de lo que encaja. Puedes cambiarlo cuando quieras desde Ajustes.'),
+        ('¿Qué pasa si me apunto y luego no puedo ir?',
+         'Te retiras desde la misión y quien coordina lo ve al momento. Es mejor saber que no vienes que contar contigo y descubrirlo sobre el terreno. No pasa nada por hacerlo.'),
+        ('¿Cómo se acreditan mis horas?',
+         'Quien coordina la operación marca en la app que has llegado. A partir de ese momento empieza a contar tu tiempo, y al cerrar la operación se calculan tus horas solas: no tienes que apuntar nada. Sin esa confirmación de llegada no hay horas, porque unas horas sin comprobar no acreditan voluntariado.'),
+        ('¿Para qué me sirven las horas acreditadas?',
+         'Son la base del carnet de voluntario: un registro comprobable de lo que has hecho, que las entidades pueden certificar y que aspira a dar acceso a ventajas culturales, de transporte y académicas.'),
+        ('¿Se publica mi dirección o mi teléfono?',
+         'No. Tu domicilio nunca aparece en el mapa: los voluntarios no se pintan uno a uno, solo se muestra cuánta gente hay disponible en una zona. Tu teléfono solo se comparte con quien coordina una misión que has aceptado.'),
+        ('¿Puedo escribir a cualquiera?',
+         'No, y es a propósito. Las conversaciones cuelgan siempre de una misión, de una petición de ayuda o de un canal de tu organización. Si quieres hablar con alguien con quien no compartes ninguna de esas cosas, se le envía una solicitud de contacto y decide si acepta.'),
+    ]),
+    ('necesita-ayuda', 'Para quien necesita ayuda', [
+        ('¿Puedo pedir ayuda aunque no sea una emergencia?',
+         'Sí. La app cubre desde una inundación hasta acompañar a un mayor o subir la compra. Al publicar eliges el grado de urgencia.'),
+        ('¿Quién ve mi petición?',
+         'Los voluntarios de tu zona. Tu teléfono no se publica: solo se comparte con la persona concreta a la que aceptes.'),
+        ('¿Y si nadie responde?',
+         'Puedes cerrarla indicando que no llegó ayuda. Nos sirve para saber dónde falta gente, que es justo lo que la plataforma existe para arreglar.'),
+    ]),
+    ('entidades', 'Para ONG, ayuntamientos y empresas', [
+        ('¿Qué tengo que hacer para empezar?',
+         'Darte de alta como entidad, desde la app o desde la <a href="cuenta/registro.html?rol=organization">web</a>. Comprobamos que la organización existe y que quien la representa eres tú antes de abrirte el panel de coordinación: publicar moviliza a gente que se va a presentar en un sitio, así que no se abre sin más.'),
+        ('¿Cuánto tarda la verificación?',
+         'Suele ser cuestión de días laborables. Mientras tanto puedes seguir usando la app como voluntario con normalidad.'),
+        ('¿Cuánto cuesta?',
+         'Una cuota mensual según el tamaño de la entidad, sin permanencia: las ONG, de 19 a 99 € al mes según sus voluntarios activos; los ayuntamientos, de 49 a 199 € según su población, y las empresas, de 19 a 99 € según su plantilla. El tramo lo confirma nuestro equipo al verificar la entidad. Los detalles, en las páginas de <a href="ongs/index.html#precios">ONG</a>, <a href="comunidades/index.html#precios">ayuntamientos</a> y <a href="empresas/index.html#precios">empresas</a>.'),
+        ('¿Cuándo se paga?',
+         'Las dos primeras misiones que publiques son gratis y no piden tarjeta; la suscripción empieza solo si decides publicar una tercera. Darte de alta, montar tu equipo y ver el panel no cuesta nada.'),
+        ('¿Qué es una operación?',
+         'El paraguas que agrupa las tareas de una misma emergencia o proyecto. Eliges un escenario preparado —inundación, incendio, evacuación, ola de calor, búsqueda, punto de reparto, apoyo vecinal— y se publican sus tareas ya dimensionadas. Cada tarea sale como una misión independiente a la que se apuntan los voluntarios.'),
+        ('¿Puedo justificar subvenciones con esto?',
+         'Para eso está el parte de horas: horas confirmadas por voluntario y por periodo, exportable. Más en <a href="plataforma/informes-y-certificados.html">Informes y certificados</a>.'),
+    ]),
+    ('cuenta', 'Cuenta y datos', [
+        ('¿Puedo borrar mi cuenta?',
+         'Sí, desde Ajustes. Se borran tu nombre, correo, teléfono, ubicación y documentos. Las horas que tengas acreditadas se conservan de forma anónima, porque forman parte de la justificación de subvenciones ya concedidas a las entidades con las que colaboraste.'),
+        ('¿Funciona sin cobertura?',
+         'En parte. La app enseña lo último que guardó y lo actualiza cuando vuelve la conexión, así que puedes consultar tus misiones aunque estés sin datos. Publicar o apuntarte sí necesita conexión.'),
+        ('¿En qué idiomas está?',
+         'Español, alemán e inglés. El idioma por defecto es siempre el español; los otros dos se cambian desde Ajustes.'),
+    ]),
+]
+
+
+def ayuda():
+    """Preguntas frecuentes: un índice de temas y, en cada tema, una lista
+    de preguntas que se despliegan al pulsarlas (<details>, sin JavaScript).
+    El contenido está solo en español; en alemán se avisa."""
+    indice = ''.join('<a href="#%s">%s<span>%d</span></a>' % (ident, titulo, len(preguntas))
+                     for ident, titulo, preguntas in FAQ)
+    grupos = ''.join(
+        '<section class="faq__grupo" id="%s"><h2>%s</h2><div class="faq__lista">%s</div></section>'
+        % (ident, titulo, ''.join(
+            '<details class="faq__item"><summary><span class="faq__num">%02d</span><span class="faq__q">%s</span>'
+            '<span class="faq__signo" aria-hidden="true"></span></summary><div class="faq__a"><p>%s</p></div></details>'
+            % (n, q, a) for n, (q, a) in enumerate(preguntas, 1)))
+        for ident, titulo, preguntas in FAQ)
+    return [
+        cabecera_azul('', ('nav.support', 'Centro de soporte', 'Hilfe-Center'),
+                      ('faq.title', 'Preguntas frecuentes', 'Häufige Fragen'),
+                      ('faq.lead', 'Lo que más nos preguntáis, ordenado por temas. Pulsa una pregunta para ver la respuesta.',
+                       'Die häufigsten Fragen, nach Themen sortiert. Tippe auf eine Frage, um die Antwort zu sehen.'),
+                      []).replace('<div class="detail-hero__actions"></div>', '<p class="pag-idioma" data-i18n="cases.soloEs"></p>', 1),
+        '  <section class="detail-section detail-section--white"><div class="container faq">'
+        '<nav class="faq__indice" aria-label="Temas">' + indice + '</nav>'
+        '<div class="faq__grupos">' + grupos + '</div></div></section>',
+        llamada(('faq.ctaT', '¿No está tu pregunta?', 'Deine Frage ist nicht dabei?'),
+                ('faq.ctaP', 'Escríbenos desde Perfil → Soporte en la app o desde el formulario de contacto. Respondemos en un par de días laborables.',
+                 'Schreib uns in der App unter Profil → Support oder über das Kontaktformular. Wir antworten innerhalb von zwei Werktagen.'),
+                boton('contacto.html?role=voluntario', 'faq.cta', 'Escribirnos', 'Uns schreiben')),
+    ]
+
+
 # Lo que cada página carga de más
 PAGINAS_DEF = [
+    ('ayuda.html', ayuda, []),
     ('plataforma/centro-de-coordinacion.html', centro, []),
     ('plataforma/app-voluntariado.html', app, []),
     ('plataforma/informes-y-certificados.html', informes, []),
