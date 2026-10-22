@@ -29,8 +29,6 @@ window.I18N = {
     'nav.desktopAria': 'Secciones',
     'nav.resources': 'Recursos',
     'nav.faq': 'Preguntas frecuentes',
-    'nav.blog': 'Blog',
-    'nav.soon': 'Próximamente',
     'nav.account': 'Mi cuenta',
     'nav.menu': 'Menú',
 
@@ -298,8 +296,6 @@ window.I18N = {
     'nav.desktopAria': 'Bereiche',
     'nav.resources': 'Ressourcen',
     'nav.faq': 'Häufige Fragen',
-    'nav.blog': 'Blog',
-    'nav.soon': 'Demnächst',
     'nav.account': 'Mein Konto',
     'nav.menu': 'Menü',
 

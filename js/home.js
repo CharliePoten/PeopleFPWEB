@@ -69,7 +69,6 @@
       var iconHandoff = ease(clamp((progress - 0.61) / 0.14, 0, 1));
       var copyOpacity = ease(clamp((progress - 0.34) / 0.32, 0, 1));
       var headerBrandOpacity = iconHandoff;
-      var headerBackground = ease(clamp((progress - 0.37) / 0.23, 0, 1));
       var brandRect = brand.getBoundingClientRect();
       var startX = window.innerWidth / 2;
       var startY = window.innerHeight / 2;
@@ -84,9 +83,8 @@
       hero.style.setProperty('--hero-icon-scale', (0.32 + iconEmergence * 0.68 - movement * 0.68).toFixed(4));
       hero.style.setProperty('--hero-icon-x', (startX + (targetX - startX) * movement).toFixed(2) + 'px');
       hero.style.setProperty('--hero-icon-y', (startY + (targetY - startY) * movement).toFixed(2) + 'px');
-      header.style.setProperty('--header-bg', headerBackground.toFixed(4));
       header.style.setProperty('--header-brand-opacity', headerBrandOpacity.toFixed(4));
-      header.classList.toggle('is-solid', progress > 0.46);
+      header.classList.toggle('marca-visible', headerBrandOpacity > 0.5);
     }
 
     function terminar() {
@@ -121,23 +119,39 @@
       window.addEventListener('resize', function () { paintHero(progreso); });
     }
   } else if (header) {
-    header.classList.add('is-solid');
-    header.style.setProperty('--header-bg', '1');
+    header.classList.add('marca-visible');
     header.style.setProperty('--header-brand-opacity', '1');
+  }
+
+  /* Azul arriba, blanco al bajar.
+     Solo donde la página empieza en azul: la portada y las páginas con
+     `detail-hero`. En el resto (la cuenta, los textos legales) la cabecera
+     es blanca desde el principio y aquí no se toca. */
+  var empiezaEnAzul = hero || document.querySelector('main > .detail-hero:first-child');
+  if (header && empiezaEnAzul) {
+    if (!hero) header.classList.add('cabecera-azul');
+    var pintarCabecera = function () {
+      header.classList.toggle('is-solid', window.scrollY > 8);
+    };
+    pintarCabecera();
+    window.addEventListener('scroll', pintarCabecera, { passive: true });
   }
 
   /* Los botones de inscripción llegan al mismo formulario, ya con el tipo
      de participante seleccionado. No se envía nada hasta pulsar Enviar. */
-  var roleSelect = document.getElementById('cf-role');
-  var queryRole = new URLSearchParams(window.location.search).get('role');
-  if (roleSelect && queryRole && roleSelect.querySelector('option[value="' + queryRole + '"]')) {
-    roleSelect.value = queryRole;
+  function elegirRol(rol) {
+    var opcion = document.querySelector('#contact-form input[name="role"][value="' + rol + '"]');
+    if (!opcion) return null;
+    opcion.checked = true;
+    opcion.dispatchEvent(new Event('change', { bubbles: true }));
+    return opcion;
   }
+  var queryRole = new URLSearchParams(window.location.search).get('role');
+  if (queryRole) elegirRol(queryRole);
   document.querySelectorAll('[data-role-target]').forEach(function (link) {
     link.addEventListener('click', function () {
-      if (!roleSelect) return;
-      roleSelect.value = link.getAttribute('data-role-target') || 'otro';
-      window.setTimeout(function () { roleSelect.focus({ preventScroll: true }); }, 700);
+      var opcion = elegirRol(link.getAttribute('data-role-target') || 'otro');
+      if (opcion) window.setTimeout(function () { opcion.focus({ preventScroll: true }); }, 700);
     });
   });
 })();

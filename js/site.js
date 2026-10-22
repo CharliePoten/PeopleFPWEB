@@ -265,6 +265,37 @@
     });
   }
 
+  /* Las opciones de «¿Cómo podemos ayudarte?». Hasta elegir una no se
+     enseña ningún campo; al elegirla salen los suyos y los de las otras se
+     desactivan, para que su `required` no bloquee el envío. */
+  var campos = document.getElementById('cf-campos');
+  var B2B_CONTACTO = { empresa: true, ayuntamiento: true, ong: true };
+
+  function mostrarCampos(rol) {
+    if (!form || !campos) return;
+    campos.hidden = !rol;
+    campos.querySelectorAll('[data-para]').forEach(function (el) {
+      var mio = (el.getAttribute('data-para') || '').split(' ').indexOf(rol) !== -1;
+      el.hidden = !mio;
+      el.querySelectorAll('input, select, textarea').forEach(function (c) { c.disabled = !mio; });
+    });
+    var msg = form.querySelector('#cf-msg');
+    if (msg) msg.required = !B2B_CONTACTO[rol];
+  }
+
+  if (form) {
+    form.querySelectorAll('input[name="role"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        mostrarCampos(r.value);
+        // El aviso de la opción anterior ya no aplica a esta.
+        var st = document.getElementById('form-status');
+        if (st && st.getAttribute('data-state') === 'error') { st.textContent = ''; st.setAttribute('data-state', ''); }
+      });
+    });
+    var marcada = form.querySelector('input[name="role"]:checked');
+    mostrarCampos(marcada ? marcada.value : '');
+  }
+
   if (form) {
   /**
    * Manda el mensaje al servidor.
@@ -314,6 +345,8 @@
       var email = form.email.value.trim();
       var role = form.role.value;
       var message = form.message.value.trim();
+      var valor = function (n) { var c = form.elements[n]; return c && !c.disabled ? c.value.trim() : ''; };
+      var organizacion = valor('empresa') || valor('institucion') || valor('entidad');
       var consent = form.consent.checked;
       var trampa = form.web ? form.web.value : '';
 
@@ -322,9 +355,25 @@
         status.setAttribute('data-state', 'error');
       }
 
-      if (!name || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return fail('contact.errFields');
+      if (!role) return fail('contact.errOpcion');
+      var b2b = !!B2B_CONTACTO[role];
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+          (b2b && !organizacion) || (!b2b && message.length < 10)) {
+        return fail(b2b ? 'contact.errFieldsOrg' : 'contact.errFields');
       }
+
+      /* Lo que se pide de más (empresa, plantilla, institución…) va al
+         principio del mensaje: así llega igual a nuestro buzón sin tocar el
+         servidor. Y si quien representa a una entidad no escribe nada, el
+         mensaje dice lo que quiere, que es ver la plataforma. */
+      var extra = [];
+      if (valor('empresa')) extra.push((d['contact.empresa'] || 'Empresa') + ': ' + valor('empresa'));
+      if (valor('empresa')) extra.push((d['contact.plantilla'] || 'Plantilla') + ': ' + valor('plantilla'));
+      if (valor('institucion')) extra.push((d['contact.institucion'] || 'Institución') + ': ' + valor('institucion'));
+      if (valor('cargo')) extra.push((d['contact.cargo'] || 'Cargo') + ': ' + valor('cargo'));
+      if (valor('entidad')) extra.push((d['contact.entidad'] || 'Entidad') + ': ' + valor('entidad'));
+      if (b2b && !message) message = d['contact.msgDefecto'] || '';
+      if (extra.length) message = extra.join('\n') + '\n\n' + message;
       if (!consent) return fail('contact.errConsent');
 
       var subject = '[' + role + '] ' + name + ' — People for People';
@@ -367,6 +416,7 @@
           // cookies. Va el tipo de perfil, nunca lo que se ha escrito.
           document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: role } }));
           form.reset();
+          mostrarCampos('');
         })
         .catch(function (err) {
           if (boton) boton.disabled = false;

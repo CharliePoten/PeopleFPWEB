@@ -1,7 +1,8 @@
 /* Páginas interiores: misma navegación, tipografía y ritmo que la portada. */
 .detail-page { background: var(--n-50); }
 .detail-page main { padding-top: var(--header-h); }
-.detail-page .header { --header-bg: 1; --header-brand-opacity: 1; }
+.detail-page .header { --header-brand-opacity: 1; }
+.detail-page .header .brand { pointer-events: auto; }
 .detail-page .detail-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 132px) 0 78px; background: var(--navy-700); color: #fff; }
 .detail-page .detail-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 82% 18%, rgba(252,175,23,.16), transparent 30%), linear-gradient(145deg, transparent 20%, rgba(11,65,124,.55)); pointer-events: none; }
 .detail-page .detail-hero .container { position: relative; }

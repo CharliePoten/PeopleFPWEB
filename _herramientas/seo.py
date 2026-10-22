@@ -297,6 +297,18 @@ def sitemap():
                                capture_output=True, text=True).stdout.strip()
         lineas.append('  <url><loc>%s%s</loc>%s</url>' % (
             DOMINIO, ruta, '<lastmod>%s</lastmod>' % fecha if fecha else ''))
+    # Los casos de impacto los escribe `casos.py`; aquí solo se listan.
+    carpeta = os.path.join(RAIZ, 'casos')
+    nombres = sorted(os.listdir(carpeta)) if os.path.isdir(carpeta) else []
+    for nombre in sorted(nombres, key=lambda n: n != 'index.html'):
+        if not nombre.endswith('.html'):
+            continue
+        archivo = 'casos/' + nombre
+        publica = '/casos/' if nombre == 'index.html' else '/' + archivo
+        fecha = subprocess.run(['git', '-C', RAIZ, 'log', '-1', '--format=%cs', '--', archivo],
+                               capture_output=True, text=True).stdout.strip()
+        lineas.append('  <url><loc>%s%s</loc>%s</url>' % (
+            DOMINIO, publica, '<lastmod>%s</lastmod>' % fecha if fecha else ''))
     lineas.append('</urlset>')
     return '\n'.join(lineas) + '\n'
 
