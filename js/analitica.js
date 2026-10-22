@@ -23,6 +23,8 @@
      lead_b2b_submit              formulario de contacto enviado por una
                                   ONG, un ayuntamiento o una empresa
      contact_submit               el mismo formulario, por cualquier otra
+     waitlist_signup              alta en la lista de espera (solo el tipo
+                                  de entidad, nunca el correo)
      resource_download            enlace a un documento (.pdf, .docx…)
    Nunca llevan datos de la persona: solo qué botón y desde qué sección.
    ========================================================================== */
@@ -237,6 +239,10 @@
   document.addEventListener('pfp:contacto-enviado', function (e) {
     var rol = (e.detail && e.detail.rol) || 'otro';
     evento(B2B[rol] ? 'lead_b2b_submit' : 'contact_submit', { tipo: rol });
+  });
+
+  document.addEventListener('pfp:lista-espera', function (e) {
+    evento('waitlist_signup', { tipo: (e.detail && e.detail.perfil) || 'otro' });
   });
 
   /* ---------------------------------------------------------------------

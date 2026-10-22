@@ -288,43 +288,34 @@
 .home #contacto .field label { color: #fff; }
 .home #contacto .consent label { color: rgba(255,255,255,.76); }
 .home #contacto .consent a { color: var(--amber-300); }
-/* «¿Cómo podemos ayudarte?»: cinco opciones como tarjetas y, al elegir,
-   solo los campos de esa opción. */
-.home .contacto { max-width: 36rem; }
-.home .contacto__opciones { display: grid; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
-.home .contacto__opciones legend { margin-bottom: 14px; padding: 0; color: #fff; font-size: 1.25rem; font-weight: 600; }
-.home .contacto__opcion { position: relative; display: block; cursor: pointer; }
-.home .contacto__opcion input { position: absolute; opacity: 0; pointer-events: none; }
-.home .contacto__opcion > span { display: grid; gap: 2px; padding: 14px 18px 14px 50px; border: 1px solid rgba(255,255,255,.22); border-radius: 14px; background: rgba(255,255,255,.05); transition: border-color .2s ease, background-color .2s ease; }
-.home .contacto__opcion > span::before { content: ''; position: absolute; left: 18px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border: 2px solid rgba(255,255,255,.5); border-radius: 50%; box-sizing: border-box; transition: border-color .2s ease, box-shadow .2s ease; }
-.home .contacto__opcion strong { color: #fff; font-size: 1rem; }
-.home .contacto__opcion small { color: rgba(255,255,255,.72); font-size: .88rem; }
-.home .contacto__opcion:hover > span { border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.08); }
-.home .contacto__opcion input:checked + span { border-color: var(--amber-500); background: rgba(252,175,23,.1); }
-.home .contacto__opcion input:checked + span::before { border-color: var(--amber-500); box-shadow: inset 0 0 0 4px var(--navy-700), inset 0 0 0 10px var(--amber-500); }
-.home .contacto__opcion input:focus-visible + span { outline: 3px solid var(--amber-300); outline-offset: 2px; }
-.home .contacto__campos { display: grid; gap: var(--s-base); margin-top: 26px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.16); }
-.home .contacto__campos[hidden], .home .contacto [data-para][hidden] { display: none; }
-.home .contacto__faq { margin: 0; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.86); font-size: .92rem; }
-.home .contacto__faq a { color: var(--amber-300); font-weight: 600; }
-.home .contacto__opcional { color: rgba(255,255,255,.6); font-weight: 400; }
-/* La página de contacto: el formulario dentro de la cabecera azul. */
-.home .detail-hero.contacto-pagina h1 { max-width: 14ch; color: #fff; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; }
-/* En la portada, solo el menú de opciones: cada una lleva al formulario. */
-.home .contacto-menu h3 { margin: 0 0 14px; color: #fff; font-size: 1.25rem; }
-.home .contacto-menu ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.home .contacto-menu__opcion { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border: 1px solid rgba(255,255,255,.22); border-radius: 14px; background: rgba(255,255,255,.05); color: #fff; text-decoration: none; transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
-.home .contacto-menu__opcion span { display: grid; gap: 2px; }
-.home .contacto-menu__opcion strong { font-size: 1rem; }
-.home .contacto-menu__opcion small { color: rgba(255,255,255,.72); font-size: .88rem; }
-.home .contacto-menu__opcion svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--amber-300); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s ease; }
-.home .contacto-menu__opcion:hover { border-color: var(--amber-500); background: rgba(252,175,23,.08); color: #fff; }
-.home .contacto-menu__opcion:hover svg { transform: translateX(4px); }
-/* El formulario es alto: el texto de la izquierda, arriba y no flotando. */
-.home #contacto .split { align-items: start; }
-/* Sobre el azul, el rojo y el verde de siempre apenas se leían. */
-.home #contacto .form-status[data-state="error"] { color: #FFB4A8; }
-.home #contacto .form-status[data-state="ok"] { color: #9BE7B4; }
+/* Página de contacto: dos bloques lado a lado. El de la lista de espera,
+   en azul y con el botón ámbar, es el que llama la atención; el del
+   mensaje, en blanco y con el botón de borde. */
+.home .contacto-bloques { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); align-items: start; }
+.home .contacto-bloque { display: grid; gap: 14px; padding: clamp(24px, 3.5vw, 40px); border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); }
+.home .contacto-bloque h2 { margin: 0; font-size: clamp(1.5rem, 2.6vw, 2rem); }
+.home .contacto-bloque .eyebrow { margin: 0; }
+.home .contacto-bloque__entrada { margin: 0 0 6px; color: var(--text-soft); }
+.home .contacto-bloque .form { max-width: none; }
+.home .contacto-bloque .btn { justify-self: start; }
+.home .contacto-bloque__legal { margin: 0; color: var(--text-mute); font-size: .84rem; }
+.home .contacto-bloque__correo { margin: 6px 0 0; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-soft); font-size: .95rem; }
+.home .contacto-bloque--espera { background: var(--navy-700); border-color: var(--navy-700); color: #fff; }
+.home .contacto-bloque--espera h2, .home .contacto-bloque--espera .field label { color: #fff; }
+.home .contacto-bloque--espera .eyebrow { color: var(--amber-300); }
+.home .contacto-bloque--espera .contacto-bloque__entrada, .home .contacto-bloque--espera .contacto-bloque__legal { color: rgba(255, 255, 255, .78); }
+.home .contacto-bloque--espera a { color: var(--amber-300); }
+.home .contacto-bloque--espera .form-status[data-state="error"] { color: #FFB4A8; }
+.home .contacto-bloque--espera .form-status[data-state="ok"] { color: #9BE7B4; }
+
+/* Cierre de la portada: una llamada y dos botones. */
+.home .cta-final { position: relative; overflow: hidden; }
+.home .cta-final::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 85% 20%, rgba(252, 175, 23, .14), transparent 40%); }
+.home .cta-final__dentro { position: relative; display: grid; justify-items: center; gap: 18px; max-width: 760px; text-align: center; }
+.home .cta-final h2 { margin: 0; color: #fff; font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.08; text-wrap: balance; }
+.home .cta-final p { margin: 0; max-width: 52ch; color: rgba(255, 255, 255, .82); font-size: 1.1rem; }
+.home .cta-final__botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
+
 /* La seccion es azul marino: el enlace se queda con el color de enlace
    normal, que sobre este fondo da 1,47:1 y no se lee. Aqui los enlaces
    van en ambar, como los dos de arriba. */
@@ -333,6 +324,7 @@
 
 @media (max-width: 900px) {
   .home .what__rejilla, .home .horas__rejilla { grid-template-columns: 1fr; }
+  .home .contacto-bloques { grid-template-columns: 1fr; }
   .home .what__claves { grid-template-columns: 1fr; gap: 0; }
   .home .app-intro { grid-template-columns: 1fr; gap: 22px; }
   .home .app-flow { grid-template-columns: 1fr; }
@@ -364,6 +356,8 @@
   .home .store-badge { width: 100%; }
   .home .store-cuenta { align-items: stretch; }
   .home .panel-demo__acciones { flex-direction: column; align-items: stretch; width: min(100%, 340px); margin-inline: auto; }
+  .home .cta-final__botones { flex-direction: column; align-items: stretch; width: min(100%, 340px); }
+  .home .contacto-bloque .btn { justify-self: stretch; }
   .home .organization-group__head { grid-template-columns: 1fr; }
   .home .organization-card p, .home .organization-card > div:last-child { margin-left: 0; }
   .home .organization-card > div:last-child { align-items: stretch; flex-direction: column; }

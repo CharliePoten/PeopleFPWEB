@@ -217,7 +217,7 @@
      copiar el mensaje y la dirección a la que mandarlo.
      --------------------------------------------------------------------- */
 
-  var BUZON = 'peopleforpeopleofficial@gmail.com';
+  var BUZON = 'contacto@peopleforpeople.es';
 
   /** Al portapapeles, con red por si no hay API o no es un sitio seguro. */
   function alPortapapeles(texto) {
@@ -265,56 +265,20 @@
     });
   }
 
-  /* Las opciones de «¿Cómo podemos ayudarte?». Hasta elegir una no se
-     enseña ningún campo; al elegirla salen los suyos y los de las otras se
-     desactivan, para que su `required` no bloquee el envío. */
-  var campos = document.getElementById('cf-campos');
-  var B2B_CONTACTO = { empresa: true, ayuntamiento: true, ong: true };
-
-  function mostrarCampos(rol) {
-    if (!form || !campos) return;
-    campos.hidden = !rol;
-    campos.querySelectorAll('[data-para]').forEach(function (el) {
-      var mio = (el.getAttribute('data-para') || '').split(' ').indexOf(rol) !== -1;
-      el.hidden = !mio;
-      el.querySelectorAll('input, select, textarea').forEach(function (c) { c.disabled = !mio; });
-    });
-    var msg = form.querySelector('#cf-msg');
-    if (msg) msg.required = !B2B_CONTACTO[rol];
-  }
-
-  if (form) {
-    form.querySelectorAll('input[name="role"]').forEach(function (r) {
-      r.addEventListener('change', function () {
-        mostrarCampos(r.value);
-        // El aviso de la opción anterior ya no aplica a esta.
-        var st = document.getElementById('form-status');
-        if (st && st.getAttribute('data-state') === 'error') { st.textContent = ''; st.setAttribute('data-state', ''); }
-      });
-    });
-    var marcada = form.querySelector('input[name="role"]:checked');
-    mostrarCampos(marcada ? marcada.value : '');
-  }
-
-  if (form) {
   /**
-   * Manda el mensaje al servidor.
+   * Llama a una Edge Function de Supabase (`contacto` o `lista-espera`).
    *
-   * Va a la Edge Function `contacto`, que lo guarda, nos lo reenvia y le
-   * manda un acuse a quien escribe. Antes esto abria el programa de correo
-   * del visitante, y cuando no habia ninguno configurado —que es lo normal—
-   * el mensaje no salia de su pantalla mientras la web le decia que si.
-   *
-   * Si la llamada falla queda el plan B de siempre: copiar el texto y la
-   * direccion. Ahora es lo que debe ser, un recambio, y no el camino.
+   * Las dos guardan lo recibido y nos avisan por correo. Si la llamada falla
+   * se devuelve el tipo de fallo, para decirle a la persona algo útil: no es
+   * lo mismo «ya te has apuntado varias veces hoy» que «no hay conexión».
    */
-  function enviarContacto(datos) {
+  function llamarFuncion(nombre, datos) {
     var cfg = window.PFP_CONFIG || {};
     if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) {
       return Promise.reject({ tipo: 'red' });
     }
 
-    return fetch(cfg.supabaseUrl + '/functions/v1/contacto', {
+    return fetch(cfg.supabaseUrl + '/functions/v1/' + nombre, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -333,6 +297,16 @@
     );
   }
 
+  var CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  /* ---------------------------------------------------------------------
+     «Habla con nuestro equipo»: nombre, correo y mensaje
+     ---------------------------------------------------------------------
+     Va a la función `contacto`, que lo guarda, nos lo reenvía y le manda un
+     acuse a quien escribe. Si la llamada falla queda el plan B: copiar el
+     texto y la dirección. */
+
+  if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -343,10 +317,7 @@
 
       var name = form.name.value.trim();
       var email = form.email.value.trim();
-      var role = form.role.value;
       var message = form.message.value.trim();
-      var valor = function (n) { var c = form.elements[n]; return c && !c.disabled ? c.value.trim() : ''; };
-      var organizacion = valor('empresa') || valor('institucion') || valor('entidad');
       var consent = form.consent.checked;
       var trampa = form.web ? form.web.value : '';
 
@@ -355,28 +326,10 @@
         status.setAttribute('data-state', 'error');
       }
 
-      if (!role) return fail('contact.errOpcion');
-      var b2b = !!B2B_CONTACTO[role];
-      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-          (b2b && !organizacion) || (!b2b && message.length < 10)) {
-        return fail(b2b ? 'contact.errFieldsOrg' : 'contact.errFields');
-      }
-
-      /* Lo que se pide de más (empresa, plantilla, institución…) va al
-         principio del mensaje: así llega igual a nuestro buzón sin tocar el
-         servidor. Y si quien representa a una entidad no escribe nada, el
-         mensaje dice lo que quiere, que es ver la plataforma. */
-      var extra = [];
-      if (valor('empresa')) extra.push((d['contact.empresa'] || 'Empresa') + ': ' + valor('empresa'));
-      if (valor('empresa')) extra.push((d['contact.plantilla'] || 'Plantilla') + ': ' + valor('plantilla'));
-      if (valor('institucion')) extra.push((d['contact.institucion'] || 'Institución') + ': ' + valor('institucion'));
-      if (valor('cargo')) extra.push((d['contact.cargo'] || 'Cargo') + ': ' + valor('cargo'));
-      if (valor('entidad')) extra.push((d['contact.entidad'] || 'Entidad') + ': ' + valor('entidad'));
-      if (b2b && !message) message = d['contact.msgDefecto'] || '';
-      if (extra.length) message = extra.join('\n') + '\n\n' + message;
+      if (!name || !CORREO.test(email) || message.length < 10) return fail('contact.errFields');
       if (!consent) return fail('contact.errConsent');
 
-      var subject = '[' + role + '] ' + name + ' — People for People';
+      var subject = name + ' — People for People';
       var body = message + '\n\n—\n' + name + '\n' + email;
 
       /* El plan B se prepara ya, pero no se enseña salvo que falle el
@@ -384,7 +337,7 @@
       copia = subject + '\n\n' + body;
       if (abrir) {
         abrir.setAttribute(
-          "href",
+          'href',
           'mailto:' + BUZON + '?subject=' + encodeURIComponent(subject) +
             '&body=' + encodeURIComponent(body),
         );
@@ -397,10 +350,10 @@
       status.textContent = d['contact.sending'] || '';
       status.setAttribute('data-state', '');
 
-      enviarContacto({
+      llamarFuncion('contacto', {
         nombre: name,
         email: email,
-        rol: role,
+        rol: 'otro',
         mensaje: message,
         lang: lang,
         web: trampa,
@@ -408,27 +361,83 @@
         .then(function (r) {
           if (boton) boton.disabled = false;
           /* Solo se menciona el acuse si el servidor dice que lo ha
-             mandado. Volver a prometer correos que no salen sería repetir
-             exactamente el fallo que esto viene a arreglar. */
+             mandado: prometer correos que no salen es justo lo que no. */
           status.textContent = (r && r.acuse) ? (d['contact.okAcuse'] || '') : (d['contact.ok'] || '');
           status.setAttribute('data-state', 'ok');
           // Para `analitica.js`, que solo lo cuenta si se aceptaron las
-          // cookies. Va el tipo de perfil, nunca lo que se ha escrito.
-          document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: role } }));
+          // cookies. Nunca va lo que se ha escrito.
+          document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: 'otro' } }));
           form.reset();
-          mostrarCampos('');
         })
         .catch(function (err) {
           if (boton) boton.disabled = false;
           var tipo = (err && err.tipo) || 'servidor';
-
           if (tipo === 'limite') return fail('contact.errLimite');
           if (tipo === 'datos') return fail('contact.errFields');
-
-          /* No se ha podido enviar. Aquí sí toca el plan B: la persona no
-             puede quedarse sin forma de hacernos llegar lo que escribió. */
+          /* No se ha podido enviar: la persona no puede quedarse sin forma
+             de hacernos llegar lo que escribió. */
           fail('contact.errEnvio');
           if (planB) planB.hidden = false;
+        });
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     «Únete a la lista de espera»: correo y tipo de entidad
+     ---------------------------------------------------------------------
+     Dos campos y nada más, a propósito: es la puerta de menos esfuerzo. Va
+     a la función `lista-espera`, que lo guarda, nos avisa y le confirma el
+     alta a quien se apunta. */
+
+  var espera = document.getElementById('waitlist-form');
+
+  if (espera) {
+    // Quien llega desde «Únete a la lista de espera» empieza a escribir ya.
+    if (window.location.hash === '#lista-espera') {
+      window.setTimeout(function () { espera.email.focus({ preventScroll: true }); }, 400);
+    }
+
+    espera.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var lang = document.documentElement.lang || DEFAULT_LANG;
+      var d = dict(lang);
+      var status = document.getElementById('wl-status');
+      var boton = espera.querySelector('button[type=submit]');
+      var email = espera.email.value.trim();
+      var perfil = espera.perfil.value;
+
+      function fail(key) {
+        status.textContent = d[key] || '';
+        status.setAttribute('data-state', 'error');
+      }
+
+      if (!CORREO.test(email)) return fail('wl.errEmail');
+      if (!perfil) return fail('wl.errPerfil');
+
+      if (boton) boton.disabled = true;
+      status.textContent = d['wl.sending'] || '';
+      status.setAttribute('data-state', '');
+
+      llamarFuncion('lista-espera', {
+        email: email,
+        perfil: perfil,
+        lang: lang,
+        web: espera.web ? espera.web.value : '',
+      })
+        .then(function (r) {
+          if (boton) boton.disabled = false;
+          status.textContent = (r && r.nueva === false) ? (d['wl.ya'] || '') : (d['wl.ok'] || '');
+          status.setAttribute('data-state', 'ok');
+          document.dispatchEvent(new CustomEvent('pfp:lista-espera', { detail: { perfil: perfil } }));
+          espera.reset();
+        })
+        .catch(function (err) {
+          if (boton) boton.disabled = false;
+          var tipo = (err && err.tipo) || 'servidor';
+          if (tipo === 'limite') return fail('wl.errLimite');
+          if (tipo === 'datos') return fail('wl.errEmail');
+          fail('wl.errEnvio');
         });
     });
   }

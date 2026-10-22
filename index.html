@@ -19,7 +19,7 @@
 <meta property="og:locale" content="es_ES" />
 <meta property="og:locale:alternate" content="de_DE" />
 <meta name="twitter:card" content="summary_large_image" />
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://peopleforpeople.es/#organizacion","name":"PeopleForPeople","alternateName":"People for People","url":"https://peopleforpeople.es/","logo":"https://peopleforpeople.es/imagenes/marca/isotipo.png","email":"peopleforpeopleofficial@gmail.com","address":{"@type":"PostalAddress","streetAddress":"Av. Monasterio del Escorial 26","postalCode":"28049","addressLocality":"Madrid","addressCountry":"ES"},"areaServed":"ES","knowsLanguage":["es","de"],"description":"Plataforma que conecta a personas voluntarias con ONG, ayuntamientos y empresas para coordinar misiones sociales y respuestas a emergencias."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://peopleforpeople.es/#organizacion","name":"PeopleForPeople","alternateName":"People for People","url":"https://peopleforpeople.es/","logo":"https://peopleforpeople.es/imagenes/marca/isotipo.png","email":"contacto@peopleforpeople.es","address":{"@type":"PostalAddress","streetAddress":"Av. Monasterio del Escorial 26","postalCode":"28049","addressLocality":"Madrid","addressCountry":"ES"},"areaServed":"ES","knowsLanguage":["es","de"],"description":"Plataforma que conecta a personas voluntarias con ONG, ayuntamientos y empresas para coordinar misiones sociales y respuestas a emergencias."}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://peopleforpeople.es/#web","url":"https://peopleforpeople.es/","name":"PeopleForPeople","inLanguage":["es","de"],"publisher":{"@id":"https://peopleforpeople.es/#organizacion"}}</script>
 <!-- seo:fin -->
 <meta name="theme-color" content="#002557" />
@@ -216,14 +216,14 @@
     </div>
   </section>
 
-  <!-- Contacto en la portada: solo el menú de «¿Cómo podemos ayudarte?».
-       Cada opción lleva a contacto.html con esa opción ya elegida, donde
-       está el formulario. -->
-  <section class="section section--navy" id="contacto">
-    <div class="container"><div class="split">
-      <div class="reveal"><span class="eyebrow" data-i18n="contact.eyebrow">Contacto</span><h2 data-i18n="contact.title">Hagamos que la ayuda llegue más lejos.</h2><p data-i18n="contact.lead">Cuéntanos si quieres participar como voluntario o incorporar PeopleForPeople a tu organización.</p><p><a href="mailto:peopleforpeopleofficial@gmail.com" class="contact-email">peopleforpeopleofficial@gmail.com</a></p><p class="field__hint contact-note" data-i18n="contact.note">Respondemos en un par de días laborables.</p></div>
-      <nav class="contacto-menu reveal" aria-labelledby="contacto-menu-titulo"><h3 id="contacto-menu-titulo" data-i18n="contact.q">¿Cómo podemos ayudarte?</h3><ul><li><a class="contacto-menu__opcion" href="contacto.html?role=empresa"><span><strong data-i18n="contact.oE">Empresas (RSC)</strong><small data-i18n="contact.oEb">Quiero gestionar el impacto social de mi empresa.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=ayuntamiento"><span><strong data-i18n="contact.oM">Ayuntamientos</strong><small data-i18n="contact.oMb">Represento a una institución pública.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=ong"><span><strong data-i18n="contact.oO">ONG y asociaciones</strong><small data-i18n="contact.oOb">Quiero coordinar a nuestro voluntariado.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=voluntario"><span><strong data-i18n="contact.oV">Ayuda con la app</strong><small data-i18n="contact.oVb">Soy voluntario o ya uso la plataforma.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li><li><a class="contacto-menu__opcion" href="contacto.html?role=otro"><span><strong data-i18n="contact.oX">Otra consulta</strong><small data-i18n="contact.oXb">Prensa, colaboraciones o cualquier otra cosa.</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li></ul></nav>
-    </div></div>
+  <!-- Cierre de la portada: ningún formulario aquí. Dos salidas: la lista
+       de espera (contacto.html#lista-espera) y la página de contacto. -->
+  <section class="section section--navy cta-final" id="contacto">
+    <div class="container cta-final__dentro reveal">
+      <h2 data-i18n="cta.title">¿Listo para coordinar el impacto de tu comunidad?</h2>
+      <p data-i18n="cta.lead">Regístrate en nuestra lista de espera para acceder a la beta cerrada de la plataforma.</p>
+      <div class="cta-final__botones"><a class="btn btn--primary" href="contacto.html#lista-espera" data-i18n="cta.espera">Únete a la lista de espera</a><a class="btn btn--ghost" href="contacto.html" data-i18n="cta.contacto">Contacto</a></div>
+    </div>
   </section>
 </main>
 
@@ -232,7 +232,7 @@
     <div class="footer__brand"><img src="imagenes/marca/logotipo-transparente.svg" alt="PeopleForPeople" /><p data-i18n="footer.tagline">Tu ayuda. Su esperanza. Nosotros unimos.</p></div>
     <div><h4 data-i18n="footer.platform">Plataforma</h4><ul><li><a href="#que-hacemos" data-i18n="nav.what">Qué hacemos</a></li><li><a href="#app" data-i18n="nav.app">La app</a></li><li><a href="#para-quien" data-i18n="nav.who">Para quién</a></li><li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li></ul></div>
     <div><h4 data-i18n="footer.resources">Recursos</h4><ul><li><a href="voluntarios/index.html" data-i18n="who.v_t">Voluntarios</a></li><li><a href="ongs/index.html" data-i18n="who.o_t">ONG y asociaciones</a></li><li><a href="comunidades/index.html" data-i18n="who.m_t">Ayuntamientos</a></li><li><a href="empresas/index.html" data-i18n="who.e_t">Empresas con iniciativa RSC</a></li><li><a href="casos/index.html" data-i18n="nav.cases">Casos de impacto</a></li><li><a href="documentos.html" data-i18n="footer.docs">Documentos</a></li></ul></div>
-    <div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:peopleforpeopleofficial@gmail.com">peopleforpeopleofficial@gmail.com</a></li></ul></div>
+    <div><h4 data-i18n="footer.legal">Legal</h4><ul><li><a href="aviso-legal.html" data-i18n="footer.imprint">Aviso legal · Impressum</a></li><li><a href="privacidad.html" data-i18n="footer.privacy">Política de privacidad</a></li><li><a href="terminos.html" data-i18n="footer.terms">Términos y condiciones</a></li><li><a href="mailto:contacto@peopleforpeople.es">contacto@peopleforpeople.es</a></li></ul></div>
   </div>
   <div class="footer__bottom"><span data-i18n="footer.rights">© 2026 PeopleForPeople. Todos los derechos reservados.</span><span data-i18n="footer.madein">Creado para que ayudar sea más fácil.</span></div>
 </div></footer>

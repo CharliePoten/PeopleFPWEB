@@ -216,7 +216,7 @@ CTA = (
     '<p data-i18n="cases.ctaLead">Si quieres ayudar, crea tu cuenta y di qué sabes hacer. Si coordinas una entidad, '
     'te enseñamos cómo preparar la respuesta antes de que haga falta.</p></div>'
     '<div class="caso-cta__botones"><a class="btn btn--primary" href="../cuenta/registro.html?rol=volunteer" data-i18n="cases.ctaHelp">Quiero ayudar</a>'
-    '<a class="btn btn--ghost" href="../contacto.html?role=ong" data-i18n="cases.ctaOrg">Represento a una organización</a></div></aside>'
+    '<a class="btn btn--ghost" href="../contacto.html#lista-espera" data-i18n="cases.ctaOrg">Represento a una organización</a></div></aside>'
 )
 
 

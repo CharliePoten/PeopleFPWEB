@@ -149,7 +149,7 @@ ORGANIZACION = {
     'alternateName': 'People for People',
     'url': DOMINIO + '/',
     'logo': LOGO,
-    'email': 'peopleforpeopleofficial@gmail.com',
+    'email': 'contacto@peopleforpeople.es',
     'address': {
         '@type': 'PostalAddress',
         'streetAddress': 'Av. Monasterio del Escorial 26',

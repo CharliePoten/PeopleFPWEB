@@ -136,24 +136,6 @@
     pintarCabecera();
     window.addEventListener('scroll', pintarCabecera, { passive: true });
   }
-
-  /* Los botones de inscripción llegan al mismo formulario, ya con el tipo
-     de participante seleccionado. No se envía nada hasta pulsar Enviar. */
-  function elegirRol(rol) {
-    var opcion = document.querySelector('#contact-form input[name="role"][value="' + rol + '"]');
-    if (!opcion) return null;
-    opcion.checked = true;
-    opcion.dispatchEvent(new Event('change', { bubbles: true }));
-    return opcion;
-  }
-  var queryRole = new URLSearchParams(window.location.search).get('role');
-  if (queryRole) elegirRol(queryRole);
-  document.querySelectorAll('[data-role-target]').forEach(function (link) {
-    link.addEventListener('click', function () {
-      var opcion = elegirRol(link.getAttribute('data-role-target') || 'otro');
-      if (opcion) window.setTimeout(function () { opcion.focus({ preventScroll: true }); }, 700);
-    });
-  });
 })();
 
 /* ==========================================================================

@@ -121,7 +121,7 @@ def centro():
                       ('pl.c.hero', 'Centro de coordinación', 'Koordinationszentrale'),
                       ('pl.c.lead', 'Todo lo que necesita quien coordina, en un mismo sitio y sin grupos de mensajería: lanzar una operación, saber quién va, quién ha llegado y cuántas horas se han hecho.',
                        'Alles, was Koordinierende brauchen, an einem Ort und ohne Messenger-Gruppen: einen Einsatz starten, wissen, wer kommt, wer angekommen ist und wie viele Stunden geleistet wurden.'),
-                      [alta, boton(pre + 'contacto.html?role=ong', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)]),
+                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)]),
         con_imagen(('pl.c.panelEy', 'El panel web', 'Das Web-Dashboard'),
                    ('pl.c.panelT', 'Abre por lo que hay que resolver hoy.', 'Es beginnt mit dem, was heute erledigt werden muss.'),
                    ('pl.c.panelP', 'Se usa en el navegador, sin instalar nada. Al entrar no ves gráficas: ves las altas que esperan respuesta, las horas por validar y las misiones a medio cubrir. Si hay una emergencia activa, aparece arriba del todo.',
@@ -347,7 +347,7 @@ def calculadora():
         + '<p class="calc__plan"><span data-i18n="pl.k.plan">Plan de PeopleForPeople para una empresa de ese tamaño:</span> <strong id="calc-r-plan">—</strong></p>'
         + txt('p', 'pl.k.aviso', 'Es una estimación, no una promesa: depende de cuánta gente participe de verdad. Con PeopleForPeople esas horas quedan fichadas, validadas y listas para tu memoria de RSC o ESG.',
               'Das ist eine Schätzung, kein Versprechen: Sie hängt davon ab, wie viele wirklich mitmachen. Mit PeopleForPeople werden diese Stunden erfasst, bestätigt und sind bereit für deinen CSR- oder ESG-Bericht.', clase='calc__aviso')
-        + boton('contacto.html?role=empresa', 'pl.k.cta', 'Hablar con nosotros', 'Mit uns sprechen')
+        + boton('contacto.html#mensaje', 'pl.k.cta', 'Hablar con nosotros', 'Mit uns sprechen')
         + '</div></div></section>',
         '  <section class="detail-section"><div class="container calc-metodo">'
         + encabezado(('pl.k.mEy', 'Cómo se calcula', 'Wie gerechnet wird'), ('pl.k.mT', 'Sin cajas negras.', 'Ohne Blackbox.'))
@@ -443,7 +443,7 @@ def ayuda():
         llamada(('faq.ctaT', '¿No está tu pregunta?', 'Deine Frage ist nicht dabei?'),
                 ('faq.ctaP', 'Escríbenos desde Perfil → Soporte en la app o desde el formulario de contacto. Respondemos en un par de días laborables.',
                  'Schreib uns in der App unter Profil → Support oder über das Kontaktformular. Wir antworten innerhalb von zwei Werktagen.'),
-                boton('contacto.html?role=voluntario', 'faq.cta', 'Escribirnos', 'Uns schreiben')),
+                boton('contacto.html#mensaje', 'faq.cta', 'Escribirnos', 'Uns schreiben')),
     ]
 
 
