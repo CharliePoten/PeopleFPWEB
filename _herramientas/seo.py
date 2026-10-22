@@ -82,6 +82,31 @@ PAGINAS = [
      'Escríbenos si quieres hacer voluntariado o coordinarlo desde tu empresa, ayuntamiento u ONG. '
      'Elige qué necesitas y te respondemos en un par de días.',
      'Contacto', None),
+    ('plataforma/centro-de-coordinacion.html', '/plataforma/centro-de-coordinacion.html',
+     'Centro de coordinación de voluntariado',
+     'Lanza operaciones desde plantillas, avisa a los voluntarios cercanos, controla plazas y '
+     'llegadas y valida horas desde un panel web, sin grupos de mensajería.',
+     'Centro de coordinación', None),
+    ('plataforma/app-voluntariado.html', '/plataforma/app-voluntariado.html',
+     'App de voluntariado: misiones cerca de ti',
+     'Avisos de misiones cercanas, tú eliges radio y tipo de aviso, mapa y lista, habilidades '
+     'acreditadas y tu historial de horas validadas. Registro gratuito.',
+     'App de voluntariado', None),
+    ('plataforma/informes-y-certificados.html', '/plataforma/informes-y-certificados.html',
+     'Informes y certificados de voluntariado',
+     'Horas fichadas sobre el terreno y validadas por la entidad: memoria de actividad en CSV, '
+     'datos para RSC y ESG y la base del certificado de la Ley 45/2015.',
+     'Informes y certificados', None),
+    ('plataforma/seguridad-y-verificacion.html', '/plataforma/seguridad-y-verificacion.html',
+     'Seguridad y verificación de entidades',
+     'Cómo comprobamos que una ONG, un ayuntamiento o una empresa es real antes de que publique, '
+     'y cómo protegemos la ubicación y los datos de quien ayuda.',
+     'Seguridad y verificación', None),
+    ('calculadora.html', '/calculadora.html',
+     'Calculadora de impacto del voluntariado',
+     'Estima cuántas personas, horas y valor económico podría aportar el voluntariado de tu '
+     'plantilla, con supuestos que puedes cambiar y datos del INE.',
+     'Calculadora de impacto', None),
     ('documentos.html', '/documentos.html',
      'Guías y documentos de voluntariado',
      'Guías para participar como voluntario, ONG, ayuntamiento o empresa, y la documentación '
@@ -272,7 +297,12 @@ VIEJOS_JSONLD = re.compile(r'[ \t]*<script type="application/ld\+json">.*?</scri
 
 
 def aplicar(archivo, ruta, titulo, descripcion, miga, producto, catalogo):
-    texto = leer(archivo)
+    return aplicar_texto(leer(archivo), archivo, ruta, titulo, descripcion, miga, producto, catalogo)
+
+
+def aplicar_texto(texto, archivo, ruta, titulo, descripcion, miga, producto, catalogo):
+    """Lo mismo que `aplicar`, sobre un texto: lo usan los generadores de
+    páginas (`paginas.py`) para escribir la página ya con su SEO."""
     salto = '\r\n' if '\r\n' in texto else '\n'
     titulo_completo = '%s | %s' % (titulo, MARCA)
 
@@ -302,18 +332,19 @@ def sitemap():
                                capture_output=True, text=True).stdout.strip()
         lineas.append('  <url><loc>%s%s</loc>%s</url>' % (
             DOMINIO, ruta, '<lastmod>%s</lastmod>' % fecha if fecha else ''))
-    # Los casos de impacto los escribe `casos.py`; aquí solo se listan.
-    carpeta = os.path.join(RAIZ, 'casos')
-    nombres = sorted(os.listdir(carpeta)) if os.path.isdir(carpeta) else []
-    for nombre in sorted(nombres, key=lambda n: n != 'index.html'):
-        if not nombre.endswith('.html'):
-            continue
-        archivo = 'casos/' + nombre
-        publica = '/casos/' if nombre == 'index.html' else '/' + archivo
-        fecha = subprocess.run(['git', '-C', RAIZ, 'log', '-1', '--format=%cs', '--', archivo],
+    # Casos de impacto y actualidad los escribe `casos.py`; aquí solo se listan.
+    for coleccion in ('casos', 'actualidad'):
+        carpeta = os.path.join(RAIZ, coleccion)
+        nombres = sorted(os.listdir(carpeta)) if os.path.isdir(carpeta) else []
+        for nombre in sorted(nombres, key=lambda n: n != 'index.html'):
+            if not nombre.endswith('.html'):
+                continue
+            archivo = coleccion + '/' + nombre
+            publica = '/%s/' % coleccion if nombre == 'index.html' else '/' + archivo
+            fecha = subprocess.run(['git', '-C', RAIZ, 'log', '-1', '--format=%cs', '--', archivo],
                                capture_output=True, text=True).stdout.strip()
-        lineas.append('  <url><loc>%s%s</loc>%s</url>' % (
-            DOMINIO, publica, '<lastmod>%s</lastmod>' % fecha if fecha else ''))
+            lineas.append('  <url><loc>%s%s</loc>%s</url>' % (
+                DOMINIO, publica, '<lastmod>%s</lastmod>' % fecha if fecha else ''))
     lineas.append('</urlset>')
     return '\n'.join(lineas) + '\n'
 

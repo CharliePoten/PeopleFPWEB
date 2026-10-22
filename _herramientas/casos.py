@@ -1,11 +1,13 @@
 """
-Casos de impacto: un archivo de texto por artículo y un script.
+Casos de impacto y Actualidad: un archivo de texto por artículo y un script.
 
-Cada caso es un `_casos/<slug>.md`: unas líneas `clave: valor` arriba, una
-línea `---` y el texto en Markdown. El script escribe
+Son dos colecciones (COLECCIONES, abajo) con el mismo formato. Cada artículo
+es un `_casos/<slug>.md` o un `_actualidad/<slug>.md`: unas líneas
+`clave: valor` arriba, una línea `---` y el texto en Markdown. El script
+escribe, para cada colección,
 
-    casos/<slug>.html    el artículo
-    casos/index.html     la lista de casos, del más nuevo al más viejo
+    casos/<slug>.html    el artículo          (o actualidad/<slug>.html)
+    casos/index.html     la lista, del más nuevo al más viejo
 
 con la cabecera y el pie de `documentos.html`, el SEO de cada página
 (canonical, Open Graph y datos estructurados de artículo) y los enlaces
@@ -42,9 +44,35 @@ MARCA = 'PeopleForPeople'
 LOGO = DOMINIO + '/imagenes/marca/isotipo.png'
 PLANTILLA = 'documentos.html'
 
-INDICE_TITULO = 'Casos de impacto en emergencias reales'
-INDICE_DESCRIPCION = ('Emergencias reales en España contadas con sus fuentes: qué pasó, qué faltó para '
-                      'coordinar a los voluntarios y cómo se podría organizar hoy la ayuda.')
+# Las dos colecciones. `imagenes` es la carpeta de sus fotos dentro de
+# imagenes/; las claves `*_clave` son las del diccionario (home-i18n.js).
+COLECCIONES = [
+    {
+        'md': '_casos', 'carpeta': 'casos', 'imagenes': 'casos', 'nombre': 'Casos de impacto',
+        'indice_titulo': 'Casos de impacto en emergencias reales',
+        'indice_descripcion': ('Emergencias reales en España contadas con sus fuentes: qué pasó, qué faltó para '
+                               'coordinar a los voluntarios y cómo se podría organizar hoy la ayuda.'),
+        'titulo_clave': 'cases.title',
+        'entrada_clave': 'cases.lead',
+        'entrada': 'Emergencias reales, contadas con sus fuentes: qué pasó, qué faltó para coordinar la ayuda y cómo se podría organizar hoy.',
+        'volver_clave': 'cases.back', 'volver': '← Casos de impacto',
+        'leer_clave': 'cases.read', 'leer': 'Leer el caso →',
+        'mas_clave': 'cases.more', 'mas': 'Otros casos',
+    },
+    {
+        'md': '_actualidad', 'carpeta': 'actualidad', 'imagenes': 'actualidad', 'nombre': 'Actualidad',
+        'indice_titulo': 'Actualidad del voluntariado y de la app',
+        'indice_descripcion': ('Novedades de PeopleForPeople y análisis sobre voluntariado: leyes, emergencias '
+                               'y cómo se coordina la ayuda. Con fuentes y fecha en cada artículo.'),
+        'titulo_clave': 'news.title',
+        'entrada_clave': 'news.lead',
+        'entrada': 'Novedades de la plataforma y análisis sobre voluntariado, con fuentes y fecha.',
+        'volver_clave': 'news.back', 'volver': '← Actualidad',
+        'leer_clave': 'news.read', 'leer': 'Leer el artículo →',
+        'mas_clave': 'news.more', 'mas': 'Más artículos',
+    },
+]
+C = COLECCIONES[0]
 
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
          'septiembre', 'octubre', 'noviembre', 'diciembre']
@@ -75,7 +103,7 @@ def fecha_larga(iso):
 # ---------------------------------------------------------------- casos
 
 def leer_caso(nombre):
-    texto = leer(os.path.join('_casos', nombre))
+    texto = leer(os.path.join(C['md'], nombre))
     cabeza, cuerpo = texto.split('\n---\n', 1)
     datos = {}
     for linea in cabeza.strip().splitlines():
@@ -87,13 +115,15 @@ def leer_caso(nombre):
 
 
 def casos():
-    lista = [leer_caso(n) for n in sorted(os.listdir(ruta('_casos'))) if n.endswith('.md')]
+    if not os.path.isdir(ruta(C['md'])):
+        return []
+    lista = [leer_caso(n) for n in sorted(os.listdir(ruta(C['md']))) if n.endswith('.md')]
     # Del más nuevo al más viejo; a igual fecha, por el orden de `orden`.
     return sorted(lista, key=lambda c: (c['publicado'], -int(c.get('orden', 0))), reverse=True)
 
 
 def cuerpo_html(md):
-    h = markdown.markdown(md, extensions=['sane_lists'])
+    h = markdown.markdown(md, extensions=['sane_lists', 'tables'])
     # Markdown junta en un solo bloque dos citas seguidas: se separan, una
     # por párrafo, y la línea «— Quién, dónde» de cada una va como su pie.
     def citas(m):
@@ -172,13 +202,13 @@ def tarjeta(c, prefijo=''):
     return (
         '<article class="caso-tarjeta reveal">'
         '<a class="caso-tarjeta__foto" href="%s%s.html" tabindex="-1" aria-hidden="true">'
-        '<img src="../imagenes/casos/%s.webp" width="%s" height="%s" loading="lazy" alt="" /></a>'
+        '<img src="../imagenes/%s/%s.webp" width="%s" height="%s" loading="lazy" alt="" /></a>'
         '<div class="caso-tarjeta__cuerpo"><p class="caso-tarjeta__meta"><span>%s</span> · <time datetime="%s">%s</time></p>'
         '<h3><a href="%s%s.html">%s</a></h3><p>%s</p>'
-        '<a class="text-link" href="%s%s.html" data-i18n="cases.read">Leer el caso →</a></div></article>'
-    ) % (prefijo, c['slug'], c['imagen'], c['imagen_ancho'], c['imagen_alto'],
+        '<a class="text-link" href="%s%s.html" data-i18n="%s">%s</a></div></article>'
+    ) % (prefijo, c['slug'], C['imagenes'], c['imagen'], c['imagen_ancho'], c['imagen_alto'],
          e(c['etiqueta']), c['publicado'], fecha_larga(c['publicado']),
-         prefijo, c['slug'], e(c['titulo']), e(c['resumen']), prefijo, c['slug'])
+         prefijo, c['slug'], e(c['titulo']), e(c['resumen']), prefijo, c['slug'], C['leer_clave'], C['leer'])
 
 
 CTA = (
@@ -191,8 +221,8 @@ CTA = (
 
 
 def pagina_caso(c, todos, estilos, cabecera, pie):
-    url = '%s/casos/%s.html' % (DOMINIO, c['slug'])
-    imagen = '%s/imagenes/casos/%s-compartir.jpg' % (DOMINIO, c['imagen'])
+    url = '%s/%s/%s.html' % (DOMINIO, C['carpeta'], c['slug'])
+    imagen = '%s/imagenes/%s/%s-compartir.jpg' % (DOMINIO, C['imagenes'], c['imagen'])
     minutos = max(1, math.ceil(c['palabras'] / 200))
     datos = jsonld(
         {
@@ -208,7 +238,7 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
             'author': {'@type': 'Organization', 'name': MARCA, 'url': DOMINIO + '/'},
             'publisher': {'@type': 'Organization', 'name': MARCA, 'logo': {'@type': 'ImageObject', 'url': LOGO}},
         },
-        migas(('Inicio', DOMINIO + '/'), ('Casos de impacto', DOMINIO + '/casos/'), (c['titulo'], url)),
+        migas(('Inicio', DOMINIO + '/'), (C['nombre'], '%s/%s/' % (DOMINIO, C['carpeta'])), (c['titulo'], url)),
     )
     extra = ['<meta property="article:published_time" content="%s" />' % c['publicado']]
     otros = [o for o in todos if o['slug'] != c['slug']][:3]
@@ -218,24 +248,26 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
         '  <section class="detail-hero"><div class="container reveal caso__cabeza">'
-        '<a class="breadcrumb" href="index.html" data-i18n="cases.back">← Casos de impacto</a>'
+        '<a class="breadcrumb" href="index.html" data-i18n="%s">%s</a>'
         '<span class="eyebrow">%s</span><h1>%s</h1><p class="detail-hero__lead">%s</p>'
         '<p class="caso__meta">Publicado el <time datetime="%s">%s</time> · %s · %d min de lectura</p>'
         '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>'
-        % (e(c['etiqueta']), e(c['titulo']), e(c['resumen']), c['publicado'], fecha_larga(c['publicado']),
-           e(c['suceso']), minutos),
+        % (C['volver_clave'], C['volver'], e(c['etiqueta']), e(c['titulo']), e(c['resumen']), c['publicado'],
+           fecha_larga(c['publicado']), e(c['suceso']), minutos),
         '  <div class="container caso__marco">',
-        '    <figure class="caso__foto"><img src="../imagenes/casos/%s.webp" width="%s" height="%s" alt="%s" />'
-        '<figcaption>%s · Foto: %s</figcaption></figure>'
-        % (c['imagen'], c['imagen_ancho'], c['imagen_alto'], e(c['imagen_alt']), e(c['imagen_pie']), e(c['credito'])),
+        '    <figure class="caso__foto"><img src="../imagenes/%s/%s.webp" width="%s" height="%s" alt="%s" />'
+        '<figcaption>%s</figcaption></figure>'
+        % (C['imagenes'], c['imagen'], c['imagen_ancho'], c['imagen_alto'], e(c['imagen_alt']),
+           # Sin `credito` es una imagen propia (una ilustración): sin «Foto:».
+           e(c['imagen_pie']) + (' · Foto: ' + e(c['credito']) if c.get('credito') else '')),
         '    <article class="caso__texto">',
         cuerpo_html(c['cuerpo_md']),
         '    </article>',
         '    ' + CTA,
         '  </div>',
         '  <section class="detail-section caso__otros"><div class="container"><div class="detail-heading reveal">'
-        '<h2 data-i18n="cases.more">Otros casos</h2></div><div class="casos-rejilla">%s</div></div></section>'
-        % ''.join(tarjeta(o) for o in otros),
+        '<h2 data-i18n="%s">%s</h2></div><div class="casos-rejilla">%s</div></div></section>'
+        % (C['mas_clave'], C['mas'], ''.join(tarjeta(o) for o in otros)) if otros else '',
         '</main>' + pie + '</body>',
         '</html>',
         '',
@@ -243,33 +275,33 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
 
 
 def pagina_indice(todos, estilos, cabecera, pie):
-    url = DOMINIO + '/casos/'
+    url = '%s/%s/' % (DOMINIO, C['carpeta'])
     datos = jsonld(
         {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            'name': INDICE_TITULO,
-            'description': INDICE_DESCRIPCION,
+            'name': C['indice_titulo'],
+            'description': C['indice_descripcion'],
             'url': url,
             'inLanguage': 'es',
             'hasPart': [{'@type': 'BlogPosting', 'headline': c['titulo'],
-                         'url': '%s/casos/%s.html' % (DOMINIO, c['slug']),
+                         'url': '%s/%s/%s.html' % (DOMINIO, C['carpeta'], c['slug']),
                          'datePublished': c['publicado']} for c in todos],
         },
-        migas(('Inicio', DOMINIO + '/'), ('Casos de impacto', url)),
+        migas(('Inicio', DOMINIO + '/'), (C['nombre'], url)),
     )
     return '\n'.join([
-        cabeza_html(INDICE_TITULO, INDICE_DESCRIPCION, url, 'website', DOMINIO + '/imagenes/compartir.jpg',
+        cabeza_html(C['indice_titulo'], C['indice_descripcion'], url, 'website', DOMINIO + '/imagenes/compartir.jpg',
                     'PeopleForPeople: Tu ayuda. Su esperanza. Nosotros unimos.', [], datos),
         estilos,
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
         '  <section class="detail-hero"><div class="container reveal">'
         '<a class="breadcrumb" href="../index.html">← PeopleForPeople</a>'
-        '<span class="eyebrow" data-i18n="nav.resources">Recursos</span><h1 data-i18n="cases.title">Casos de impacto</h1>'
-        '<p class="detail-hero__lead" data-i18n="cases.lead">Emergencias reales, contadas con sus fuentes: qué pasó, '
-        'qué faltó para coordinar la ayuda y cómo se podría organizar hoy.</p>'
-        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>',
+        '<span class="eyebrow" data-i18n="nav.resources">Recursos</span><h1 data-i18n="%s">%s</h1>'
+        '<p class="detail-hero__lead" data-i18n="%s">%s</p>'
+        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>'
+        % (C['titulo_clave'], C['nombre'], C['entrada_clave'], C['entrada']),
         '  <section class="detail-section"><div class="container"><div class="casos-rejilla casos-rejilla--indice">%s</div></div></section>'
         % ''.join(tarjeta(c) for c in todos),
         '  <section class="detail-section detail-section--white"><div class="container">%s</div></section>'
@@ -282,7 +314,7 @@ def pagina_indice(todos, estilos, cabecera, pie):
 
 def comprobar(todos):
     avisos = []
-    for c in todos + [{'slug': 'index', 'titulo_seo': INDICE_TITULO, 'descripcion': INDICE_DESCRIPCION}]:
+    for c in todos + [{'slug': C['carpeta'] + '/index', 'titulo_seo': C['indice_titulo'], 'descripcion': C['indice_descripcion']}]:
         largo = len('%s | %s' % (c['titulo_seo'], MARCA))
         if largo > 60:
             avisos.append('%s: el título tiene %d caracteres (máximo 60)' % (c['slug'], largo))
@@ -292,12 +324,16 @@ def comprobar(todos):
 
 
 def main():
+    global C
     solo_comprobar = '--check' in sys.argv
-    todos = casos()
     estilos, cabecera, pie = piezas_de_plantilla()
-    salida = {'casos/index.html': pagina_indice(todos, estilos, cabecera, pie)}
-    for c in todos:
-        salida['casos/%s.html' % c['slug']] = pagina_caso(c, todos, estilos, cabecera, pie)
+    salida, avisos = {}, []
+    for C in COLECCIONES:
+        todos = casos()
+        salida['%s/index.html' % C['carpeta']] = pagina_indice(todos, estilos, cabecera, pie)
+        for c in todos:
+            salida['%s/%s.html' % (C['carpeta'], c['slug'])] = pagina_caso(c, todos, estilos, cabecera, pie)
+        avisos += comprobar(todos)
 
     desfasadas = []
     for r, texto in salida.items():
@@ -306,7 +342,6 @@ def main():
             desfasadas.append(r)
             if not solo_comprobar:
                 escribir(r, texto)
-    avisos = comprobar(todos)
     for a in avisos:
         print('AVISO', a)
     if solo_comprobar:

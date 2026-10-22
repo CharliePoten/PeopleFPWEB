@@ -101,6 +101,12 @@
 .home .nav__sublink:hover { color: var(--amber-300); transform: translateX(6px); }
 .home .nav__link:hover, .home .nav__link[aria-current="page"] { color: var(--amber-300); border-bottom-color: rgba(255,255,255,.14); }
 .home .nav__link:hover strong { transform: translateX(8px); }
+/* Con tres grupos y sus páginas el menú lateral es largo: que se pueda
+   desplazar en pantallas bajas. Los títulos de grupo no son enlaces. */
+.home .nav { overflow-y: auto; }
+.home .nav__link--grupo { cursor: default; }
+.home .nav__link--grupo:hover { color: #fff; }
+.home .nav__link--grupo:hover strong { transform: none; }
 .home .nav__tagline { margin: 0; color: rgba(255,255,255,.56); font-size: .92rem; }
 .home .nav__backdrop { position: fixed; inset: 0; z-index: 120; border: 0; background: rgba(0,14,35,.62); opacity: 0; visibility: hidden; cursor: default; transition: opacity .3s ease, visibility 0s linear .3s; }
 .home .nav__backdrop.is-visible { opacity: 1; visibility: visible; transition-delay: 0s; }
@@ -608,11 +614,9 @@
   }
 }
 
-/* Botón «Solicitar presentación» de la cabecera: solo en pantallas anchas,
-   donde cabe junto a los cuatro menús sin apretarlos. */
-.header__demo { display: none; white-space: nowrap; }
+/* Ni el idioma ni la cuenta se encogen nunca: si falta sitio, que se note
+   al medir y no aplastando un botón. */
 .home .header .lang, .home .header .header__cuenta { flex-shrink: 0; }
-@media (min-width: 1280px) { .header__demo { display: inline-flex; } }
 
 /* --------------------------------------------------------------------------
    Menú de escritorio
@@ -629,14 +633,10 @@
   .home .menu-ancho ~ .header__actions { margin-left: clamp(16px, 2vw, 32px); }
   .menu-ancho__lista { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
 }
-/* Con cuatro menús, idioma, cuenta y presentación no cabe también el
-   nombre de la marca (el contenedor no pasa de 1140 px): en escritorio
-   queda el icono, que ya la identifica. */
-@media (min-width: 1024px) {
-  .home .header .brand__name { display: none; }
-}
 @media (min-width: 1024px) and (max-width: 1279px) {
   .menu-ancho__boton, .menu-ancho__enlace { padding-inline: 10px; }
+  .home .menu-ancho ~ .header__actions { margin-left: 12px; }
+  .home .header .lang button { padding-inline: 9px; }
 }
 @media (min-width: 1024px) {
   .menu-ancho__grupo { position: relative; }
@@ -656,8 +656,6 @@
     opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
   }
   /* Puente invisible para que el ratón no cierre el menú al bajar hasta él. */
-  /* El último menú se abre hacia la izquierda para no salirse de la pantalla. */
-  .menu-ancho__grupo--derecha .menu-ancho__desplegable { left: auto; right: 0; }
   .menu-ancho__desplegable::before { content: ''; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
   .menu-ancho__grupo.is-open .menu-ancho__desplegable { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
   .menu-ancho__grupo.is-open .menu-ancho__boton svg { transform: rotate(180deg); }

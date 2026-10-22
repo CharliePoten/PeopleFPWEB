@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Páginas de «La plataforma» y la calculadora
+   --------------------------------------------------------------------------
+   Las escribe `_herramientas/paginas.py` con las piezas de las páginas de
+   detalle (detail.css). Aquí solo lo que no tenían: texto e imagen lado a
+   lado, los móviles, el papel del certificado y la calculadora.
+   ========================================================================== */
+
+/* Texto a un lado, imagen al otro. */
+.pag-dos { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.pag-dos .detail-heading { margin-bottom: 0; }
+.pag-figura { margin: 0; }
+.pag-figura .navegador { overflow: hidden; border-radius: 14px; box-shadow: 0 30px 70px rgba(0, 20, 51, .18); }
+.pag-figura .navegador img { display: block; width: 100%; height: auto; }
+
+.pag-moviles { display: flex; justify-content: center; align-items: flex-end; gap: clamp(8px, 2vw, 22px); }
+.pag-moviles img { width: 31%; height: auto; filter: drop-shadow(0 24px 40px rgba(0, 20, 51, .2)); }
+.pag-moviles img:nth-child(2) { width: 36%; }
+
+.pag-papel { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 20, 51, .08), 0 30px 70px rgba(0, 20, 51, .18); transform: rotate(1.5deg); }
+
+.pag-enlaces { margin: 26px 0 0; }
+.pag-enlaces .text-link { display: inline-block; margin-right: 18px; }
+
+/* Las otras páginas de la plataforma, al final. */
+.pag-otras { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.pag-otras .eyebrow { margin: 0; }
+.pag-otras__lista { display: flex; flex-wrap: wrap; gap: 10px; }
+.pag-otra { padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--navy-700); font-weight: 600; font-size: .92rem; text-decoration: none; transition: border-color .2s ease, background-color .2s ease; }
+.pag-otra:hover { border-color: var(--navy-600); background: var(--navy-50, #E8EEF6); }
+
+/* Calculadora */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+.calc h2 { margin: 0 0 18px; font-size: 1.4rem; }
+.calc__datos { display: grid; gap: var(--s-base); }
+.calc__datos .field__hint { margin: 0; color: var(--text-mute); font-size: .84rem; }
+.calc__resultado { position: sticky; top: calc(var(--header-h) + 24px); display: grid; gap: 14px; padding: 28px; border-radius: var(--r-lg); background: var(--navy-700); color: #fff; }
+.calc__resultado h2 { color: #fff; margin-bottom: 4px; }
+.calc__cifra { display: grid; gap: 2px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, .14); }
+.calc__cifra strong { color: var(--amber-300); font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.calc__cifra span { color: rgba(255, 255, 255, .78); font-size: .95rem; }
+.calc__plan { margin: 4px 0 0; color: rgba(255, 255, 255, .85); font-size: .95rem; }
+.calc__plan strong { color: #fff; }
+.calc__aviso { margin: 0; color: rgba(255, 255, 255, .7); font-size: .86rem; }
+.calc__resultado .btn { justify-self: start; }
+
+.calc-metodo { max-width: 860px; }
+.calc-metodo__lista { display: grid; gap: 10px; margin: 0; padding-left: 1.3em; color: var(--text-soft); }
+.calc-metodo__nota { margin: 22px 0 0; color: var(--navy-700); font-weight: 500; }
+.calc-metodo__fuente { margin: 14px 0 0; color: var(--text-mute); font-size: .88rem; }
+.calc-metodo__fuente a { color: var(--navy-600); }
+
+@media (max-width: 900px) {
+  .pag-dos, .calc { grid-template-columns: 1fr; }
+  .calc__resultado { position: static; }
+}
+@media (max-width: 640px) {
+  .calc__resultado { padding: 22px; }
+  .calc__resultado .btn { justify-self: stretch; }
+}
