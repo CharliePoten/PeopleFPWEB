@@ -137,14 +137,12 @@ def centro():
                       ('pl.c.hero', 'Centro de coordinación', 'Koordinationszentrale'),
                       ('pl.c.lead', 'Todo lo que necesita quien coordina, en un mismo sitio y sin grupos de mensajería: lanzar una operación, saber quién va, quién ha llegado y cuántas horas se han hecho.',
                        'Alles, was Koordinierende brauchen, an einem Ort und ohne Messenger-Gruppen: einen Einsatz starten, wissen, wer kommt, wer angekommen ist und wie viele Stunden geleistet wurden.'),
-                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)],
-                      clase='detail-hero--pantalla',
-                      figura='<figure class="detail-hero__pantalla">' + ventana('../imagenes/consola-panel.webp', 'peopleforpeople.es/cuenta', 'panel.alt1') + '</figure>'),
+                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)]),
         con_imagen(('pl.c.panelEy', 'El panel web', 'Das Web-Dashboard'),
                    ('pl.c.panelT', 'Abre por lo que hay que resolver hoy.', 'Es beginnt mit dem, was heute erledigt werden muss.'),
                    ('pl.c.panelP', 'Se usa en el navegador, sin instalar nada. Al entrar no ves gráficas: ves las altas que esperan respuesta, las horas por validar y las misiones a medio cubrir. Si hay una emergencia activa, aparece arriba del todo.',
                     'Es läuft im Browser, ohne Installation. Beim Öffnen siehst du keine Diagramme, sondern offene Registrierungen, zu bestätigende Stunden und halb besetzte Einsätze. Läuft gerade ein Notfall, steht er ganz oben.'),
-                   ventana('../imagenes/consola-voluntariado.webp', 'peopleforpeople.es/cuenta/voluntariado', 'panel.alt2'),
+                   ventana('../imagenes/consola-panel.webp', 'peopleforpeople.es/cuenta', 'panel.alt1'),
                    'detail-section--white'),
         tarjetas(('pl.c.qEy', 'Qué puedes hacer', 'Was du tun kannst'),
                  ('pl.c.qT', 'Coordinar sin perder el hilo.', 'Koordinieren, ohne den Überblick zu verlieren.'), [
@@ -190,7 +188,7 @@ def app():
                      ('pl.a.verT', 'Clara, directa y sin pasos de más.', 'Klar, direkt und ohne überflüssige Schritte.'),
                      ('pl.a.verP', 'Una misión se entiende de un vistazo: qué hace falta, dónde, cuándo y en qué punto está. Las pantallas son de la app real.',
                       'Ein Einsatz ist auf einen Blick verständlich: was gebraucht wird, wo, wann und wie weit er ist. Die Bildschirme stammen aus der echten App.'),
-                     '<div class="pag-moviles">' + moviles + '</div>', 'detail-section--white')
+                     '<div class="pag-moviles">' + moviles + '</div>', 'detail-section--white tras-movil')
     return [
         cabecera_azul(pre, ('pl.eyebrow', 'La plataforma', 'Die Plattform'),
                       ('pl.a.hero', 'App de voluntariado', 'Freiwilligen-App'),
@@ -198,6 +196,7 @@ def app():
                        'Für alle, die helfen wollen: Einsätze in der Nähe, eine Meldung, wenn es wirklich nötig ist, und deine Stunden immer griffbereit.'),
                       [cuenta], clase='detail-hero--flota',
                       figura='<figure class="detail-hero__flota detail-hero__flota--movil"><img src="../imagenes/app/movil-misiones.webp" width="740" height="1530" alt="" data-i18n-alt="app.shot2" /></figure>'),
+        asi,
         tarjetas(('pl.a.qEy', 'Lo que hace por ti', 'Was sie für dich tut'),
                  ('pl.a.qT', 'Ayudar sin estar pendiente del móvil.', 'Helfen, ohne ständig aufs Handy zu schauen.'), [
             (('pl.a.q1t', 'Avisos que suenan', 'Meldungen, die klingeln'),
@@ -219,7 +218,6 @@ def app():
              ('pl.a.q6b', 'Las horas validadas forman tu historial, que puedes imprimir. Son la base del certificado de voluntariado que emite la entidad.',
               'Die bestätigten Stunden bilden deinen Verlauf, den du ausdrucken kannst. Sie sind die Grundlage für die Freiwilligenbescheinigung der Organisation.')),
         ], fondo=''),
-        asi,
         llamada(('pl.a.ctaT', 'Empieza a ayudar cerca de ti.', 'Fang an, in deiner Nähe zu helfen.'),
                 ('app.storeAccount', 'Mientras llega a las tiendas, crea tu cuenta en la web: es la misma con la que entrarás en la app.',
                  'Bis sie in den Stores ist, erstelle dein Konto im Web: Es ist dasselbe, mit dem du dich in der App anmeldest.'), cuenta),

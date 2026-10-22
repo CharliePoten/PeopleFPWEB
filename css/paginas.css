@@ -50,6 +50,15 @@
 .calc-metodo__fuente { margin: 14px 0 0; color: var(--text-mute); font-size: .88rem; }
 .calc-metodo__fuente a { color: var(--navy-600); }
 
+/* «Así se ve» de la app, justo bajo la cabecera: el móvil grande de la
+   cabecera baja sobre la columna derecha, así que aquí la imagen va a la
+   izquierda y el texto empieza por debajo del móvil. */
+@media (min-width: 901px) {
+  .detail-page .tras-movil .pag-dos { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; }
+  .detail-page .tras-movil .pag-figura { order: -1; }
+  .detail-page .detail-hero--flota + .detail-section.tras-movil .detail-heading { max-width: none; padding-top: 150px; }
+}
+
 @media (max-width: 900px) {
   .pag-dos, .calc { grid-template-columns: 1fr; }
   .calc__resultado { position: static; }
