@@ -181,10 +181,10 @@
      limitado y su margen automático. */
   .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--panel) .container { flex: none; }
 
-  /* Foto a la derecha, hasta el borde. */
-  .detail-page .detail-hero--foto .detail-hero__foto { position: absolute; top: 0; right: 0; bottom: 0; width: min(44vw, 780px); }
-  .detail-page .detail-hero--foto .detail-hero__foto::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--navy-700) 0%, rgba(0, 30, 71, .5) 16%, rgba(0, 30, 71, 0) 42%); }
-  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: 0; width: 38%; height: 10px; background: var(--amber-500); }
+  /* Foto a la derecha, encima del azul: una pieza con su tamaño, dentro de
+     la columna, sin fundirse con el fondo ni llegar a los bordes. */
+  .detail-page .detail-hero--foto .detail-hero__foto { position: absolute; top: 50%; right: max(24px, calc(50% - 570px)); width: min(480px, 38vw); aspect-ratio: 4 / 3; transform: translateY(-50%); box-shadow: 0 30px 70px rgba(0, 10, 30, .4); }
+  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: -10px; width: 38%; height: 10px; background: var(--amber-500); }
 
   /* La captura del panel, en su ventana, saliéndose por la derecha. */
   .detail-page .detail-hero--pantalla .detail-hero__pantalla { position: absolute; top: 50%; left: calc(50% + 20px); right: 0; margin: 0; transform: translateY(-46%); box-shadow: 0 40px 90px rgba(0, 0, 0, .45); }
@@ -203,10 +203,8 @@
 }
 
 @media (max-width: 899px) {
-  .detail-page .detail-hero--foto { padding-bottom: 0; }
-  .detail-page .detail-hero--foto .detail-hero__foto { position: relative; height: 260px; margin-top: 40px; }
-  .detail-page .detail-hero--foto .detail-hero__foto::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--navy-700) 0%, rgba(0, 30, 71, 0) 30%); }
-  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40%; height: 8px; background: var(--amber-500); }
+  .detail-page .detail-hero--foto .detail-hero__foto { position: relative; width: calc(100% - 48px); aspect-ratio: 4 / 3; margin: 36px 24px 0; box-shadow: 0 24px 50px rgba(0, 10, 30, .35); }
+  .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 40%; height: 8px; background: var(--amber-500); }
   .detail-page .detail-hero--pantalla .detail-hero__pantalla { width: calc(100% - 48px); margin: 36px 24px 0; }
   .detail-page .detail-hero--flota { overflow: visible; padding-bottom: 0; }
   .detail-page .detail-hero--flota .detail-hero__flota { position: relative; z-index: 3; width: min(62vw, 280px); margin: 36px auto -150px; }
