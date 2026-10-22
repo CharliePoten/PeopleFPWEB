@@ -194,9 +194,10 @@
 
   /* Un objeto que cruza del azul al blanco. */
   .detail-page .detail-hero--flota { overflow: visible; padding-bottom: 110px; }
-  .detail-page .detail-hero--flota .detail-hero__flota { position: absolute; z-index: 3; right: max(32px, calc(50% - 570px + 40px)); bottom: -190px; width: min(330px, 26vw); margin: 0; }
-  .detail-page .detail-hero--flota + .detail-section { padding-top: 120px; }
-  .detail-page .detail-hero--flota + .detail-section .detail-heading { max-width: 58%; }
+  /* Asoma 120 px sobre la sección siguiente, y esa sección empieza 50 px
+     más abajo: nada de lo que haya debajo queda tapado por el objeto. */
+  .detail-page .detail-hero--flota .detail-hero__flota { position: absolute; z-index: 3; right: max(32px, calc(50% - 570px + 40px)); bottom: -120px; width: min(330px, 26vw); margin: 0; }
+  .detail-page .detail-hero--flota + .detail-section { padding-top: 170px; }
 
   /* Una pieza propia en la columna de la derecha. */
   .detail-page .detail-hero--panel .detail-hero__panel { position: absolute; top: 50%; right: max(24px, calc(50% - 570px)); width: min(500px, 40vw); margin: 0; transform: translateY(-50%); }

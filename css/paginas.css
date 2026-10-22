@@ -56,7 +56,7 @@
 @media (min-width: 901px) {
   .detail-page .tras-movil .pag-dos { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; }
   .detail-page .tras-movil .pag-figura { order: -1; }
-  .detail-page .detail-hero--flota + .detail-section.tras-movil .detail-heading { max-width: none; padding-top: 150px; }
+  .detail-page .tras-movil .pag-dos { align-items: center; }
 }
 
 @media (max-width: 900px) {
