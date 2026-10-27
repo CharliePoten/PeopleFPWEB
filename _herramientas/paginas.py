@@ -145,7 +145,8 @@ def centro():
                       ('pl.c.hero', 'Centro de coordinación', 'Koordinationszentrale'),
                       ('pl.c.lead', 'Todo lo que necesita quien coordina, en un mismo sitio y sin grupos de mensajería: lanzar una operación, saber quién va, quién ha llegado y cuántas horas se han hecho.',
                        'Alles, was Koordinierende brauchen, an einem Ort und ohne Messenger-Gruppen: einen Einsatz starten, wissen, wer kommt, wer angekommen ist und wie viele Stunden geleistet wurden.'),
-                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)]),
+                      [alta, boton(pre + 'contacto.html#mensaje', 'pl.hablar', 'Hablar con nosotros', 'Mit uns sprechen', False)],
+                      clase='detail-hero--panel', figura=red()),
         con_imagen(('pl.c.panelEy', 'El panel web', 'Das Web-Dashboard'),
                    ('pl.c.panelT', 'Abre por lo que hay que resolver hoy.', 'Es beginnt mit dem, was heute erledigt werden muss.'),
                    ('pl.c.panelP', 'Se usa en el navegador, sin instalar nada. Al entrar no ves gráficas: ves las altas que esperan respuesta, las horas por validar y las misiones a medio cubrir. Si hay una emergencia activa, aparece arriba del todo.',
@@ -276,6 +277,22 @@ def informes():
                  'Der Rechner schätzt Personen, Stunden und den Wert der gespendeten Zeit – mit Annahmen, die du ändern kannst.'),
                 boton(pre + 'calculadora.html', 'pl.i.calcAbrir', 'Abrir la calculadora', 'Rechner öffnen')),
     ]
+
+
+def red():
+    """La cabecera del Centro de coordinación: puntos que se conectan en red
+    y acaban en uno solo, el que coordina. Dibujo plano, decorativo."""
+    entradas = [(70, 105), (70, 200), (70, 295)]
+    medios = [(250, 60), (250, 153), (250, 247), (250, 340)]
+    centro = (430, 200)
+    enlaces = [(0, 0), (0, 1), (0, 2), (1, 1), (1, 2), (2, 1), (2, 2), (2, 3)]
+    lineas = ''.join('<line x1="%d" y1="%d" x2="%d" y2="%d" />' % (entradas[a] + medios[b]) for a, b in enlaces)
+    lineas += ''.join('<line x1="%d" y1="%d" x2="%d" y2="%d" />' % (m + centro) for m in medios)
+    puntos = (''.join('<circle class="red__entrada" cx="%d" cy="%d" r="20" />' % p for p in entradas)
+              + ''.join('<circle class="red__medio" cx="%d" cy="%d" r="26" />' % p for p in medios)
+              + '<circle class="red__centro" cx="%d" cy="%d" r="36" />' % centro)
+    return ('<figure class="detail-hero__panel red" aria-hidden="true">'
+            '<svg viewBox="0 0 500 400" focusable="false"><g class="red__lineas">%s</g>%s</svg></figure>' % (lineas, puntos))
 
 
 def ficha():

@@ -230,6 +230,21 @@
 .detail-page .ficha li em { color: #1F7A4D; font-style: normal; font-size: .82rem; font-weight: 600; text-align: right; }
 .detail-page .ficha__sello { position: absolute; right: 22px; bottom: -20px; margin: 0; padding: 10px 16px; background: var(--navy-600); color: #fff; font-family: var(--tipo-titulos); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 
+/* La red del Centro de coordinación: colores planos, sin sombras ni
+   degradados. Las líneas, el azul del gráfico de la calculadora; los
+   puntos del medio, un celeste de la misma familia. */
+/* Posicionada también en móvil, para quedar por encima del degradado de la
+   cabecera (::before). */
+.detail-page .red { position: relative; }
+.detail-page .red svg { display: block; width: 100%; height: auto; overflow: visible; }
+.detail-page .red__lineas { stroke: #4A84CF; stroke-width: 4; stroke-linecap: round; }
+.detail-page .red__entrada { fill: #fff; }
+.detail-page .red__medio { fill: #7DB9F2; }
+.detail-page .red__centro { fill: var(--amber-500); }
+@media (max-width: 899px) {
+  .detail-page .detail-hero--panel .red { max-width: 360px; margin-inline: auto; }
+}
+
 /* El gráfico de la calculadora, sobre el azul. Colores comprobados con el
    validador de la guía de gráficos sobre #001E47 (también con daltonismo). */
 .detail-page .grafico { padding: 24px 24px 18px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .14); border-bottom: 10px solid var(--amber-500); }
