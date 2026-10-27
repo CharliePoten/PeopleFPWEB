@@ -153,8 +153,8 @@
    llega hasta el borde de la pantalla y se funde con el azul por la
    izquierda, y una barra ámbar la ancla abajo, como el subrayado del
    antetítulo. Variantes:
-     --foto      foto a la derecha (soporte, ONG, ayuntamientos, empresas,
-                 voluntarios, actualidad)
+     --foto      foto a la derecha (ya sin uso: contacto, soporte, las de
+                 Para quién y actualidad llevan «Cabeceras con arte», al final)
      --fondo     foto de fondo tapada de azul (casos de impacto)
      --pantalla  una captura del panel en su ventana de navegador
      --flota     un objeto que cruza del azul al blanco (el móvil, el
@@ -253,3 +253,190 @@
 .detail-page .detail-section--white .step::before { color: var(--amber-700); }
 .detail-page .detail-section--white .step h3 { color: var(--navy-700); }
 .detail-page .detail-section--white .step p { color: var(--text-soft); }
+
+/* ==========================================================================
+   Cabeceras con arte
+   --------------------------------------------------------------------------
+   La foto, compuesta con piezas de la marca en vez de pegada como un
+   recuadro: el aro (la cabeza del isotipo), el arco de la P, las líneas del
+   logotipo, franjas, y tarjetas con la interfaz real de la app. Cada
+   composición se dibujó sobre un lienzo de 700 × 568 px y --u es un píxel de
+   ese lienzo: las formas escalan con el ancho disponible y las tarjetas
+   conservan su tamaño de lectura.
+     .arte--aro      contacto: la persona sale del aro
+     .arte--arco     ONG: la foto dentro del arco de la P
+     .arte--lineas   ayuntamientos: el grupo entre las líneas del logotipo
+     .arte--franjas  empresas: franjas y el seguimiento de una misión
+     .arte--orbita   voluntarios: los cuatro pasos alrededor del retrato
+     .arte--cristal  soporte: preguntas de la FAQ en cristal
+     .arte--rotulo   actualidad: el último artículo, como un rótulo
+   Las tarjetas que imitan la app son ilustración (aria-hidden): sus datos
+   son de ejemplo y no son de nadie.
+   ========================================================================== */
+
+.detail-page .detail-hero--arte .container { z-index: 2; }
+.detail-page .arte { position: relative; margin: 0; aspect-ratio: 700 / 568; container-type: inline-size; --u: calc(100cqw / 700); }
+.detail-page .arte > * { position: absolute; margin: 0; }
+.detail-page .arte img { display: block; max-width: none; }
+
+/* Tarjetas blancas, como las de la app. */
+.detail-page .arte__tarjeta { z-index: 3; box-sizing: border-box; padding: 18px 20px 20px; background: #fff; color: var(--navy-700); border-radius: 3px; box-shadow: 0 30px 60px rgba(0, 8, 25, .45); font-size: .84rem; line-height: 1.4; text-align: left; }
+.detail-page .arte__etiqueta { display: block; color: var(--navy-500); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.detail-page .arte__titulo { display: block; margin-top: 6px; color: var(--navy-700); font-family: var(--tipo-titulos); font-size: 1.08rem; font-weight: 700; line-height: 1.22; }
+.detail-page .arte__texto { display: block; margin-top: 6px; color: var(--navy-400); }
+.detail-page a.arte__texto:hover { color: var(--navy-600); }
+.detail-page .arte__botones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.detail-page .arte__boton { display: inline-block; margin-top: 14px; padding: 10px 16px; border-radius: 5px; background: var(--navy-600); color: #fff; font-size: .84rem; font-weight: 700; line-height: 1.2; text-decoration: none; }
+.detail-page .arte__botones .arte__boton { margin-top: 0; }
+.detail-page a.arte__boton:hover { background: var(--navy-700); color: #fff; }
+.detail-page .arte__boton--ambar { display: block; text-align: center; background: var(--amber-500); color: var(--navy-800); }
+.detail-page a.arte__boton--ambar:hover { background: var(--amber-600); color: var(--navy-900); }
+.detail-page .arte__boton--borde { padding: 9px 15px; border: 1px solid var(--navy-100); background: transparent; color: var(--navy-500); }
+.detail-page .arte__campo { display: block; margin-top: 12px; color: var(--navy-400); font-size: .72rem; font-weight: 600; }
+.detail-page .arte__campo b { position: relative; display: block; margin-top: 4px; padding: 8px 30px 8px 11px; border: 1px solid var(--navy-100); border-radius: 5px; color: var(--navy-700); font-size: .8rem; }
+.detail-page .arte__campo b::after { content: ''; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 2px solid var(--navy-400); border-bottom: 2px solid var(--navy-400); transform: translateY(-70%) rotate(45deg); }
+
+/* 1 · Contacto: la persona sale del aro, la cabeza del isotipo. */
+.detail-page .arte--aro .arte__aro { left: calc(110 * var(--u)); top: calc(128 * var(--u)); width: calc(520 * var(--u)); aspect-ratio: 1; box-sizing: border-box; border: calc(85 * var(--u)) solid var(--navy-400); border-radius: 50%; }
+.detail-page .arte--aro .arte__persona { left: calc(158 * var(--u)); top: calc(-8 * var(--u)); z-index: 1; width: calc(398 * var(--u)); height: auto; }
+.detail-page .arte--aro .arte__tarjeta--mensaje { left: calc(26 * var(--u)); top: calc(332 * var(--u)); width: 236px; }
+.detail-page .arte--aro .arte__tarjeta--espera { right: 0; bottom: calc(20 * var(--u)); width: 222px; }
+
+/* 2 · ONG: la foto dentro del arco de la P, con su trazo ámbar abierto por
+   abajo, como en el isotipo. */
+.detail-page .arte--arco .arte__trazo { left: 0; top: 0; width: 100%; height: 100%; overflow: visible; color: var(--amber-500); }
+.detail-page .arte--arco .arte__foto { left: calc(130 * var(--u)); top: calc(68 * var(--u)); z-index: 1; width: calc(500 * var(--u)); height: calc(440 * var(--u)); overflow: hidden; border-radius: 0 44% 44% 0 / 0 50% 50% 0; }
+.detail-page .arte--arco .arte__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 45% 50%; }
+.detail-page .arte--arco .arte__tarjeta { right: calc(14 * var(--u)); top: calc(24 * var(--u)); width: 236px; padding: 16px 18px 18px; }
+.detail-page .arte__prioridad { display: inline-block; padding: 3px 8px; border-radius: 6px; background: #FFE9D6; color: #A3470A; font-size: .69rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.detail-page .arte--arco .arte__titulo { margin-top: 8px; }
+.detail-page .arte__plazas { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 7px; }
+.detail-page .arte__plazas i { height: 6px; background: var(--navy-50); }
+.detail-page .arte__plazas i:nth-child(-n + 5) { background: var(--navy-600); }
+
+/* 3 · Ayuntamientos: el grupo entre las dos líneas del logotipo; el lema
+   corta la de arriba, como el «FOR». */
+.detail-page .arte--lineas .arte__banda { left: 0; right: -100vw; top: calc(420 * var(--u)); bottom: 0; border-top: 2px solid #fff; background: var(--navy-400); }
+.detail-page .arte--lineas .arte__regla { top: calc(280 * var(--u)); height: 2px; background: rgba(255, 255, 255, .6); }
+.detail-page .arte--lineas .arte__regla--1 { left: 0; width: calc(266 * var(--u)); }
+.detail-page .arte--lineas .arte__regla--2 { left: calc(500 * var(--u)); right: -100vw; }
+.detail-page .arte--lineas .arte__lema { left: calc(266 * var(--u)); top: calc(281 * var(--u)); width: calc(234 * var(--u)); transform: translateY(-50%); color: var(--amber-500); font-family: var(--tipo-titulos); font-size: max(10px, calc(13 * var(--u))); font-weight: 800; letter-spacing: .16em; line-height: 1; text-align: center; text-transform: uppercase; white-space: nowrap; }
+.detail-page .arte--lineas .arte__grupo { left: calc(-20 * var(--u)); top: calc(243 * var(--u)); z-index: 1; width: calc(812 * var(--u)); height: auto; }
+/* La notificación se apoya justo encima de la línea, a cualquier ancho. */
+.detail-page .arte--lineas .arte__tarjeta { right: calc(34 * var(--u)); bottom: calc(306 * var(--u)); width: 330px; padding: 16px 18px 18px; }
+.detail-page .arte__aviso { display: flex; align-items: center; gap: 6px; color: var(--navy-400); font-size: .75rem; }
+.detail-page .arte__aviso img { width: 22px; height: 22px; margin-right: 2px; }
+.detail-page .arte__aviso b { color: var(--navy-700); }
+.detail-page .arte--lineas .arte__titulo { margin-top: 10px; }
+
+/* 4 · Empresas: franjas en el borde de la foto y el seguimiento de una
+   misión corporativa, de publicada a horas validadas. */
+.detail-page .arte--franjas .arte__foto { left: calc(240 * var(--u)); top: calc(44 * var(--u)); width: calc(360 * var(--u)); height: calc(476 * var(--u)); object-fit: cover; object-position: 50% 35%; }
+.detail-page .arte--franjas .arte__franja { top: calc(44 * var(--u)); height: calc(476 * var(--u)); }
+.detail-page .arte--franjas .arte__franja--azul { left: calc(536 * var(--u)); width: calc(64 * var(--u)); background: var(--navy-400); opacity: .8; }
+.detail-page .arte--franjas .arte__franja--ambar { left: calc(600 * var(--u)); width: calc(14 * var(--u)); background: var(--amber-500); }
+.detail-page .arte--franjas .arte__tarjeta { left: calc(70 * var(--u)); top: calc(142 * var(--u)); width: 292px; padding: 20px 22px 22px; }
+.detail-page .arte__pasos { margin: 16px 0 0; padding: 0; list-style: none; }
+.detail-page .arte__pasos li { position: relative; padding: 1px 0 14px 34px; }
+.detail-page .arte__pasos li:last-child { padding-bottom: 0; }
+.detail-page .arte__pasos li::before { content: ''; position: absolute; left: 0; top: 0; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; background: var(--navy-100); }
+.detail-page .arte__pasos li::after { content: ''; position: absolute; left: 10px; top: 24px; bottom: 2px; width: 2px; background: var(--navy-200); }
+.detail-page .arte__pasos li:last-child::after { display: none; }
+.detail-page .arte__pasos .es-hecho::before { background: var(--navy-600) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.5 9.5 3.5' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; }
+.detail-page .arte__pasos .es-actual::before { border: 2px solid var(--navy-600); background: #fff radial-gradient(circle, var(--amber-500) 0 4.5px, transparent 5px); }
+.detail-page .arte__pasos .es-actual::after { background: var(--navy-100); }
+.detail-page .arte__pasos b { display: block; color: var(--navy-700); font-size: .9rem; font-weight: 600; line-height: 1.3; }
+.detail-page .arte__pasos small { display: block; margin-top: 2px; color: var(--navy-400); font-size: .78rem; }
+.detail-page .arte__pasos .es-actual b { font-weight: 800; }
+.detail-page .arte__pasos .es-actual small { color: #8C5A02; font-weight: 700; }
+.detail-page .arte__pasos .es-pendiente b { color: var(--navy-400); }
+
+/* 5 · Voluntarios: los cuatro pasos de una misión en la app, alrededor del
+   retrato. */
+.detail-page .arte--orbita .arte__orbita { left: calc(118 * var(--u)); top: calc(22 * var(--u)); width: calc(524 * var(--u)); aspect-ratio: 1; box-sizing: border-box; border: 1.5px dashed rgba(255, 255, 255, .4); border-radius: 50%; }
+.detail-page .arte--orbita .arte__anillo { left: calc(180 * var(--u)); top: calc(84 * var(--u)); width: calc(400 * var(--u)); aspect-ratio: 1; border-radius: 50%; background: var(--navy-500); }
+.detail-page .arte--orbita .arte__foto { left: calc(210 * var(--u)); top: calc(114 * var(--u)); z-index: 1; width: calc(340 * var(--u)); aspect-ratio: 1; overflow: hidden; border-radius: 50%; box-shadow: 0 0 0 4px var(--navy-700), 0 0 0 5px rgba(255, 255, 255, .7); }
+.detail-page .arte--orbita .arte__foto img { position: absolute; left: calc(-696 * var(--u)); top: calc(-4 * var(--u)); width: calc(1244 * var(--u)); height: calc(700 * var(--u)); }
+.detail-page .arte__nodo { z-index: 2; display: flex; width: calc(66 * var(--u)); aspect-ratio: 1; box-sizing: border-box; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, .45); border-radius: 50%; background: var(--navy-500); color: #fff; font-family: var(--tipo-titulos); font-size: max(12px, calc(20 * var(--u))); font-weight: 800; }
+.detail-page .arte__nodo--1 { left: calc(132 * var(--u)); top: calc(101 * var(--u)); border-color: var(--amber-500); background: var(--amber-500); color: var(--navy-800); }
+.detail-page .arte__nodo--2 { left: calc(497 * var(--u)); top: calc(36 * var(--u)); border-color: #fff; background: #fff; color: var(--navy-800); box-shadow: 0 0 0 7px rgba(252, 175, 23, .38); }
+.detail-page .arte__nodo--3 { left: calc(562 * var(--u)); top: calc(401 * var(--u)); }
+.detail-page .arte__nodo--4 { left: calc(197 * var(--u)); top: calc(466 * var(--u)); }
+.detail-page .arte__paso { z-index: 2; color: rgba(255, 255, 255, .75); font-size: .78rem; line-height: 1.35; white-space: nowrap; }
+.detail-page .arte__paso b, .detail-page .arte__paso span { display: block; }
+.detail-page .arte__paso b { color: #fff; font-size: .94rem; }
+.detail-page .arte__paso--1 { right: calc(580 * var(--u)); top: calc(112 * var(--u)); text-align: right; }
+.detail-page .arte__paso--2 { left: calc(578 * var(--u)); top: calc(47 * var(--u)); }
+.detail-page .arte__paso--2 span { color: var(--amber-300); font-weight: 700; }
+.detail-page .arte__paso--3 { left: calc(595 * var(--u)); top: calc(476 * var(--u)); transform: translateX(-50%); text-align: center; }
+.detail-page .arte__paso--4 { right: calc(516 * var(--u)); top: calc(478 * var(--u)); text-align: right; }
+
+/* 6 · Centro de soporte: preguntas de la FAQ, en cristal sobre la foto. */
+.detail-page .arte--cristal .arte__franja { top: calc(24 * var(--u)); height: calc(250 * var(--u)); }
+.detail-page .arte--cristal .arte__franja--ambar { left: calc(152 * var(--u)); width: calc(14 * var(--u)); background: var(--amber-500); }
+.detail-page .arte--cristal .arte__franja--azul { left: calc(166 * var(--u)); width: calc(64 * var(--u)); background: var(--navy-400); }
+.detail-page .arte--cristal .arte__foto { left: calc(196 * var(--u)); top: calc(52 * var(--u)); z-index: 1; width: calc(464 * var(--u)); height: calc(320 * var(--u)); object-fit: cover; object-position: 65% 50%; }
+.detail-page .arte__pildora { left: calc(50 * var(--u)); top: calc(340 * var(--u)); z-index: 2; display: flex; height: 60px; box-sizing: border-box; padding: 0 28px 0 24px; align-items: center; gap: 14px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 30px; background: rgba(10, 47, 94, .5); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 20px 50px rgba(0, 8, 25, .35); color: #fff; font-family: var(--tipo-titulos); font-size: 1.19rem; font-weight: 700; white-space: nowrap; }
+.detail-page .arte__pildora::before { content: ''; width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--amber-500); }
+.detail-page .arte__pregunta { left: calc(50 * var(--u) + 48px); z-index: 2; color: rgba(255, 255, 255, .8); font-size: 1.06rem; font-weight: 600; white-space: nowrap; }
+.detail-page .arte__pregunta--2 { top: calc(422 * var(--u)); }
+.detail-page .arte__pregunta--3 { top: calc(458 * var(--u)); color: rgba(255, 255, 255, .6); }
+
+/* 7 · Actualidad: el último artículo, como el rótulo de un informativo,
+   entre dos líneas del logotipo. */
+.detail-page .arte--rotulo .arte__regla { left: calc(60 * var(--u)); right: -100vw; height: 2px; background: rgba(255, 255, 255, .55); }
+.detail-page .arte--rotulo .arte__regla--1 { top: calc(28 * var(--u)); }
+.detail-page .arte--rotulo .arte__regla--2 { top: calc(520 * var(--u)); }
+.detail-page .arte--rotulo .arte__foto { left: calc(108 * var(--u)); top: calc(56 * var(--u)); width: calc(552 * var(--u)); height: calc(352 * var(--u)); object-fit: cover; object-position: 60% 50%; }
+.detail-page .arte__noticia { left: calc(60 * var(--u)); bottom: calc(69 * var(--u)); z-index: 2; width: min(470px, 100% - 60 * var(--u)); box-sizing: border-box; padding: 18px 22px 20px; background: #fff; box-shadow: 0 30px 60px rgba(0, 8, 25, .4); }
+.detail-page .arte__fecha { position: absolute; left: 0; bottom: 100%; margin: 0; padding: 7px 12px; background: var(--amber-500); color: var(--navy-800); font-size: .75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.detail-page .arte__noticia-titulo { display: block; color: var(--navy-700); font-family: var(--tipo-titulos); font-size: 1.3rem; font-weight: 700; line-height: 1.25; text-decoration: none; }
+.detail-page .arte__noticia-titulo:hover { color: var(--navy-500); text-decoration: underline; }
+.detail-page .arte__noticia .text-link { display: inline-block; margin-top: 10px; font-size: .88rem; }
+
+/* Escritorio: la composición a la derecha del texto, apoyada en el borde
+   inferior de la cabecera. */
+@media (min-width: 1024px) {
+  .detail-page .detail-hero--arte { display: flex; min-height: clamp(540px, 47vw, 610px); padding: 48px 0 56px; align-items: center; }
+  .detail-page .detail-hero--arte .container { flex: none; }
+  .detail-page .detail-hero--arte .container > * { max-width: min(480px, 40vw); }
+  .detail-page .detail-hero--arte h1 { font-size: clamp(2.4rem, 3.6vw, 3.25rem); }
+  .detail-page .detail-hero--arte .arte { position: absolute; z-index: 1; bottom: 0; left: calc(max(24px, 50% - 570px) + min(480px, 40vw) + 20px); right: max(8px, 50% - 610px); }
+}
+/* Portátiles pequeños: la composición es más estrecha y se queda con su
+   tarjeta principal. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .detail-page .arte__tarjeta--amplia, .detail-page .arte__paso { display: none; }
+  .detail-page .arte--franjas .arte__tarjeta { left: 0; }
+}
+/* Tableta y móvil: debajo del texto, apoyada en el borde inferior. */
+@media (max-width: 1023px) {
+  .detail-page .detail-hero--arte { padding-bottom: 0; }
+  .detail-page .detail-hero--arte .arte { width: min(100% - 32px, 640px); margin: 40px auto 0; }
+  .detail-page .arte--lineas .arte__banda, .detail-page .arte--rotulo .arte__regla { left: -100vw; }
+  .detail-page .arte--lineas .arte__regla--1 { left: -100vw; width: calc(100vw + 266 * var(--u)); }
+}
+@media (max-width: 767px) {
+  .detail-page .arte__paso { display: none; }
+}
+/* Móvil: solo la composición; las tarjetas no caben a su tamaño de lectura. */
+@media (max-width: 599px) {
+  .detail-page .detail-hero--arte .arte { width: 100%; margin-top: 32px; }
+  .detail-page .arte__tarjeta, .detail-page .arte__pregunta--3 { display: none; }
+  .detail-page .arte--franjas > * { translate: calc(-110 * var(--u)) 0; }
+  /* Sin la notificación, el lienzo empieza en la línea: el grupo entero, sin
+     hueco encima. */
+  .detail-page .arte--lineas { aspect-ratio: 700 / 300; }
+  .detail-page .arte--lineas .arte__grupo { left: 0; top: calc(20 * var(--u)); width: calc(700 * var(--u)); }
+  .detail-page .arte--lineas .arte__banda { top: calc(178 * var(--u)); }
+  .detail-page .arte--lineas .arte__regla { top: calc(50 * var(--u)); }
+  .detail-page .arte--lineas .arte__regla--1 { width: calc(100vw + 200 * var(--u)); }
+  .detail-page .arte--lineas .arte__regla--2 { left: calc(500 * var(--u)); }
+  .detail-page .arte--lineas .arte__lema { left: calc(200 * var(--u)); top: calc(51 * var(--u)); width: calc(300 * var(--u)); }
+  .detail-page .arte__pildora { left: calc(24 * var(--u)); height: 46px; padding: 0 18px 0 16px; gap: 10px; font-size: .94rem; }
+  .detail-page .arte__pregunta { left: calc(24 * var(--u) + 36px); font-size: .9rem; }
+  .detail-page .arte__pregunta--2 { top: calc(340 * var(--u) + 58px); }
+  .detail-page .arte__noticia { left: 16px; width: calc(100% - 32px); padding: 14px 16px 16px; }
+  .detail-page .arte__noticia-titulo { font-size: 1.08rem; }
+  .detail-page .arte__fecha { font-size: .68rem; }
+}

@@ -59,11 +59,19 @@ def cabecera_azul(pre, eyebrow, titulo, entrada, botones, clase='', figura=''):
             + '<div class="detail-hero__actions">' + ''.join(botones) + '</div></div>' + figura + '</section>')
 
 
-def foto(src, ancho, alto, foco='50% 50%'):
-    """Foto junto al título, hasta el borde derecho. Es decorativa: el
-    título ya dice de qué va la página."""
-    return ('<figure class="detail-hero__foto" style="--foco: %s"><img src="%s" width="%d" height="%d" alt="" /></figure>'
-            % (foco, src, ancho, alto))
+def cristal(pre):
+    """Centro de soporte: tres preguntas de la FAQ, en cristal sobre la foto
+    (ver «Cabeceras con arte» en css/detail.css). Es ilustración: las
+    preguntas de verdad están debajo."""
+    return ('<div class="arte arte--cristal" aria-hidden="true">'
+            '<span class="arte__franja arte__franja--ambar"></span><span class="arte__franja arte__franja--azul"></span>'
+            '<img class="arte__foto" src="%simagenes/paginas/soporte.webp" width="1400" height="788" alt="" />' % pre
+            + txt('span', 'faq.arte1', '¿Cuánto cuesta usar la app?', 'Was kostet die Nutzung der App?', clase='arte__pildora')
+            + txt('span', 'faq.arte2', '¿Cómo se acreditan mis horas?', 'Wie werden meine Stunden nachgewiesen?',
+                  clase='arte__pregunta arte__pregunta--2')
+            + txt('span', 'faq.arte3', '¿Funciona sin cobertura?', 'Funktioniert die App ohne Netz?',
+                  clase='arte__pregunta arte__pregunta--3')
+            + '</div>')
 
 
 def ventana(src, url, alt_clave):
@@ -476,7 +484,7 @@ def ayuda():
                       ('faq.title', 'Preguntas frecuentes', 'Häufige Fragen'),
                       ('faq.lead', 'Lo que más nos preguntáis, ordenado por temas. Pulsa una pregunta para ver la respuesta.',
                        'Die häufigsten Fragen, nach Themen sortiert. Tippe auf eine Frage, um die Antwort zu sehen.'),
-                      [], clase='detail-hero--foto', figura=foto('imagenes/paginas/soporte.webp', 1400, 788, '62% 40%')).replace('<div class="detail-hero__actions"></div>', '<p class="pag-idioma" data-i18n="cases.soloEs"></p>', 1),
+                      [], clase='detail-hero--arte', figura=cristal('')).replace('<div class="detail-hero__actions"></div>', '<p class="pag-idioma" data-i18n="cases.soloEs"></p>', 1),
         '  <section class="detail-section detail-section--white"><div class="container faq">'
         '<nav class="faq__indice" aria-label="Temas">' + indice + '</nav>'
         '<div class="faq__grupos">' + grupos + '</div></div></section>',

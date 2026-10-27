@@ -149,7 +149,35 @@
     'docs.privacyB': 'Qué datos tratamos y cómo ejercer tus derechos.',
     'docs.termsB': 'Las condiciones de uso de la web y de la plataforma.',
     'docs.imprintB': 'Identificación del responsable y marco legal del sitio.',
-    'docs.read': 'Leer documento →'
+    'docs.read': 'Leer documento →',
+
+    // Cabeceras con arte (css/detail.css): las tarjetas que imitan la app.
+    'arte.escribir': 'Escribir un mensaje',
+    'arte.alta': 'Prioridad alta',
+    'arte.reparto': 'Punto de reparto',
+    'arte.plazas': 'Plazas cubiertas',
+    'arte.lema': 'Misión municipal',
+    'arte.ahora': 'ahora',
+    'arte.avisoTitulo': 'Tu ayuntamiento ha publicado una misión',
+    'arte.avisoTexto': 'Punto de reparto · sábado, 10:00 · Se busca voluntariado',
+    'arte.verMision': 'Ver misión',
+    'arte.comoLlegar': 'Cómo llegar',
+    'arte.e.etiqueta': 'Misión corporativa',
+    'arte.e.titulo': 'Voluntariado de la plantilla',
+    'arte.e.p1': 'Misión publicada',
+    'arte.e.p2': 'Plantilla inscrita',
+    'arte.e.p3': 'Horas fichadas en el terreno',
+    'arte.e.p4': 'Horas validadas para tu memoria de RSC',
+    'arte.hecho': 'Hecho',
+    'arte.enCurso': 'En curso',
+    'arte.v.p1': 'Inscripción',
+    'arte.v.p1b': 'Eliges una misión',
+    'arte.v.p2': 'De camino',
+    'arte.v.p2b': 'Ahora',
+    'arte.v.p3': 'En el lugar',
+    'arte.v.p3b': 'Fichas al llegar',
+    'arte.v.p4': 'Completada',
+    'arte.v.p4b': 'La entidad valida tus horas'
   });
 
   Object.assign(window.I18N.de, {
@@ -300,6 +328,33 @@
     'docs.privacyB': 'Welche Daten wir verarbeiten und wie du deine Rechte ausübst.',
     'docs.termsB': 'Nutzungsbedingungen für Website und Plattform.',
     'docs.imprintB': 'Verantwortliche Person und rechtlicher Rahmen der Website.',
-    'docs.read': 'Dokument lesen →'
+    'docs.read': 'Dokument lesen →',
+
+    'arte.escribir': 'Nachricht schreiben',
+    'arte.alta': 'Hohe Priorität',
+    'arte.reparto': 'Verteilstelle',
+    'arte.plazas': 'Besetzte Plätze',
+    'arte.lema': 'Kommunaler Einsatz',
+    'arte.ahora': 'jetzt',
+    'arte.avisoTitulo': 'Deine Gemeinde hat einen Einsatz veröffentlicht',
+    'arte.avisoTexto': 'Verteilstelle · Samstag, 10:00 · Freiwillige gesucht',
+    'arte.verMision': 'Einsatz ansehen',
+    'arte.comoLlegar': 'Route',
+    'arte.e.etiqueta': 'Firmeneinsatz',
+    'arte.e.titulo': 'Engagement der Belegschaft',
+    'arte.e.p1': 'Einsatz veröffentlicht',
+    'arte.e.p2': 'Belegschaft angemeldet',
+    'arte.e.p3': 'Stunden vor Ort erfasst',
+    'arte.e.p4': 'Bestätigte Stunden für euren CSR-Bericht',
+    'arte.hecho': 'Erledigt',
+    'arte.enCurso': 'Läuft',
+    'arte.v.p1': 'Anmeldung',
+    'arte.v.p1b': 'Du wählst einen Einsatz',
+    'arte.v.p2': 'Unterwegs',
+    'arte.v.p2b': 'Jetzt',
+    'arte.v.p3': 'Vor Ort',
+    'arte.v.p3b': 'Check-in bei Ankunft',
+    'arte.v.p4': 'Abgeschlossen',
+    'arte.v.p4b': 'Deine Stunden werden bestätigt'
   });
 })();
