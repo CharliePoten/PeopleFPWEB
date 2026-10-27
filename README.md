@@ -29,7 +29,7 @@ python _herramientas/seo.py --check   # avisa si algo está desfasado
 
 ## Analítica
 
-Google Analytics 4 (`G-BNMCSPGJ4B`) lo carga `js/analitica.js`, y **solo si la
+Google Analytics 4 (`G-BW63R3XK9E`) lo carga `js/analitica.js`, y **solo si la
 persona acepta** en el aviso de cookies: no pegar la etiqueta de Google en el
 `<head>`, porque se cargaría antes del consentimiento (art. 22.2 LSSI).
 

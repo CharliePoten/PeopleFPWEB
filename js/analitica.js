@@ -32,7 +32,7 @@
 (function () {
   'use strict';
 
-  var ID = 'G-BNMCSPGJ4B';
+  var ID = 'G-BW63R3XK9E';
   var CLAVE = 'pfp.cookies';
   var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;
   var PRODUCCION = /^(www\.)?peopleforpeople\.es$/.test(window.location.hostname);
