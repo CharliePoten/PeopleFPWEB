@@ -79,8 +79,10 @@
     </div>
   </section>
 
-  <!-- Qué hacemos, justo después de la portada: el titular y la foto lado a
-       lado y, debajo, las tres ideas con su icono. -->
+  <!-- Qué hacemos, justo después de la portada: el titular y el vídeo de
+       presentación lado a lado y, debajo, las tres ideas. El vídeo está en
+       inglés; lleva subtítulos y salen en el idioma de la página (home.js).
+       No se descarga nada hasta que se pulsa: solo la imagen de portada. -->
   <section class="section what" id="que-hacemos">
     <div class="container">
       <div class="what__rejilla">
@@ -90,7 +92,19 @@
           <p data-i18n="what.lead">PeopleForPeople reúne en un mismo flujo a quien ofrece su tiempo y a las organizaciones que detectan necesidades y coordinan la respuesta.</p>
           <a class="text-link what__mas" href="plataforma/centro-de-coordinacion.html" data-i18n="what.more">Conoce la plataforma →</a>
         </div>
-        <figure class="what__foto reveal"><img src="imagenes/que-hacemos-equipo.webp" width="1200" height="675" loading="lazy" alt="" /></figure>
+        <figure class="what__foto what__video reveal">
+          <div class="what__marco">
+            <video id="video-presentacion" controls preload="none" playsinline width="1920" height="1080" poster="video/presentacion-portada.webp" aria-label="Vídeo de presentación de PeopleForPeople, en inglés con subtítulos" data-i18n-aria="what.videoAria">
+              <source src="video/presentacion-720.mp4" type="video/mp4" media="(max-width: 800px)" />
+              <source src="video/presentacion.mp4" type="video/mp4" />
+              <track kind="subtitles" srclang="es" label="Español" src="video/presentacion.es.vtt" default />
+              <track kind="subtitles" srclang="de" label="Deutsch" src="video/presentacion.de.vtt" />
+              <track kind="subtitles" srclang="en" label="English" src="video/presentacion.en.vtt" />
+            </video>
+            <button class="what__play" type="button" hidden aria-label="Ver el vídeo de presentación" data-i18n-aria="what.play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg></button>
+          </div>
+          <figcaption class="what__pie" data-i18n="what.videoPie">Vídeo de presentación · 57 s · en inglés, con subtítulos</figcaption>
+        </figure>
       </div>
       <ul class="what__claves"><li class="what__clave reveal"><span class="what__num">01</span><h3 data-i18n="what.k1">Cerca de ti</h3><p data-i18n="what.c1b">Un mapa y una lista con misiones ordenadas por distancia, urgencia y afinidad.</p></li><li class="what__clave reveal"><span class="what__num">02</span><h3 data-i18n="what.k2">En minutos</h3><p data-i18n="what.c2b">Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.</p></li><li class="what__clave reveal"><span class="what__num">03</span><h3 data-i18n="what.k3">Con datos</h3><p data-i18n="what.c3b">Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.</p></li></ul>
     </div>

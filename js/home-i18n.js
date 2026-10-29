@@ -106,6 +106,9 @@
     'what.c2b': 'Las organizaciones publican necesidades y encuentran a las personas adecuadas sin perder tiempo.',
     'what.c3t': 'Seguimiento con datos',
     'what.c3b': 'Plazas, mensajería y estado de cada misión para saber qué está cubierto y qué falta.',
+    'what.play': 'Ver el vídeo de presentación',
+    'what.videoAria': 'Vídeo de presentación de PeopleForPeople, en inglés con subtítulos',
+    'what.videoPie': 'Vídeo de presentación · 57 s · en inglés, con subtítulos',
 
     'who.title': 'Dos maneras de formar parte.',
     'who.lead': 'Participa como persona voluntaria o registra la organización desde la que coordinas.',
@@ -288,6 +291,9 @@
     'what.c2b': 'Organisationen veröffentlichen Bedarfe und finden ohne Zeitverlust die passenden Menschen.',
     'what.c3t': 'Nachverfolgung mit Daten',
     'what.c3b': 'Plätze, Nachrichten und Einsatzstatus zeigen, was abgedeckt ist und was noch fehlt.',
+    'what.play': 'Präsentationsvideo ansehen',
+    'what.videoAria': 'Präsentationsvideo von PeopleForPeople, auf Englisch mit Untertiteln',
+    'what.videoPie': 'Präsentationsvideo · 57 s · auf Englisch, mit Untertiteln',
 
     'who.title': 'Zwei Wege, Teil davon zu werden.',
     'who.lead': 'Mach als freiwillige Person mit oder registriere die Organisation, aus der du koordinierst.',

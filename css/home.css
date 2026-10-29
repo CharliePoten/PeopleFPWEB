@@ -189,6 +189,20 @@
 .home .what__foto img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: 50% 30%; }
 .home .what__foto::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 13%; background: rgba(0, 37, 87, .78); }
 .home .what__foto::after { content: ''; position: absolute; top: 0; bottom: 0; right: -4.5%; width: 4.5%; background: var(--amber-500); }
+/* Con el vídeo de presentación en lugar de la foto: entero en 16:9, sin
+   recortar, con esquinas rectas y sin las franjas de la foto: el vídeo va
+   limpio, sin nada encima ni al lado, y ocupa todo el ancho de su columna.
+   El botón de reproducir es el ámbar de los botones. */
+.home .what__video { margin-right: 0; }
+.home .what__video::before, .home .what__video::after { content: none; }
+.home .what__marco { position: relative; }
+.home .what__video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--navy-800, #001636); }
+.home .what__play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: clamp(64px, 8vw, 92px); aspect-ratio: 1; margin: 0; padding: 0; border: 0; border-radius: 50%; background: var(--amber-500); color: var(--navy-800, #001636); cursor: pointer; transform: translate(-50%, -50%); box-shadow: 0 14px 34px rgba(0, 22, 54, .35); transition: transform .15s ease, background-color .15s ease; }
+.home .what__play[hidden], .home .what__video.is-playing .what__play { display: none; }
+.home .what__play:hover { background: var(--amber-600); transform: translate(-50%, -50%) scale(1.06); }
+.home .what__play:focus-visible { outline: 3px solid var(--navy-600); outline-offset: 4px; }
+.home .what__play svg { width: 40%; height: 40%; margin-left: 8%; fill: currentColor; }
+.home .what__pie { margin: 12px 0 0; color: var(--text-mute); font-size: .86rem; }
 .home .what__claves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; list-style: none; }
 .home .what__clave { padding: 24px 0; border-top: 1px solid var(--border); }
 .home .what__num { display: block; margin-bottom: 12px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }

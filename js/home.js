@@ -288,3 +288,44 @@
 
   pintar();
 })();
+
+/* El vídeo de presentación de «Qué hacemos». Está en inglés: sus subtítulos
+   salen en el idioma de la página y cambian con él (site.js cambia `lang`
+   en <html>). Mientras no se reproduce, en lugar de la barra del navegador
+   se ve la portada con el botón de reproducir; sin JavaScript queda el
+   vídeo con sus controles de siempre. */
+(function () {
+  'use strict';
+
+  var video = document.getElementById('video-presentacion');
+  if (!video) return;
+  var figura = video.closest('.what__video');
+  var boton = figura && figura.querySelector('.what__play');
+
+  function subtitulos() {
+    var idioma = (document.documentElement.lang || 'es').slice(0, 2);
+    Array.prototype.forEach.call(video.textTracks, function (pista) {
+      pista.mode = pista.language === idioma ? 'showing' : 'disabled';
+    });
+  }
+
+  if (boton) {
+    video.removeAttribute('controls');
+    boton.hidden = false;
+    boton.addEventListener('click', function () {
+      video.setAttribute('controls', '');
+      var promesa = video.play();
+      if (promesa && promesa.catch) promesa.catch(function () { /* sin permiso para sonar: quedan los controles */ });
+    });
+  }
+  video.addEventListener('play', function () {
+    video.setAttribute('controls', '');
+    if (figura) figura.classList.add('is-playing');
+  });
+  video.addEventListener('ended', function () {
+    if (figura) figura.classList.remove('is-playing');
+  });
+
+  subtitulos();
+  new MutationObserver(subtitulos).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+})();
