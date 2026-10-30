@@ -22,7 +22,7 @@
     'plan.medium': 'Mediana',
     'plan.large': 'Grande',
 
-    'vol.eyebrow': 'Personas voluntarias',
+    'vol.eyebrow': 'Voluntariado cerca de ti',
     'vol.hero': 'Ayuda desde la app, a tu ritmo.',
     'vol.lead': 'Encuentra misiones publicadas por organizaciones verificadas, elige dónde puedes aportar y coordínate con la entidad. El acceso para voluntarios es siempre gratuito.',
     'vol.cta': 'Quiero inscribirme',
@@ -53,7 +53,7 @@
     'vol.finalTitle': 'Crea tu cuenta y empieza.',
     'vol.finalLead': 'El registro de voluntariado es gratuito. La app llegará a las tiendas más adelante; tu cuenta te estará esperando.',
 
-    'ngo.eyebrow': 'ONG y asociaciones',
+    'ngo.eyebrow': 'Gestión de voluntarios para ONG',
     'ngo.hero': 'Más manos para cada misión.',
     'ngo.lead': 'Publica misiones planificadas o urgentes, cubre plazas y mantén informadas a las personas voluntarias desde un solo lugar.',
     'ngo.cta': 'Inscribirme como ONG',
@@ -82,7 +82,7 @@
     'ngo.finalTitle': 'Prueba PeopleForPeople con una misión real.',
     'ngo.finalLead': 'Te ayudamos a verificar la entidad y preparar la primera publicación.',
 
-    'mun.eyebrow': 'Ayuntamientos',
+    'mun.eyebrow': 'Voluntariado para ayuntamientos',
     'mun.hero': 'Una ciudadanía lista para actuar.',
     'mun.lead': 'Convoca voluntariado para misiones municipales planificadas o urgentes, con información clara y una visión compartida de cada misión.',
     'mun.cta': 'Inscribirme como ayuntamiento',
@@ -111,7 +111,7 @@
     'mun.finalTitle': 'Empieza con una misión municipal.',
     'mun.finalLead': 'La verificación y las dos primeras publicaciones son gratuitas.',
 
-    'corp.eyebrow': 'Empresas con iniciativa RSC',
+    'corp.eyebrow': 'Voluntariado corporativo para empresas',
     'corp.hero': 'Un programa social que la plantilla quiere vivir.',
     'corp.lead': 'Crea misiones de voluntariado corporativo, facilita la participación y conecta tus iniciativas RSC con necesidades coordinadas por la empresa.',
     'corp.cta': 'Inscribirme como empresa',
@@ -201,7 +201,7 @@
     'plan.medium': 'Mittel',
     'plan.large': 'Groß',
 
-    'vol.eyebrow': 'Freiwillige',
+    'vol.eyebrow': 'Ehrenamt in deiner Nähe',
     'vol.hero': 'Hilf mit der App – in deinem Tempo.',
     'vol.lead': 'Finde Einsätze verifizierter Organisationen, entscheide, wo du helfen kannst, und stimme dich mit der Organisation ab. Für Freiwillige bleibt alles kostenlos.',
     'vol.cta': 'Ich möchte mich anmelden',
@@ -232,7 +232,7 @@
     'vol.finalTitle': 'Leg dein Konto an und fang an.',
     'vol.finalLead': 'Die Anmeldung als Freiwillige:r ist kostenlos. Die App kommt später in die Stores; dein Konto wartet dann schon.',
 
-    'ngo.eyebrow': 'NGOs und Vereine',
+    'ngo.eyebrow': 'Freiwilligenmanagement für NGOs',
     'ngo.hero': 'Mehr Hände für jeden Einsatz.',
     'ngo.lead': 'Veröffentlicht geplante oder dringende Einsätze, besetzt Plätze und informiert Freiwillige an einem Ort.',
     'ngo.cta': 'Als NGO anmelden',
@@ -261,7 +261,7 @@
     'ngo.finalTitle': 'Testet PeopleForPeople mit einem echten Einsatz.',
     'ngo.finalLead': 'Wir helfen bei der Verifizierung und der ersten Veröffentlichung.',
 
-    'mun.eyebrow': 'Kommunen',
+    'mun.eyebrow': 'Freiwilligenkoordination für Kommunen',
     'mun.hero': 'Eine Bürgerschaft, die handeln kann.',
     'mun.lead': 'Mobilisiert Freiwillige für geplante oder dringende kommunale Einsätze – mit klaren Informationen und einer gemeinsamen Übersicht.',
     'mun.cta': 'Als Kommune anmelden',
@@ -290,7 +290,7 @@
     'mun.finalTitle': 'Startet mit einem kommunalen Einsatz.',
     'mun.finalLead': 'Verifizierung und die ersten beiden Veröffentlichungen sind kostenlos.',
 
-    'corp.eyebrow': 'Unternehmen mit CSR-Initiative',
+    'corp.eyebrow': 'Corporate Volunteering für Unternehmen',
     'corp.hero': 'Ein Sozialprogramm, das Mitarbeitende erleben wollen.',
     'corp.lead': 'Erstellt Corporate-Volunteering-Einsätze, erleichtert die Teilnahme und verbindet eure CSR-Initiativen mit koordinierten Bedarfen.',
     'corp.cta': 'Als Unternehmen anmelden',

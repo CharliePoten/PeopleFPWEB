@@ -49,7 +49,11 @@
   background: var(--amber-500);
 }
 
-.detail-page .detail-hero h1 { max-width: 17ch; color: #fff; font-size: clamp(2.45rem, 6vw, 5rem); line-height: 1.04; text-wrap: balance; }
+.detail-page .detail-hero h1, .detail-page .detail-hero__titulo { max-width: 17ch; color: #fff; font-size: clamp(2.45rem, 6vw, 5rem); line-height: 1.04; text-wrap: balance; }
+/* En las páginas de cada público el <h1> es el nombre de arriba («Voluntariado
+   para ayuntamientos»: lo que se busca en Google, con las mismas letras de
+   antes) y el eslogan se queda debajo, igual de grande, en un párrafo. */
+.detail-page .detail-hero__titulo { margin: 0; font-family: var(--tipo-titulos); font-weight: 700; letter-spacing: -0.015em; }
 .detail-page .detail-hero__lead { max-width: 64ch; margin: 24px 0 0; color: rgba(255,255,255,.8); font-size: clamp(1.02rem, 2vw, 1.22rem); }
 .detail-page .detail-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .detail-page .detail-hero__actions .btn--ghost { color: #fff; border-color: rgba(255,255,255,.4); }
@@ -175,7 +179,8 @@
 
 @media (min-width: 900px) {
   .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) .container > * { max-width: min(560px, 46vw); }
-  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) h1 { font-size: clamp(2.3rem, 4.4vw, 3.8rem); }
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) h1,
+  .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--flota, .detail-hero--panel) .detail-hero__titulo { font-size: clamp(2.3rem, 4.4vw, 3.8rem); }
   .detail-page :is(.detail-hero--foto, .detail-hero--pantalla, .detail-hero--panel) { min-height: 540px; display: flex; align-items: center; }
   /* El hero es flex para centrar en vertical; el contenedor conserva su ancho
      limitado y su margen automático. */
@@ -415,7 +420,7 @@
   .detail-page .detail-hero--arte { display: flex; min-height: clamp(540px, 47vw, 610px); padding: 48px 0 56px; align-items: center; }
   .detail-page .detail-hero--arte .container { flex: none; }
   .detail-page .detail-hero--arte .container > * { max-width: min(480px, 40vw); }
-  .detail-page .detail-hero--arte h1 { font-size: clamp(2.4rem, 3.6vw, 3.25rem); }
+  .detail-page .detail-hero--arte h1, .detail-page .detail-hero--arte .detail-hero__titulo { font-size: clamp(2.4rem, 3.6vw, 3.25rem); }
   .detail-page .detail-hero--arte .arte { position: absolute; z-index: 1; bottom: 0; left: calc(max(24px, 50% - 570px) + min(480px, 40vw) + 20px); right: max(8px, 50% - 610px); }
 }
 /* Portátiles pequeños: la composición es más estrecha y se queda con su
