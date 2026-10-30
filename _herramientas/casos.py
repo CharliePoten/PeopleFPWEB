@@ -146,7 +146,8 @@ def cuerpo_html(md):
 
 # ---------------------------------------------------------------- plantilla
 
-ATRIBUTO_RELATIVO = re.compile(r'((?:href|src)=")(?!https?:|mailto:|#|/|\.\./|data:)([^"]*")')
+# `./` (la portada vista desde la raíz) se cambia por `../`, no se le antepone.
+ATRIBUTO_RELATIVO = re.compile(r'((?:href|src)=")(?!https?:|mailto:|#|/|\.\./|data:)(?:\./)?([^"]*")')
 
 
 def a_subcarpeta(fragmento):
@@ -253,7 +254,7 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
         '  <section class="detail-hero"><div class="container reveal caso__cabeza">'
-        '<a class="breadcrumb" href="index.html" data-i18n="%s">%s</a>'
+        '<a class="breadcrumb" href="./" data-i18n="%s">%s</a>'
         '<span class="eyebrow">%s</span><h1>%s</h1><p class="detail-hero__lead">%s</p>'
         '<p class="caso__meta">Publicado el <time datetime="%s">%s</time> · %s · %d min de lectura</p>'
         '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>'
@@ -325,7 +326,7 @@ def pagina_indice(todos, estilos, cabecera, pie):
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
         '  <section class="detail-hero detail-hero--%s"><div class="container reveal">' % C['cabecera'][0]
-        + '<a class="breadcrumb" href="../index.html">← PeopleForPeople</a>'
+        + '<a class="breadcrumb" href="../">← PeopleForPeople</a>'
         '<span class="eyebrow" data-i18n="nav.resources">Recursos</span><h1 data-i18n="%s">%s</h1>'
         '<p class="detail-hero__lead" data-i18n="%s">%s</p>'
         '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div>%s</section>'

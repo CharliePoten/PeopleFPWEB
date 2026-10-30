@@ -29,15 +29,15 @@ MENU = [
         ('nav.pTrust', 'Seguridad y verificación', 'plataforma/seguridad-y-verificacion.html'),
     ]),
     ('nav.who', 'Para quién', '#para-quien', [
-        ('nav.whoNgo', 'ONG y asociaciones', 'ongs/index.html'),
-        ('nav.whoMuni', 'Ayuntamientos', 'comunidades/index.html'),
-        ('nav.whoCorp', 'Empresas RSC', 'empresas/index.html'),
-        ('nav.whoVol', 'Voluntarios', 'voluntarios/index.html'),
+        ('nav.whoNgo', 'ONG y asociaciones', 'ongs/'),
+        ('nav.whoMuni', 'Ayuntamientos', 'comunidades/'),
+        ('nav.whoCorp', 'Empresas RSC', 'empresas/'),
+        ('nav.whoVol', 'Voluntarios', 'voluntarios/'),
     ]),
     ('nav.resources', 'Recursos', None, [
-        ('nav.cases', 'Casos de impacto', 'casos/index.html'),
+        ('nav.cases', 'Casos de impacto', 'casos/'),
         ('nav.calc', 'Calculadora de impacto', 'calculadora.html'),
-        ('nav.news', 'Actualidad', 'actualidad/index.html'),
+        ('nav.news', 'Actualidad', 'actualidad/'),
         ('nav.support', 'Centro de soporte', 'ayuda.html'),
     ]),
     ('nav.contact', 'Contacto', 'contacto.html', []),
@@ -47,10 +47,12 @@ FLECHA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></
 
 
 def enlace(destino, archivo):
-    """La ruta de `destino` vista desde `archivo`."""
+    """La ruta de `destino` vista desde `archivo`. Las carpetas van sin
+    `index.html` (`ongs/`, `../`): es la URL de su canonical, y enlazar a otra
+    le da a Google dos direcciones para la misma página."""
     pre = '../' if os.path.dirname(archivo) else ''
     if destino.startswith('#'):
-        return destino if archivo == 'index.html' else pre + 'index.html' + destino
+        return destino if archivo == 'index.html' else (pre or './') + destino
     return pre + destino
 
 
@@ -73,7 +75,7 @@ def menu_ancho(archivo):
 
 def menu_lateral(archivo):
     filas = []
-    for n, (clave, texto, destino, sub) in enumerate(MENU + [('nav.account', 'Mi cuenta', 'cuenta/index.html', [])], 1):
+    for n, (clave, texto, destino, sub) in enumerate(MENU + [('nav.account', 'Mi cuenta', 'cuenta/', [])], 1):
         cabeza = '<span>%02d</span><strong data-i18n="%s">%s</strong>' % (n, clave, texto)
         if destino:
             filas.append('<li><a class="nav__link" href="%s">%s</a></li>' % (enlace(destino, archivo), cabeza))

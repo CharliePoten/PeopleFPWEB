@@ -53,7 +53,7 @@ def cabecera_azul(pre, eyebrow, titulo, entrada, botones, clase='', figura=''):
     """La cabecera azul. `clase` elige cómo va la imagen junto al título
     (ver «Cabeceras con imagen» en css/detail.css) y `figura` es esa imagen."""
     return ('  <section class="detail-hero%s"><div class="container reveal">' % (' ' + clase if clase else '')
-            + '<a class="breadcrumb" href="%sindex.html">← PeopleForPeople</a>' % pre
+            + '<a class="breadcrumb" href="%s">← PeopleForPeople</a>' % (pre or './')
             + txt('span', *eyebrow, clase='eyebrow') + txt('h1', *titulo)
             + txt('p', *entrada, clase='detail-hero__lead')
             + '<div class="detail-hero__actions">' + ''.join(botones) + '</div></div>' + figura + '</section>')
@@ -464,7 +464,7 @@ FAQ = [
         ('¿Cuánto tarda la verificación?',
          'Suele ser cuestión de días laborables. Mientras tanto puedes seguir usando la app como voluntario con normalidad.'),
         ('¿Cuánto cuesta?',
-         'Una cuota mensual según el tamaño de la entidad, sin permanencia: las ONG, de 19 a 99 € al mes según sus voluntarios activos; los ayuntamientos, de 49 a 199 € según su población, y las empresas, de 19 a 99 € según su plantilla. El tramo lo confirma nuestro equipo al verificar la entidad. Los detalles, en las páginas de <a href="ongs/index.html#precios">ONG</a>, <a href="comunidades/index.html#precios">ayuntamientos</a> y <a href="empresas/index.html#precios">empresas</a>.'),
+         'Una cuota mensual según el tamaño de la entidad, sin permanencia: las ONG, de 19 a 99 € al mes según sus voluntarios activos; los ayuntamientos, de 49 a 199 € según su población, y las empresas, de 19 a 99 € según su plantilla. El tramo lo confirma nuestro equipo al verificar la entidad. Los detalles, en las páginas de <a href="ongs/#precios">ONG</a>, <a href="comunidades/#precios">ayuntamientos</a> y <a href="empresas/#precios">empresas</a>.'),
         ('¿Cuándo se paga?',
          'Las dos primeras misiones que publiques son gratis y no piden tarjeta; la suscripción empieza solo si decides publicar una tercera. Darte de alta, montar tu equipo y ver el panel no cuesta nada.'),
         ('¿Qué es una operación?',
@@ -534,7 +534,8 @@ t('pl.k.gTip', '{pct} % de la plantilla · {horas} h · {valor}', '{pct} % der B
 t('pl.k.gTu', 'tu caso', 'dein Fall')
 t('pl.k.gS', 'Con {p} personas en plantilla y {h} h por persona.', 'Bei {p} Beschäftigten und {h} Std. pro Person.')
 
-ATRIBUTO_RELATIVO = re.compile(r'((?:href|src)=")(?!https?:|mailto:|#|/|\.\./|data:)([^"]*")')
+# `./` (la portada vista desde la raíz) se cambia por `../`, no se le antepone.
+ATRIBUTO_RELATIVO = re.compile(r'((?:href|src)=")(?!https?:|mailto:|#|/|\.\./|data:)(?:\./)?([^"]*")')
 
 
 def plantilla(archivo):
