@@ -27,6 +27,12 @@
                                   de entidad, nunca el correo)
      resource_download            enlace a un documento (.pdf, .docx…)
    Nunca llevan datos de la persona: solo qué botón y desde qué sección.
+
+   Tráfico interno: abriendo una vez la web con `?interno=1` en un navegador,
+   sus visitas llevan `traffic_type: 'internal'` y el filtro «Tráfico
+   interno» de Analytics las descarta (Administrar → Filtros de datos, en
+   estado «Activo»). `?interno=0` lo quita. Es para los navegadores del
+   equipo: si no, las estadísticas cuentan sobre todo nuestras propias visitas.
    ========================================================================== */
 
 (function () {
@@ -37,8 +43,32 @@
   var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;
   var PRODUCCION = /^(www\.)?peopleforpeople\.es$/.test(window.location.hostname);
 
+  var CLAVE_INTERNO = 'pfp.interno';
+
   var cargado = false;
   var aviso = null;
+
+  /* Lee y guarda la marca de tráfico interno. El parámetro se quita de la
+     barra de direcciones: copiado en un enlace, marcaría como interno a
+     quien lo abriera. Se queda en este navegador y no sale de él. */
+  function esInterno() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.has('interno')) {
+        if (params.get('interno') === '0') localStorage.removeItem(CLAVE_INTERNO);
+        else localStorage.setItem(CLAVE_INTERNO, '1');
+        params.delete('interno');
+        var resto = params.toString();
+        history.replaceState(history.state, '',
+          window.location.pathname + (resto ? '?' + resto : '') + window.location.hash);
+      }
+      return localStorage.getItem(CLAVE_INTERNO) === '1';
+    } catch (err) {
+      return false;
+    }
+  }
+
+  var INTERNO = esInterno();
 
   /* ---------------------------------------------------------------------
      La elección
@@ -83,10 +113,14 @@
       ad_personalization: 'denied',
     });
     gtag('js', new Date());
-    gtag('config', ID, {
+    var ajustes = {
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
-    });
+    };
+    // En `config` va con todos los eventos de esta etiqueta, no solo con la
+    // página vista.
+    if (INTERNO) ajustes.traffic_type = 'internal';
+    gtag('config', ID, ajustes);
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
@@ -150,7 +184,7 @@
       T('cookies.texto', 'Usamos cookies de Google Analytics para saber cómo se usa la web y mejorarla, solo si las aceptas.');
     var mas = caja.querySelector('a');
     mas.href = rutaPrivacidad();
-    mas.textContent = T('cookies.mas', 'Más información');
+    mas.textContent = T('cookies.mas', 'Política de cookies');
     caja.querySelector('[data-eleccion="no"]').textContent = T('cookies.rechazar', 'Rechazar');
     caja.querySelector('[data-eleccion="si"]').textContent = T('cookies.aceptar', 'Aceptar');
 

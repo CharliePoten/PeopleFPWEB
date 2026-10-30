@@ -36,13 +36,23 @@ persona acepta** en el aviso de cookies: no pegar la etiqueta de Google en el
 - Solo en las páginas públicas y solo en `peopleforpeople.es`: en local el
   aviso sale, pero no se envía nada.
 - Eventos: `volunteer_signup_click`, `organization_signup_click`,
-  `lead_b2b_submit`, `contact_submit` y `resource_download`. Se detectan solos
-  por el enlace (alta o documento) o por el aviso `pfp:contacto-enviado` de
-  `site.js`. Un evento nuevo se añade en `analitica.js`, sin datos personales.
+  `lead_b2b_submit`, `contact_submit`, `waitlist_signup` y
+  `resource_download`. Se detectan solos por el enlace (alta o documento) o
+  por los avisos `pfp:contacto-enviado` y `pfp:lista-espera` de `site.js`. Un
+  evento nuevo se añade en `analitica.js`, sin datos personales.
+- Eventos clave en Analytics (Administrar → Eventos clave): `lead_b2b_submit`,
+  `organization_signup_click` y `waitlist_signup`. Sus parámetros (`ubicacion`,
+  `tipo`, `archivo`) solo se ven en los informes si se registran como
+  dimensiones personalizadas de ámbito «evento».
+- **Tráfico interno:** abre la web una vez con `?interno=1` en cada navegador
+  del equipo (`?interno=0` lo quita). Esas visitas llevan
+  `traffic_type: 'internal'` y el filtro «Tráfico interno» de Analytics, en
+  estado «Activo», las descarta. El filtro no es retroactivo.
 - Si cambian las cookies, el proveedor o lo que se mide, hay que cambiar
   también «Cookies y analítica» en `privacidad.html`.
 
 ## Fuentes
 
-Poppins se sirve desde `fuentes/poppins/` (`css/fuentes.css`), no desde Google
-Fonts. Licencia en `fuentes/poppins/OFL.txt`.
+Red Hat Display y Red Hat Text se sirven desde `fuentes/redhat/`
+(`css/fuentes.css`), no desde Google Fonts. Licencia en
+`fuentes/redhat/OFL.txt`.

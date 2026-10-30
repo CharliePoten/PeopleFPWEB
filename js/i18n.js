@@ -168,7 +168,7 @@ window.I18N = {
     // Aviso de cookies (`analitica.js`).
     'cookies.aria': 'Aviso de cookies',
     'cookies.texto': 'Usamos cookies de Google Analytics para saber cómo se usa la web y mejorarla, solo si las aceptas. Puedes cambiar de idea cuando quieras desde el pie de página.',
-    'cookies.mas': 'Más información',
+    'cookies.mas': 'Política de cookies',
     'cookies.rechazar': 'Rechazar',
     'cookies.aceptar': 'Aceptar',
     'cookies.ajustes': 'Configurar cookies',
@@ -443,7 +443,7 @@ window.I18N = {
     // Cookie-Hinweis (`analitica.js`).
     'cookies.aria': 'Cookie-Hinweis',
     'cookies.texto': 'Wir verwenden Cookies von Google Analytics, um zu verstehen, wie die Website genutzt wird, und sie zu verbessern – nur wenn du zustimmst. Du kannst deine Wahl jederzeit unten auf der Seite ändern.',
-    'cookies.mas': 'Mehr erfahren',
+    'cookies.mas': 'Cookie-Richtlinie',
     'cookies.rechazar': 'Ablehnen',
     'cookies.aceptar': 'Akzeptieren',
     'cookies.ajustes': 'Cookie-Einstellungen',
