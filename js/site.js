@@ -246,6 +246,49 @@
   var caja = document.getElementById('cf-copia');
   var copia = '';
 
+  /* «Solicitar una presentación»: las páginas de cada público enlazan aquí
+     con `?presentacion=ayuntamiento` (u `ong`, `empresa`, `proteccion-civil`).
+     El mensaje sale ya escrito, para cambiarlo o completarlo, y el envío
+     lleva el perfil: lo vemos en el asunto del correo y Analytics lo cuenta
+     como contacto de una entidad (`lead_b2b_submit`), no como uno más. */
+  var PRESENTACION = {
+    ayuntamiento: { rol: 'ayuntamiento', texto: 'cm.presAyto' },
+    'proteccion-civil': { rol: 'ayuntamiento', texto: 'cm.presPc' },
+    ong: { rol: 'ong', texto: 'cm.presOng' },
+    empresa: { rol: 'empresa', texto: 'cm.presEmpresa' },
+  };
+  var presentacion = null;
+  try {
+    presentacion = PRESENTACION[new URLSearchParams(window.location.search).get('presentacion')] || null;
+  } catch (e) { /* navegador sin URLSearchParams: el formulario de siempre */ }
+  var rolContacto = presentacion ? presentacion.rol : 'otro';
+  var propuesto = '';
+
+  // En el idioma de la página. Si se cambia de idioma y el texto sigue como
+  // lo propusimos, cambia con él; lo que la persona haya escrito no se toca.
+  function proponerMensaje() {
+    if (!form || !presentacion) return;
+    var campo = form.message;
+    if (campo.value.trim() && campo.value !== propuesto) return;
+    propuesto = dict(document.documentElement.lang || DEFAULT_LANG)[presentacion.texto] || '';
+    campo.value = propuesto;
+    // Que se lea entero sin tener que desplazarse dentro del campo.
+    campo.style.height = '';
+    if (campo.scrollHeight > campo.clientHeight) {
+      campo.style.height = (campo.scrollHeight + campo.offsetHeight - campo.clientHeight) + 'px';
+    }
+  }
+
+  if (form && presentacion) {
+    proponerMensaje();
+    document.querySelectorAll('.lang [data-lang]').forEach(function (btn) {
+      btn.addEventListener('click', proponerMensaje);
+    });
+    if (window.location.hash === '#mensaje') {
+      window.setTimeout(function () { form.name.focus({ preventScroll: true }); }, 400);
+    }
+  }
+
   if (copiar) {
     copiar.addEventListener('click', function () {
       var d = dict(document.documentElement.lang || DEFAULT_LANG);
@@ -353,7 +396,7 @@
       llamarFuncion('contacto', {
         nombre: name,
         email: email,
-        rol: 'otro',
+        rol: rolContacto,
         mensaje: message,
         lang: lang,
         web: trampa,
@@ -366,7 +409,8 @@
           status.setAttribute('data-state', 'ok');
           // Para `analitica.js`, que solo lo cuenta si se aceptaron las
           // cookies. Nunca va lo que se ha escrito.
-          document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: 'otro' } }));
+          document.dispatchEvent(new CustomEvent('pfp:contacto-enviado', { detail: { rol: rolContacto } }));
+          presentacion = null; // ya enviado: no se vuelve a proponer al cambiar de idioma
           form.reset();
         })
         .catch(function (err) {
