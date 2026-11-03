@@ -67,6 +67,12 @@ PAGINAS = [
      'Moviliza a la ciudadanía en emergencias y misiones municipales desde un panel web. Prueba '
      'dos publicaciones gratis; después, desde 49 € al mes por población.',
      'Ayuntamientos', 'municipality'),
+    # Proteccion Civil contrata con la tarifa de su ayuntamiento.
+    ('proteccion-civil/index.html', '/proteccion-civil/',
+     'Gestión de voluntarios de Protección Civil',
+     'Para agrupaciones de Protección Civil: operaciones desde plantillas, aviso a los voluntarios '
+     'cercanos, llegadas por punto y horas validadas. Desde 49 € al mes.',
+     'Protección Civil', 'municipality'),
     ('empresas/index.html', '/empresas/',
      'Voluntariado corporativo y RSC',
      'Organiza el voluntariado de tu plantilla con ONG y ayuntamientos verificados y mide horas '
@@ -187,6 +193,12 @@ def tarifas():
 
 def miles(n):
     return '{:,}'.format(n).replace(',', '.')
+
+
+def euros(centimos):
+    """`4900` -> `49 €`, `238800` -> `2.388 €`; con centimos, `19,90 €`."""
+    e = centimos / 100
+    return ('%s €' % miles(int(e))) if e == int(e) else ('%.2f €' % e).replace('.', ',')
 
 
 def ofertas(tipo, catalogo):

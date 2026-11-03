@@ -227,7 +227,10 @@
 @media (max-width: 899px) {
   .detail-page .detail-hero--foto .detail-hero__foto { position: relative; width: calc(100% - 48px); aspect-ratio: 4 / 3; margin: 36px 24px 0; box-shadow: 0 24px 50px rgba(0, 10, 30, .35); }
   .detail-page .detail-hero--foto .detail-hero__foto::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 40%; height: 8px; background: var(--amber-500); }
-  .detail-page .detail-hero--pantalla .detail-hero__pantalla { width: calc(100% - 48px); margin: 36px 24px 0; }
+  /* Posicionada, para quedar por encima del degradado de .detail-hero::before. */
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla { position: relative; width: calc(100% - 48px); margin: 36px 24px 0; box-shadow: 0 24px 50px rgba(0, 10, 30, .35); }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla .navegador { border-radius: 0; }
+  .detail-page .detail-hero--pantalla .detail-hero__pantalla::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 40%; height: 8px; background: var(--amber-500); }
   .detail-page .detail-hero--flota { overflow: visible; padding-bottom: 0; }
   .detail-page .detail-hero--flota .detail-hero__flota { position: relative; z-index: 3; width: min(62vw, 280px); margin: 36px auto -150px; }
   .detail-page .detail-hero--flota + .detail-section { padding-top: 190px; }

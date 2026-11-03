@@ -31,6 +31,7 @@ MENU = [
     ('nav.who', 'Para quién', '#para-quien', [
         ('nav.whoNgo', 'ONG y asociaciones', 'ongs/'),
         ('nav.whoMuni', 'Ayuntamientos', 'comunidades/'),
+        ('nav.whoPc', 'Protección Civil', 'proteccion-civil/'),
         ('nav.whoCorp', 'Empresas RSC', 'empresas/'),
         ('nav.whoVol', 'Voluntarios', 'voluntarios/'),
     ]),

@@ -1,5 +1,6 @@
 """
-Las páginas de «La plataforma» y la calculadora de impacto.
+Las páginas de «La plataforma», la de Protección Civil y la calculadora de
+impacto.
 
 Cada página se describe aquí como una lista de bloques, con sus textos en
 español y en alemán. El script escribe
@@ -8,6 +9,7 @@ español y en alemán. El script escribe
     plataforma/app-voluntariado.html
     plataforma/informes-y-certificados.html
     plataforma/seguridad-y-verificacion.html
+    proteccion-civil/index.html
     calculadora.html
     js/paginas-i18n.js        los textos de todas ellas, en los dos idiomas
 
@@ -49,12 +51,18 @@ def txt(etiqueta, clave, es, de, clase='', extra=''):
 
 # ---------------------------------------------------------------- bloques
 
-def cabecera_azul(pre, eyebrow, titulo, entrada, botones, clase='', figura=''):
+def cabecera_azul(pre, eyebrow, titulo, entrada, botones, clase='', figura='', h1_eyebrow=False):
     """La cabecera azul. `clase` elige cómo va la imagen junto al título
-    (ver «Cabeceras con imagen» en css/detail.css) y `figura` es esa imagen."""
+    (ver «Cabeceras con imagen» en css/detail.css) y `figura` es esa imagen.
+    Con `h1_eyebrow`, el <h1> es la línea de arriba (lo que se busca, como en
+    las páginas de cada público) y el título grande va en un párrafo."""
+    if h1_eyebrow:
+        cabeza = txt('h1', *eyebrow, clase='eyebrow') + txt('p', *titulo, clase='detail-hero__titulo')
+    else:
+        cabeza = txt('span', *eyebrow, clase='eyebrow') + txt('h1', *titulo)
     return ('  <section class="detail-hero%s"><div class="container reveal">' % (' ' + clase if clase else '')
             + '<a class="breadcrumb" href="%s">← PeopleForPeople</a>' % (pre or './')
-            + txt('span', *eyebrow, clase='eyebrow') + txt('h1', *titulo)
+            + cabeza
             + txt('p', *entrada, clase='detail-hero__lead')
             + '<div class="detail-hero__actions">' + ''.join(botones) + '</div></div>' + figura + '</section>')
 
@@ -74,11 +82,13 @@ def cristal(pre):
             + '</div>')
 
 
-def ventana(src, url, alt_clave):
-    """Una captura del panel dentro de su ventana de navegador."""
+def ventana(src, url, alt_clave, lazy=False):
+    """Una captura del panel dentro de su ventana de navegador. `lazy` para
+    las que quedan lejos de la cabecera."""
     return ('<div class="navegador"><div class="navegador__barra" aria-hidden="true"><span class="navegador__punto"></span>'
             '<span class="navegador__punto"></span><span class="navegador__punto"></span><span class="navegador__url">%s</span></div>'
-            '<img src="%s" width="1600" height="1000" alt="" data-i18n-alt="%s" /></div>' % (url, src, alt_clave))
+            '<img src="%s" width="1600" height="1000"%s alt="" data-i18n-alt="%s" /></div>'
+            % (url, src, ' loading="lazy"' if lazy else '', alt_clave))
 
 
 def boton(href, clave, es, de, primario=True):
@@ -93,12 +103,14 @@ def encabezado(eyebrow, titulo, entrada=None):
     return h + '</div>'
 
 
-def tarjetas(eyebrow, titulo, items, fondo='detail-section--white', entrada=None):
+def tarjetas(eyebrow, titulo, items, fondo='detail-section--white', entrada=None, ident='', pie=''):
+    """Tarjetas numeradas. `ident` es el id de la sección (para enlazarla) y
+    `pie`, lo que va debajo de las tarjetas (enlaces)."""
     cuerpo = ''.join(
         '<article class="benefit-card reveal"><span class="benefit-card__number">%02d</span>%s%s</article>'
         % (n, txt('h3', *it[0]), txt('p', *it[1])) for n, it in enumerate(items, 1))
-    return ('  <section class="detail-section %s"><div class="container">%s<div class="benefit-grid">%s</div></div></section>'
-            % (fondo, encabezado(eyebrow, titulo, entrada), cuerpo))
+    return ('  <section class="detail-section %s"%s><div class="container">%s<div class="benefit-grid">%s</div>%s</div></section>'
+            % (fondo, ' id="%s"' % ident if ident else '', encabezado(eyebrow, titulo, entrada), cuerpo, pie))
 
 
 def pasos(eyebrow, titulo, items, fondo='detail-section--navy'):
@@ -361,6 +373,114 @@ def seguridad():
     ]
 
 
+def proteccion_civil():
+    """Para las agrupaciones de voluntarios de Protección Civil. Se dan de
+    alta como administración pública, a través de su ayuntamiento (lo dice
+    el alta de entidad, js/cuenta-alta.js), y contratan con la tarifa
+    municipal de js/planes.js. Las afirmaciones son las de comunidades/ y de
+    las páginas de la plataforma."""
+    pre = '../'
+    presentar = boton(pre + 'contacto.html?presentacion=proteccion-civil#mensaje', 'pc.presentar',
+                      'Solicitar una presentación', 'Präsentation anfragen')
+    cents = [b['cents'] for b in seo.tarifas()['municipality']['bandas']]
+    minimo, maximo, anual = seo.euros(min(cents)), seo.euros(max(cents)), seo.euros(max(cents) * 12)
+
+    def enlace(href, clave, es, de, extra=''):
+        k, v = t(clave, es, de)
+        return '<a class="text-link" href="%s"%s data-i18n="%s">%s</a>' % (href, extra, k, v)
+
+    return [
+        cabecera_azul(pre, ('pc.eyebrow', 'Gestión de voluntarios de Protección Civil', 'Freiwilligenmanagement für den Zivilschutz'),
+                      # Espacio de no separación en «Que llegue»: si no, el título se parte tras «Que».
+                      ('pc.hero', 'La ayuda llega. Que llegue con orden.', 'Hilfe, die geordnet ankommt.'),
+                      ('pc.lead', 'Para agrupaciones de voluntarios y servicios municipales de Protección Civil: lanzad una operación desde una plantilla, avisad a quien está cerca y comprobad quién ha llegado a cada punto. Refuerza vuestros servicios; no los sustituye.',
+                       'Für Freiwilligengruppen und kommunale Zivilschutzdienste: Startet einen Einsatz aus einer Vorlage, benachrichtigt Freiwillige in der Nähe und seht, wer an jedem Ort angekommen ist. Es verstärkt eure Einsatzkräfte, ohne sie zu ersetzen.'),
+                      [presentar, boton('#precios', 'pc.precios', 'Ver precios', 'Preise ansehen', False)],
+                      clase='detail-hero--pantalla', h1_eyebrow=True,
+                      figura='<figure class="detail-hero__pantalla">%s</figure>'
+                      % ventana('../imagenes/consola-panel.webp', 'peopleforpeople.es/cuenta', 'panel.alt1')),
+        tarjetas(('pc.opEy', 'En la emergencia', 'Im Ernstfall'),
+                 ('pc.opT', 'Toda la operación, en un mismo sitio.', 'Der ganze Einsatz an einem Ort.'), [
+            (('pc.op1t', 'Siete escenarios preparados', 'Sieben vorbereitete Szenarien'),
+             ('pc.op1b', 'Inundación, incendio forestal, evacuación, ola de calor, búsqueda de una persona, punto de reparto y apoyo vecinal, con las tareas, las habilidades y las plazas ya definidas. Ajustáis las cifras y publicáis.',
+              'Hochwasser, Waldbrand, Evakuierung, Hitzewelle, Personensuche, Verteilstelle und Nachbarschaftshilfe – mit Aufgaben, Fähigkeiten und Plätzen. Ihr passt die Zahlen an und veröffentlicht.')),
+            (('pc.op2t', 'El aviso llega a quien está cerca', 'Die Meldung erreicht, wer in der Nähe ist'),
+             ('pc.op2b', 'Cada misión avisa por notificación a los voluntarios que la tienen dentro de su radio. En una urgencia crítica podéis ampliar ese radio para llegar a más gente.',
+              'Jeder Einsatz benachrichtigt die Freiwilligen, in deren Umkreis er liegt. Bei kritischer Dringlichkeit könnt ihr den Umkreis erweitern, um mehr Menschen zu erreichen.')),
+            (('pc.op3t', 'Plazas por tarea', 'Plätze pro Aufgabe'),
+             ('pc.op3b', 'Cada tarea dice cuántas personas necesita: veis en directo qué está cubierto y dónde falta gente.',
+              'Jede Aufgabe sagt, wie viele Personen sie braucht: Ihr seht live, was besetzt ist und wo noch Leute fehlen.')),
+            (('pc.op4t', 'Quién ha llegado a cada punto', 'Wer an jedem Ort angekommen ist'),
+             ('pc.op4b', 'Quien coordina marca en la app la llegada de cada persona. Sabéis con cuánta gente contáis en cada sitio, y las horas se calculan solas.',
+              'Die Koordination vermerkt in der App die Ankunft jeder Person. Ihr wisst, mit wie vielen Leuten ihr an jedem Ort rechnen könnt, und die Stunden berechnen sich selbst.')),
+            (('pc.op5t', 'Mensajes por operación', 'Nachrichten pro Einsatz'),
+             ('pc.op5b', 'Las conversaciones cuelgan de cada misión u operación, no de un grupo abierto donde todo se mezcla.',
+              'Gespräche hängen an einem Einsatz, nicht an einer offenen Gruppe, in der alles durcheinandergeht.')),
+            (('pc.op6t', 'Con poca cobertura', 'Bei schlechtem Netz'),
+             ('pc.op6b', 'La app enseña lo último que guardó y lo actualiza cuando vuelve la conexión: las misiones se consultan sin datos. Publicar o apuntarse sí necesita conexión.',
+              'Die App zeigt den zuletzt gespeicherten Stand und aktualisiert ihn, sobald die Verbindung zurück ist: Einsätze lassen sich ohne Daten ansehen. Veröffentlichen oder sich anmelden braucht eine Verbindung.')),
+        ], entrada=('pc.opP', 'Sin hojas de cálculo ni grupos de mensajería: quién va, a qué punto y quién ha llegado.',
+                    'Ohne Tabellen und Messenger-Gruppen: wer kommt, wohin und wer angekommen ist.')),
+        con_imagen(('pc.agEy', 'Vuestra agrupación', 'Eure Gruppe'),
+                   ('pc.agT', 'Los papeles de cada voluntario, a la vista.', 'Die Unterlagen jeder Person im Blick.'),
+                   ('pc.agP', 'Los miembros de la agrupación piden entrar en vuestra entidad y los aceptáis desde el panel. Ahí veis qué sabe hacer cada uno, cuántas horas lleva y cómo tiene los papeles: el panel avisa de quién tiene el seguro o una acreditación caducada, o a punto de caducar. Las habilidades que exigen titulación, como conducir un camión o manejar maquinaria pesada, se acreditan con un documento que revisa nuestro equipo.',
+                    'Die Mitglieder eurer Gruppe beantragen den Beitritt zu eurer Organisation, und ihr nehmt sie im Dashboard auf. Dort seht ihr, was jede Person kann, wie viele Stunden sie geleistet hat und wie ihre Unterlagen stehen: Das Dashboard meldet, wessen Versicherung oder Nachweis abgelaufen ist oder bald abläuft. Fähigkeiten, die eine Qualifikation erfordern – etwa Lkw fahren oder schwere Maschinen bedienen –, werden mit einem Dokument belegt, das unser Team prüft.'),
+                   ventana('../imagenes/consola-voluntariado.webp', 'peopleforpeople.es/cuenta/voluntariado', 'panel.alt2', lazy=True)),
+        tarjetas(('pc.espEy', 'Voluntariado espontáneo', 'Spontane Hilfe'),
+                 ('pc.espT', 'Quien quiere ayudar, con una tarea y un sitio.', 'Wer helfen will, bekommt eine Aufgabe und einen Ort.'), [
+            (('pc.esp1t', 'Solo publican entidades verificadas', 'Nur geprüfte Organisationen veröffentlichen'),
+             ('pc.esp1b', 'Comprobamos que la entidad existe y quién la representa antes de abrir el panel. Mientras no está verificada, la base de datos no le deja publicar.',
+              'Wir prüfen, ob es die Organisation gibt und wer sie vertritt, bevor wir das Dashboard freischalten. Solange sie nicht geprüft ist, lässt die Datenbank sie nichts veröffentlichen.')),
+            (('pc.esp2t', 'Cada uno decide hasta dónde', 'Jede Person entscheidet, wie weit'),
+             ('pc.esp2b', 'Cada voluntario elige si recibe avisos de emergencias, de misiones planificadas o de las dos, y hasta qué distancia: 10, 25, 50 o 100 km.',
+              'Jede freiwillige Person wählt, ob sie Meldungen zu Notfällen, zu geplanten Einsätzen oder zu beidem bekommt, und bis zu welcher Entfernung: 10, 25, 50 oder 100 km.')),
+            (('pc.esp3t', 'Nadie aparece en el mapa', 'Niemand erscheint auf der Karte'),
+             ('pc.esp3b', 'La ubicación de los voluntarios solo sirve para calcular distancias: el mapa enseña cuánta gente hay disponible en una zona, nunca quién ni dónde.',
+              'Der Standort der Freiwilligen dient nur zur Entfernungsberechnung: Die Karte zeigt, wie viele Menschen in einem Gebiet verfügbar sind, nie wer oder wo.')),
+        ], entrada=('pc.espP', 'En una gran emergencia aparece mucha gente dispuesta a ayudar que no pertenece a ninguna agrupación. Con una cuenta en PeopleForPeople, recibe el aviso de lo que publicáis cerca y se apunta a una tarea concreta, en un sitio y a una hora.',
+                    'Bei einer großen Notlage wollen viele Menschen helfen, die zu keiner Gruppe gehören. Mit einem Konto bei PeopleForPeople bekommen sie die Meldung zu dem, was ihr in der Nähe veröffentlicht, und melden sich für eine konkrete Aufgabe an – an einem Ort, zu einer Uhrzeit.'),
+           pie='<p class="pag-enlaces reveal">'
+               + enlace('../casos/dana-valencia-2024.html', 'pc.casoDana', 'Voluntariado en la DANA de Valencia →',
+                        'Freiwillige bei der DANA in Valencia (auf Spanisch) →') + ' '
+               + enlace('../casos/filomena-madrid-2021.html', 'pc.casoFilomena', 'Filomena y los voluntarios 4x4 de Madrid →',
+                        'Filomena und die 4x4-Freiwilligen in Madrid (auf Spanisch) →') + '</p>'),
+        pasos(('pl.pasoEy', 'Paso a paso', 'Schritt für Schritt'),
+              ('pc.pT', 'Del aviso a la memoria.', 'Von der Meldung bis zum Bericht.'), [
+            (('pc.p1t', 'Publicáis', 'Ihr veröffentlicht'),
+             ('pc.p1b', 'Desde una plantilla o desde cero: dónde, cuándo, cuántas personas y con qué habilidades.', 'Aus einer Vorlage oder neu: wo, wann, wie viele Personen und mit welchen Fähigkeiten.')),
+            (('pc.p2t', 'Se apuntan', 'Sie melden sich an'),
+             ('pc.p2b', 'Los voluntarios cercanos reciben el aviso y ocupan las plazas.', 'Freiwillige in der Nähe werden benachrichtigt und besetzen die Plätze.')),
+            (('pc.p3t', 'Ficháis las llegadas', 'Ihr erfasst die Ankünfte'),
+             ('pc.p3b', 'Quien coordina marca en la app quién ha llegado a cada punto.', 'Die Koordination vermerkt in der App, wer an jedem Ort angekommen ist.')),
+            (('pc.p4t', 'Validáis las horas', 'Ihr bestätigt die Stunden'),
+             ('pc.p4b', 'Al cerrar, las horas se calculan solas. Las validáis y sale la memoria, en CSV o impresa.', 'Beim Abschluss berechnen sich die Stunden selbst. Ihr bestätigt sie und erhaltet den Bericht als CSV oder gedruckt.')),
+        ]),
+        tarjetas(('pc.prEy', 'Precios', 'Preise'),
+                 ('pc.prT', 'Con la tarifa de vuestro ayuntamiento.', 'Zum Tarif eurer Gemeinde.'), [
+            (('pc.pr1t', 'Se da de alta el ayuntamiento', 'Die Gemeinde meldet sich an'),
+             ('pc.pr1b', 'Protección Civil entra como administración pública, a través de su ayuntamiento. Comprobamos que existe y quién lo representa antes de abrir el panel.',
+              'Der Zivilschutz wird als öffentliche Verwaltung über seine Gemeinde angemeldet. Wir prüfen, ob es sie gibt und wer sie vertritt, bevor wir das Dashboard freischalten.')),
+            (('pc.pr2t', 'De %s a %s al mes' % (minimo, maximo), '%s bis %s pro Monat' % (minimo, maximo)),
+             ('pc.pr2b', 'Según la población del municipio, sin IVA y sin permanencia. Las dos primeras publicaciones son gratis y no piden tarjeta.',
+              'Je nach Einwohnerzahl der Gemeinde, ohne MwSt. und ohne Mindestlaufzeit. Die ersten zwei Veröffentlichungen sind kostenlos und ohne Kreditkarte.')),
+            (('pc.pr3t', 'Cabe en un contrato menor', 'Passt in einen Kleinauftrag'),
+             ('pc.pr3b', 'Un año de la tarifa más alta son %s sin IVA, por debajo de los 15.000 € del contrato menor de servicios (art. 118 de la Ley 9/2017 de Contratos del Sector Público).' % anual,
+              'Ein Jahr im höchsten Tarif kostet %s ohne MwSt. – unter der Grenze von 15.000 €, bis zu der spanische Kommunen Dienstleistungen als Kleinauftrag vergeben können (Art. 118 Ley 9/2017).' % anual)),
+        ], fondo='', ident='precios',
+           pie='<p class="pag-enlaces reveal">'
+               + enlace('../comunidades/#precios', 'pc.tarifas', 'Las tarifas de ayuntamientos, tramo a tramo →',
+                        'Die Tarife für Kommunen im Einzelnen →') + ' '
+               + enlace('../descargas/peopleforpeople-ayuntamientos.pdf', 'pc.dossier', 'Dossier para ayuntamientos (PDF) →',
+                        'Dossier für Kommunen (PDF, auf Spanisch) →', extra=' download') + '</p>'),
+        llamada(('pc.ctaT', '¿Lo vemos con vuestra agrupación?', 'Schauen wir es uns mit eurer Gruppe an?'),
+                ('pc.ctaP', 'En 20 minutos os enseñamos el panel y la app, y resolvemos las dudas de contratación y de datos.',
+                 'In 20 Minuten zeigen wir euch das Dashboard und die App und klären Fragen zu Beauftragung und Datenschutz.'),
+                '<div class="cta-panel__botones">' + presentar
+                + boton(pre + 'cuenta/registro.html?rol=organization', 'pc.alta', 'Dar de alta el ayuntamiento', 'Gemeinde anmelden', False)
+                + '</div>'),
+    ]
+
+
 def grafico():
     """El gráfico de la cabecera de la calculadora. Lo dibuja calculadora.js
     con los datos del formulario: horas al año según qué parte de la
@@ -519,6 +639,7 @@ PAGINAS_DEF = [
     ('plataforma/app-voluntariado.html', app, []),
     ('plataforma/informes-y-certificados.html', informes, []),
     ('plataforma/seguridad-y-verificacion.html', seguridad, []),
+    ('proteccion-civil/index.html', proteccion_civil, []),
     ('calculadora.html', calculadora, ['js/planes.js', 'js/calculadora.js']),
 ]
 
@@ -572,7 +693,8 @@ def construir():
         existentes += fh.read()
     propias = [k for k in ES if "'%s':" % k not in existentes]
     js = ['/* GENERADO por _herramientas/paginas.py: los textos de las páginas de',
-          '   «La plataforma» y de la calculadora. No se edita a mano. */',
+          '   «La plataforma», de Protección Civil y de la calculadora. No se edita',
+          '   a mano. */',
           '(function () {', "  'use strict';"]
     for lang, d in (('es', ES), ('de', DE)):
         js.append('  Object.assign(window.I18N.%s, {' % lang)

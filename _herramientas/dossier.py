@@ -24,11 +24,6 @@ MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto
          'octubre', 'noviembre', 'diciembre']
 
 
-def euros(centimos):
-    e = centimos / 100
-    return ('%s €' % seo.miles(int(e))) if e == int(e) else ('%.2f €' % e).replace('.', ',')
-
-
 def tarifas(bandas):
     """Las tres tarjetas de precio, con los tramos escritos como en `seo.py`."""
     tarjetas = []
@@ -42,7 +37,7 @@ def tarifas(bandas):
             tramo = 'De %s a %s habitantes' % (seo.miles(anterior + 1), seo.miles(b['upTo']))
         tarjetas.append('<div class="tarifa"><p class="tarifa__nombre">%s</p><p class="tarifa__tramo">%s</p>'
                         '<p class="tarifa__precio">%s <small>al mes</small></p></div>'
-                        % (seo.NOMBRE_TRAMO[b['size']], tramo, euros(b['cents'])))
+                        % (seo.NOMBRE_TRAMO[b['size']], tramo, seo.euros(b['cents'])))
         anterior = b['upTo'] or anterior
     return ''.join(tarjetas)
 
@@ -52,7 +47,7 @@ def html_relleno():
     hoy = datetime.date.today()
     texto = seo.leer(os.path.relpath(PLANTILLA, seo.RAIZ))
     for marca, valor in (('{{tarifas}}', tarifas(bandas)),
-                         ('{{anual}}', euros(max(b['cents'] for b in bandas) * 12)),
+                         ('{{anual}}', seo.euros(max(b['cents'] for b in bandas) * 12)),
                          ('{{fecha}}', '%s de %d' % (MESES[hoy.month - 1], hoy.year))):
         assert marca in texto, marca
         texto = texto.replace(marca, valor)
