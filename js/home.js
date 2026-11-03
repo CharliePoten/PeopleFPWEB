@@ -45,7 +45,9 @@
 
      Antes lo movía el scroll, y la primera pantalla era solo el logotipo: ni
      qué es esto ni qué hacer hasta bajar unos 500 px por una pantalla azul.
-     La coreografía es la misma, pero la mueve el reloj y dura dos segundos.
+     La coreografía es la misma, pero la mueve el reloj y dura poco más de un
+     segundo: desde que arranca, el mensaje empieza a verse a los 0,6 s y
+     está entero al segundo (antes duraba 2,4 s y el mensaje tardaba 1,8 s).
      Se ve una vez por visita: quien vuelve a la portada, llega con un ancla
      o tiene la página ya bajada la encuentra hecha, y quien toca algo
      mientras dura no tiene que esperar a que acabe. */
@@ -53,8 +55,8 @@
     var wordmark = hero.querySelector('.hero__lockup--wordmark');
     var appIcon = hero.querySelector('.hero__lockup--app-icon');
     var brand = header.querySelector('.brand');
-    var ESPERA_MS = 600;
-    var DURACION_MS = 1800;
+    var ESPERA_MS = 250;
+    var DURACION_MS = 1100;
     var CLAVE_INTRO = 'pfp.introVista';
     var progreso = 1;
     var animacion = null;
