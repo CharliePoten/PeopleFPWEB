@@ -5,3 +5,8 @@
 
 # Configuracion local del editor.
 .claude/
+
+# Cache de Python de las herramientas: la crea el interprete al importar
+# un modulo, y GitHub Pages la publicaria igual.
+__pycache__/
+*.pyc
