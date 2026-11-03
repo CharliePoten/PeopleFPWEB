@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!-- Plantilla del dossier para ayuntamientos (una página A4). No se publica:
+     la convierte en descargas/peopleforpeople-ayuntamientos.pdf
+     `python _herramientas/dossier.py`, que rellena los precios desde
+     js/planes.js. Norma: solo lo que la plataforma hace hoy, lo mismo que
+     dicen comunidades/ y plataforma/centro-de-coordinacion.html. -->
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>PeopleForPeople para ayuntamientos</title>
+<link rel="stylesheet" href="../../css/fuentes.css" />
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --navy-50: #E8EEF6; --navy-500: #0B417C; --navy-600: #002557; --navy-700: #001E47;
+    --amber-50: #FFF8E7; --amber-300: #FDCB4E; --amber-500: #FCAF17; --amber-700: #B77503;
+    --texto: #1E2A3A; --suave: #4A5768; --borde: #DDE3EA;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 210mm; height: 297mm; overflow: hidden;
+    font-family: 'Red Hat Text', system-ui, sans-serif; font-size: 9.2pt; line-height: 1.4; color: var(--texto);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    display: flex; flex-direction: column;
+  }
+  h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; margin: 0; letter-spacing: -0.01em; }
+  p { margin: 0; }
+
+  /* Ningún bloque encoge: si algo no cabe, desborda y dossier.py lo detecta. */
+  .cabeza, .cuerpo, .contratar, .cierre, .letra-pequena { flex-shrink: 0; }
+  .cabeza { background: var(--navy-600); color: #fff; padding: 8.5mm 14mm 7.5mm; position: relative; overflow: hidden; }
+  .cabeza::after { content: ''; position: absolute; right: -30mm; top: -40mm; width: 110mm; height: 110mm; border-radius: 50%;
+    background: radial-gradient(circle, rgba(252,175,23,.22), transparent 62%); }
+  .cabeza__logo { height: 8mm; display: block; margin-bottom: 6mm; }
+  .cabeza__ojo { color: var(--amber-300); font-family: 'Red Hat Display', sans-serif; font-weight: 700; font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; }
+  .cabeza h1 { font-size: 21pt; line-height: 1.08; font-weight: 700; margin: 2mm 0 3mm; max-width: 160mm; text-wrap: balance; }
+  .cabeza__entrada { font-size: 10pt; color: rgba(255,255,255,.84); max-width: 160mm; }
+
+  .cuerpo { display: grid; grid-template-columns: 1.08fr .92fr; gap: 8mm; padding: 6mm 14mm 0; }
+  h2 { font-size: 12pt; color: var(--navy-600); margin-bottom: 3mm; }
+  .lista { list-style: none; margin: 0; padding: 0; }
+  .lista li { display: grid; grid-template-columns: 8mm 1fr; padding: 1.4mm 0; border-top: 1px solid var(--borde); }
+  .lista li:first-child { border-top: 0; padding-top: 0; }
+  .lista b { display: block; color: var(--navy-600); font-family: 'Red Hat Display', sans-serif; font-size: 10pt; }
+  .num { color: var(--amber-700); font-family: 'Red Hat Display', sans-serif; font-weight: 700; font-size: 8.6pt; letter-spacing: .06em; padding-top: .6mm; }
+
+  .navegador { border: 1px solid var(--borde); border-radius: 2.5mm; overflow: hidden; background: #fff; box-shadow: 0 2mm 6mm rgba(0, 22, 54, .12); }
+  .navegador__barra { display: flex; gap: 1.2mm; align-items: center; padding: 1.6mm 2.4mm; background: #F2F4F7; border-bottom: 1px solid var(--borde); }
+  .navegador__barra i { width: 1.6mm; height: 1.6mm; border-radius: 50%; background: #C9D1DB; }
+  .navegador__barra span { margin-left: 2mm; font-size: 6.6pt; color: var(--suave); }
+  .navegador img { display: block; width: 100%; }
+  .pie-foto { font-size: 7.6pt; color: var(--suave); margin: 1.5mm 0 4.5mm; }
+  .datos { list-style: none; margin: 0; padding: 0; }
+  .datos li { position: relative; padding: 0 0 1.8mm 4.5mm; }
+  .datos li::before { content: ''; position: absolute; left: 0; top: 1.9mm; width: 1.8mm; height: 1.8mm; border-radius: 50%; background: var(--amber-500); }
+
+  .contratar { margin: 4.5mm 14mm 0; padding: 4.5mm 6mm; border-radius: 3mm; background: var(--navy-50); }
+  .tarifas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-bottom: 3.5mm; }
+  .tarifa { background: #fff; border-radius: 2.2mm; padding: 2.6mm 3.6mm; }
+  .tarifa__nombre { font-family: 'Red Hat Display', sans-serif; font-weight: 700; color: var(--navy-600); }
+  .tarifa__tramo { font-size: 8.2pt; color: var(--suave); }
+  .tarifa__precio { font-family: 'Red Hat Display', sans-serif; font-size: 14pt; font-weight: 700; color: var(--navy-600); margin-top: 1.2mm; }
+  .tarifa__precio small { font-size: 8.4pt; font-weight: 500; color: var(--suave); }
+  .contratar__notas { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; font-size: 8.8pt; }
+  .contratar__notas b { color: var(--navy-600); }
+
+  .cierre { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8mm; padding: 5mm 14mm; background: var(--navy-600); color: #fff; }
+  .cierre h2 { color: #fff; margin: 0 0 1mm; font-size: 13pt; }
+  .cierre p { color: rgba(255,255,255,.82); font-size: 9pt; }
+  .cierre__contacto a { color: inherit; text-decoration: none; }
+  .cierre__contacto { text-align: right; font-family: 'Red Hat Display', sans-serif; font-weight: 700; font-size: 10.4pt; color: var(--amber-300); line-height: 1.5; }
+  .letra-pequena { padding: 2.2mm 14mm 2.6mm; font-size: 7.2pt; color: var(--suave); background: #fff; }
+</style>
+</head>
+<body>
+  <header class="cabeza">
+    <img class="cabeza__logo" src="../../imagenes/marca/logotipo-blanco.png" alt="PeopleForPeople" />
+    <p class="cabeza__ojo">Para ayuntamientos</p>
+    <h1>Voluntariado municipal, coordinado desde un solo panel.</h1>
+    <p class="cabeza__entrada">Publica misiones planificadas o urgentes, avisa a los voluntarios que están cerca, comprueba quién ha llegado y valida sus horas. El panel se usa desde el navegador, sin instalar nada; la ciudadanía participa desde la app.</p>
+  </header>
+
+  <main class="cuerpo">
+    <section>
+      <h2>Qué hace por el ayuntamiento</h2>
+      <ol class="lista">
+        <li><span class="num">01</span><p><b>Operaciones desde una plantilla</b>Siete escenarios preparados —inundación, incendio forestal, evacuación, ola de calor, búsqueda de una persona, punto de reparto y apoyo vecinal— con tareas y plazas ya definidas. Se ajustan las cifras y se publica.</p></li>
+        <li><span class="num">02</span><p><b>El aviso llega a quien está cerca</b>Cada misión avisa por notificación a los voluntarios que la tienen dentro de su radio. En una urgencia crítica, el radio se amplía para llegar a más gente.</p></li>
+        <li><span class="num">03</span><p><b>Plazas y llegadas</b>Cada tarea dice cuántas personas necesita y se ve en directo qué está cubierto. Quien coordina marca en la app quién ha llegado.</p></li>
+        <li><span class="num">04</span><p><b>Mensajes con orden</b>Las conversaciones cuelgan de cada misión u operación, no de un grupo abierto donde todo se mezcla.</p></li>
+        <li><span class="num">05</span><p><b>Horas validadas y memoria</b>Solo cuentan las horas que valida el ayuntamiento. La memoria entre dos fechas, por persona o por misión, se descarga en CSV o se imprime.</p></li>
+      </ol>
+    </section>
+    <aside>
+      <div class="navegador"><div class="navegador__barra"><i></i><i></i><i></i><span>peopleforpeople.es/cuenta</span></div><img src="../../imagenes/consola-panel.webp" alt="" /></div>
+      <p class="pie-foto">El panel de coordinación, con datos de ejemplo.</p>
+      <h2>Datos y privacidad</h2>
+      <ul class="datos">
+        <li>La base de datos está en Fráncfort (Alemania), dentro de la UE.</li>
+        <li>Comprobamos que el ayuntamiento existe y quién lo representa antes de abrir el panel.</li>
+        <li>Los voluntarios no aparecen uno a uno en el mapa: solo cuánta gente hay disponible en una zona.</li>
+        <li>El teléfono de un voluntario solo lo ve quien coordina una misión que ha aceptado.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <section class="contratar">
+    <h2>Cómo se contrata</h2>
+    <div class="tarifas">{{tarifas}}</div>
+    <div class="contratar__notas">
+      <p><b>Cabe en un contrato menor.</b> Un año de la tarifa más alta son {{anual}} sin IVA, por debajo de los 15.000 € del contrato menor de servicios (art. 118 de la Ley 9/2017 de Contratos del Sector Público).</p>
+      <p><b>Sin permanencia.</b> Precios al mes, sin IVA. Las dos primeras publicaciones son gratis y no piden tarjeta; la suscripción empieza solo si se publica una tercera.</p>
+    </div>
+  </section>
+
+  <footer class="cierre">
+    <div>
+      <h2>Solicita una presentación de 20 minutos</h2>
+      <p>Te enseñamos el panel y la app, y resolvemos las dudas de contratación y de datos.</p>
+    </div>
+    <!-- Con UTM: las visitas que llegan desde el PDF se ven en Analytics como dossier / pdf. -->
+    <p class="cierre__contacto"><a href="https://peopleforpeople.es/comunidades/?utm_source=dossier&amp;utm_medium=pdf&amp;utm_campaign=ayuntamientos">peopleforpeople.es/comunidades</a><br /><a href="mailto:contacto@peopleforpeople.es">contacto@peopleforpeople.es</a></p>
+  </footer>
+  <p class="letra-pequena">PeopleForPeople · Av. Monasterio del Escorial 26, 28049 Madrid · La app para voluntarios llegará a las tiendas más adelante; mientras, la cuenta se crea en peopleforpeople.es. Precios vigentes en {{fecha}}.</p>
+</body>
+</html>

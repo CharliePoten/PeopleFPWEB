@@ -106,6 +106,20 @@
 .detail-page .cta-panel { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 38px; border-radius: 24px; background: var(--navy-600); color: #fff; }
 .detail-page .cta-panel h2 { color: #fff; }
 .detail-page .cta-panel p { max-width: 62ch; margin: 8px 0 0; color: rgba(255,255,255,.72); }
+/* El botón no encoge: en tableta se partía en dos y tres líneas. */
+.detail-page .cta-panel > .btn { flex: none; }
+/* Cierre con dos salidas: presentación y alta. El botón de borde, en blanco
+   sobre el azul, como en la cabecera. Si los dos botones no caben al lado
+   del texto, bajan a su propia fila en lugar de estrujarlo. */
+.detail-page .cta-panel:has(.cta-panel__botones) { flex-wrap: wrap; }
+.detail-page .cta-panel:has(.cta-panel__botones) > :first-child { flex: 1 1 22rem; }
+.detail-page .cta-panel__botones { display: flex; flex-wrap: wrap; gap: 12px; }
+.detail-page .cta-panel .btn--ghost { color: #fff; border-color: rgba(255,255,255,.4); }
+.detail-page .cta-panel .btn--ghost:hover { color: #fff; background: rgba(255,255,255,.1); }
+/* Debajo de una rejilla de tarjetas: un enlace con su frase, o una descarga. */
+.detail-page .detail-nota { margin: 28px 0 0; }
+.detail-page .descarga { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 32px; }
+.detail-page .descarga p { margin: 0; color: var(--text-soft); font-size: .92rem; }
 .detail-page .document-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
 .detail-page .document-card { min-height: 245px; padding: 28px; border: 1px solid var(--border); border-radius: 20px; background: #fff; color: inherit; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
 .detail-page .document-card:hover { color: inherit; transform: translateY(-5px); box-shadow: var(--shadow-raised); }
@@ -142,8 +156,10 @@
   .detail-page .steps { grid-template-columns: 1fr; }
   .detail-page .step + .step { border-left: 0; }
   .detail-page .trial-banner { grid-template-columns: 1fr; }
-  .detail-page .cta-panel { align-items: stretch; flex-direction: column; }
-  .detail-page .cta-panel .btn { width: 100%; }
+  .detail-page .cta-panel { align-items: stretch; flex-direction: column; padding: 32px 24px; }
+  .detail-page .cta-panel:has(.cta-panel__botones) > :first-child { flex: none; }
+  .detail-page .cta-panel__botones { flex-direction: column; }
+  .detail-page .cta-panel .btn { width: 100%; text-align: center; }
   .detail-page .resource-gallery { grid-template-columns: 1fr; }
   .detail-page .legal-shell dl { grid-template-columns: 1fr; gap: 2px; }
   .detail-page .legal-shell dd { margin-bottom: 12px; }

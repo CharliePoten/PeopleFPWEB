@@ -27,6 +27,20 @@ python _herramientas/seo.py --check   # avisa si algo está desfasado
 
 `_herramientas/` empieza por guion bajo para que GitHub Pages no la publique.
 
+## Dossier para ayuntamientos
+
+`descargas/peopleforpeople-ayuntamientos.pdf` (una página A4, se descarga
+desde `comunidades/`) sale de `_herramientas/dossier/ayuntamientos.html` con
+los precios de `js/planes.js`. Si cambian los precios o el texto:
+
+```
+python _herramientas/dossier.py
+```
+
+Necesita Playwright con Chromium. Si cambia la tarifa más alta de
+ayuntamientos, cambiar también a mano los 2.388 € (12 meses) de
+`comunidades/` y de `mun.hire1b` en `js/detail-i18n.js`.
+
 ## Analítica
 
 Google Analytics 4 (`G-BW63R3XK9E`) lo carga `js/analitica.js`, y **solo si la
@@ -40,6 +54,10 @@ persona acepta** en el aviso de cookies: no pegar la etiqueta de Google en el
   `resource_download`. Se detectan solos por el enlace (alta o documento) o
   por los avisos `pfp:contacto-enviado` y `pfp:lista-espera` de `site.js`. Un
   evento nuevo se añade en `analitica.js`, sin datos personales.
+- `lead_b2b_submit` es el formulario de contacto cuando se llega desde un
+  botón «Solicitar una presentación» (`contacto.html?presentacion=…`), que
+  deja el mensaje escrito y el perfil elegido. Sin ese parámetro, el mismo
+  formulario cuenta como `contact_submit`.
 - Eventos clave en Analytics (Administrar → Eventos clave): `lead_b2b_submit`,
   `organization_signup_click` y `waitlist_signup`. Sus parámetros (`ubicacion`,
   `tipo`, `archivo`) solo se ven en los informes si se registran como
