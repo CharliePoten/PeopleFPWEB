@@ -204,17 +204,18 @@ def cabeza_html(titulo, descripcion, url, tipo, imagen, imagen_alt, extra_meta, 
     ])
 
 
-def tarjeta(c, prefijo=''):
+def tarjeta(c, prefijo='', nivel=3):
+    # `nivel` 2 en el índice, donde las tarjetas van justo debajo del h1.
     return (
         '<article class="caso-tarjeta reveal">'
         '<a class="caso-tarjeta__foto" href="%s%s.html" tabindex="-1" aria-hidden="true">'
         '<img src="../imagenes/%s/%s.webp" width="%s" height="%s" loading="lazy" alt="" /></a>'
         '<div class="caso-tarjeta__cuerpo"><p class="caso-tarjeta__meta"><span>%s</span> · <time datetime="%s">%s</time></p>'
-        '<h3><a href="%s%s.html">%s</a></h3><p>%s</p>'
+        '<h%d><a href="%s%s.html">%s</a></h%d><p>%s</p>'
         '<a class="text-link" href="%s%s.html" data-i18n="%s">%s</a></div></article>'
     ) % (prefijo, c['slug'], C['imagenes'], c['imagen'], c['imagen_ancho'], c['imagen_alto'],
          e(c['etiqueta']), c['publicado'], fecha_larga(c['publicado']),
-         prefijo, c['slug'], e(c['titulo']), e(c['resumen']), prefijo, c['slug'], C['leer_clave'], C['leer'])
+         nivel, prefijo, c['slug'], e(c['titulo']), nivel, e(c['resumen']), prefijo, c['slug'], C['leer_clave'], C['leer'])
 
 
 CTA = (
@@ -332,7 +333,7 @@ def pagina_indice(todos, estilos, cabecera, pie):
         '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div>%s</section>'
         % (C['titulo_clave'], C['nombre'], C['entrada_clave'], C['entrada'], figura_cabecera(todos)),
         '  <section class="detail-section"><div class="container"><div class="casos-rejilla casos-rejilla--indice">%s</div></div></section>'
-        % ''.join(tarjeta(c) for c in todos),
+        % ''.join(tarjeta(c, nivel=2) for c in todos),
         '  <section class="detail-section detail-section--white"><div class="container">%s</div></section>'
         % CTA,
         '</main>' + pie + '</body>',

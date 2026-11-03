@@ -205,7 +205,7 @@
 .home .what__pie { margin: 12px 0 0; color: var(--text-mute); font-size: .86rem; }
 .home .what__claves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; list-style: none; }
 .home .what__clave { padding: 24px 0; border-top: 1px solid var(--border); }
-.home .what__num { display: block; margin-bottom: 12px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.home .what__num { display: block; margin-bottom: 12px; color: var(--amber-800); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .what__clave h3 { margin: 0 0 8px; color: var(--navy-700); font-size: 1.2rem; }
 .home .what__clave p { margin: 0; color: var(--text-soft); }
 
@@ -240,13 +240,13 @@
 .home .horas__doc img { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 20, 51, .08), 0 30px 70px rgba(0, 20, 51, .18); transform: rotate(1.5deg); }
 .home .horas__doc figcaption { max-width: 40ch; margin: 22px auto 0; color: var(--text-mute); font-size: .86rem; }
 .home .horas .card { padding: 28px; box-shadow: none; }
-.home .horas__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.home .horas__num { display: block; margin-bottom: 14px; color: var(--amber-800); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .horas__mas { margin: 22px 0 0; }
 
 /* Privacidad y confianza. */
 .home .confianza .card { box-shadow: none; }
 /* Números en lugar de iconos: los símbolos sueltos parecían de plantilla. */
-.home .card__num { display: block; margin-bottom: 14px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.home .card__num { display: block; margin-bottom: 14px; color: var(--amber-800); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .home .confianza__ley { max-width: 70ch; margin: 26px 0 0; color: var(--text-soft); font-size: .92rem; }
 .home .confianza__ley .text-link { display: inline-block; margin-right: 14px; }
 
@@ -257,7 +257,7 @@
 .home .audience-choice:is(:hover,:focus,:focus-within) { background: var(--navy-600); color: #fff; border-color: var(--navy-600); transform: translateY(-8px); box-shadow: 0 22px 46px rgba(0,37,87,.18); }
 .home .audience-card--volunteer { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 100%; }
 .home .audience-card--volunteer::after { content: ''; position: absolute; width: 240px; height: 240px; right: -90px; bottom: -90px; border: 1px solid rgba(252,175,23,.24); border-radius: 50%; box-shadow: 0 0 0 38px rgba(252,175,23,.04), 0 0 0 76px rgba(252,175,23,.03); }
-.home .audience-card__number { color: var(--amber-600); font-size: .75rem; font-weight: 700; letter-spacing: .09em; }
+.home .audience-card__number { color: var(--amber-800); font-size: .75rem; font-weight: 700; letter-spacing: .09em; }
 .home .audience-choice:is(:hover,:focus,:focus-within) .audience-card__number { color: var(--amber-300); }
 /* Sin icono: el número de arriba ya marca la tarjeta; el aire se queda. */
 .home .audience-card > h3 { margin-top: 70px; }
@@ -265,11 +265,12 @@
 .home .audience-card p { color: var(--text-soft); transition: color .3s ease; }
 .home .audience-points { position: relative; z-index: 1; display: grid; gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
 .home .audience-points li { display: flex; gap: 10px; color: var(--text-soft); font-size: .9rem; transition: color .3s ease; }
-.home .audience-points li::before { content: '✓'; color: var(--amber-700); font-weight: 700; }
+.home .audience-points li::before { content: '✓'; color: var(--amber-800); font-weight: 700; }
 .home .audience-choice:is(:hover,:focus,:focus-within) h3,
 .home .audience-choice:is(:hover,:focus,:focus-within) h4 { color: #fff; }
 .home .audience-choice:is(:hover,:focus,:focus-within) p,
 .home .audience-choice:is(:hover,:focus,:focus-within) .audience-points li { color: rgba(255,255,255,.78); }
+.home .audience-choice:is(:hover,:focus,:focus-within) .audience-points li::before { color: var(--amber-300); }
 .home .audience-card__actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: auto; padding-top: 30px; }
 .home .audience-card .text-link { color: var(--navy-600); }
 .home .audience-choice:is(:hover,:focus,:focus-within) .text-link { color: #fff; }

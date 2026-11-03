@@ -88,7 +88,7 @@
 .faq__item summary::-webkit-details-marker { display: none; }
 .faq__item summary:hover .faq__q { color: var(--navy-600); }
 .faq__item summary:focus-visible { outline: 3px solid var(--amber-300); outline-offset: 2px; border-radius: 6px; }
-.faq__num { color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.faq__num { color: var(--amber-800); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .faq__q { color: var(--navy-700); font-weight: 600; font-size: 1.02rem; }
 /* El signo «+» que gira a «×» al abrir. */
 .faq__signo { position: relative; width: 16px; height: 16px; justify-self: end; transition: transform .2s ease; }

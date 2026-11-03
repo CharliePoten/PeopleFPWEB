@@ -29,6 +29,9 @@
   --amber-500: #FCAF17;
   --amber-600: #E09405;
   --amber-700: #B77503;
+  /* El texto ámbar pequeño sobre fondo claro va en 800: el 700 se queda en
+     3,8:1 sobre blanco y AA pide 4,5:1. */
+  --amber-800: #8C5902;
 
   --n-0:   #FFFFFF;
   --n-50:  #F7F8FA;
@@ -51,7 +54,9 @@
   --surface:   var(--n-0);
   --text:      var(--n-900);
   --text-soft: var(--n-600);
-  --text-mute: var(--n-500);
+  /* Un punto más oscuro que --n-500, el de la app, que se queda en 4,4:1
+     sobre blanco y 4,2:1 sobre --n-50; AA pide 4,5:1. */
+  --text-mute: #68717F;
   --border:    var(--n-200);
   --brand:     var(--navy-600);
   --accent:    var(--amber-500);
@@ -144,7 +149,7 @@ p  { margin: 0 0 var(--s-base); }
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--amber-700);
+  color: var(--amber-800);
   margin-bottom: var(--s-sm);
 }
 .section--navy .eyebrow { color: var(--amber-300); }
@@ -642,7 +647,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .footer a { color: rgba(255,255,255,0.86); text-decoration: none; }
 .footer a:hover { color: var(--amber-500); text-decoration: underline; }
 .footer__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-xl); }
-.footer h4 { color: #fff; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: var(--s-md); }
+.footer h2 { color: #fff; font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: var(--s-md); }
 .footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-sm); font-size: 0.94rem; }
 .footer__brand p { font-size: 0.94rem; max-width: 30ch; }
 .footer__bottom {

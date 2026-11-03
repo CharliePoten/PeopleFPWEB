@@ -54,10 +54,10 @@
 .caso-tarjeta:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0, 37, 87, .12); }
 .caso-tarjeta__foto img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 .caso-tarjeta__cuerpo { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 20px 22px 22px; }
-.caso-tarjeta__meta { margin: 0; color: var(--amber-700); font-size: .78rem; font-weight: 600; letter-spacing: .03em; }
-.caso-tarjeta h3 { margin: 0; font-size: 1.12rem; line-height: 1.35; }
-.caso-tarjeta h3 a { color: var(--navy-700); text-decoration: none; }
-.caso-tarjeta h3 a:hover { color: var(--navy-600); text-decoration: underline; }
+.caso-tarjeta__meta { margin: 0; color: var(--amber-800); font-size: .78rem; font-weight: 600; letter-spacing: .03em; }
+.caso-tarjeta :is(h2, h3) { margin: 0; font-size: 1.12rem; font-weight: 600; line-height: 1.35; }
+.caso-tarjeta :is(h2, h3) a { color: var(--navy-700); text-decoration: none; }
+.caso-tarjeta :is(h2, h3) a:hover { color: var(--navy-600); text-decoration: underline; }
 .caso-tarjeta p { margin: 0; color: var(--text-soft); font-size: .94rem; }
 .caso-tarjeta .text-link { margin-top: auto; padding-top: 6px; }
 

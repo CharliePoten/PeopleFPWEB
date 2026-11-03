@@ -61,13 +61,14 @@
 .detail-page .detail-section { padding: 84px 0; }
 .detail-page .detail-section--white { background: #fff; }
 .detail-page .detail-section--navy { background: var(--navy-600); color: #fff; }
+.detail-page .detail-section--navy .eyebrow { color: var(--amber-300); }
 .detail-page .detail-heading { max-width: 720px; margin-bottom: 42px; }
 .detail-page .detail-heading h2 { margin-bottom: 14px; font-size: clamp(1.9rem, 4vw, 3.1rem); text-wrap: balance; }
 .detail-page .detail-heading p { color: var(--text-soft); }
 .detail-page .detail-section--navy .detail-heading p { color: rgba(255,255,255,.76); }
 .detail-page .benefit-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
 .detail-page .benefit-card { min-height: 230px; padding: 30px; border: 1px solid var(--border); border-radius: 20px; background: #fff; }
-.detail-page .benefit-card__number { display: block; margin-bottom: 46px; color: var(--amber-700); font-size: .75rem; font-weight: 700; letter-spacing: .1em; }
+.detail-page .benefit-card__number { display: block; margin-bottom: 46px; color: var(--amber-800); font-size: .75rem; font-weight: 700; letter-spacing: .1em; }
 .detail-page .benefit-card h3 { margin-bottom: 10px; color: var(--navy-600); }
 .detail-page .benefit-card p { margin: 0; color: var(--text-soft); font-size: .94rem; }
 .detail-page .steps { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; counter-reset: steps; }
@@ -90,7 +91,7 @@
 .detail-page .price span { color: var(--text-mute); font-size: .84rem; }
 .detail-page .price-card ul { display: grid; gap: 10px; margin: 0 0 26px; padding: 0; list-style: none; color: var(--text-soft); font-size: .9rem; }
 .detail-page .price-card li { display: flex; gap: 9px; }
-.detail-page .price-card li::before { content: '✓'; color: var(--amber-700); font-weight: 700; }
+.detail-page .price-card li::before { content: '✓'; color: var(--amber-800); font-weight: 700; }
 .detail-page .price-card .btn { width: 100%; margin-top: auto; }
 .detail-page .price-card:is(:hover, :focus, :focus-within) h3,
 .detail-page .price-card:is(:hover, :focus, :focus-within) .price { color: #fff; }
@@ -123,7 +124,7 @@
 .detail-page .document-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
 .detail-page .document-card { min-height: 245px; padding: 28px; border: 1px solid var(--border); border-radius: 20px; background: #fff; color: inherit; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
 .detail-page .document-card:hover { color: inherit; transform: translateY(-5px); box-shadow: var(--shadow-raised); }
-.detail-page .document-card span { display: block; margin-bottom: 40px; color: var(--amber-700); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.detail-page .document-card span { display: block; margin-bottom: 40px; color: var(--amber-800); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
 .detail-page .document-card h3 { margin-bottom: 8px; color: var(--navy-600); }
 .detail-page .document-card p { color: var(--text-soft); font-size: .91rem; }
 .detail-page .document-card strong { color: var(--navy-500); font-size: .85rem; }
@@ -249,7 +250,7 @@
 .detail-page .ficha__sub { margin: 0 0 18px; color: var(--text-mute); font-size: .85rem; }
 .detail-page .ficha ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--border); }
 .detail-page .ficha li { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: .92rem; }
-.detail-page .ficha li > span { color: var(--amber-700); font-size: .76rem; font-weight: 700; letter-spacing: .06em; }
+.detail-page .ficha li > span { color: var(--amber-800); font-size: .76rem; font-weight: 700; letter-spacing: .06em; }
 .detail-page .ficha li strong { color: var(--navy-700); font-weight: 600; }
 .detail-page .ficha li em { color: #1F7A4D; font-style: normal; font-size: .82rem; font-weight: 600; text-align: right; }
 .detail-page .ficha__sello { position: absolute; right: 22px; bottom: -20px; margin: 0; padding: 10px 16px; background: var(--navy-600); color: #fff; font-family: var(--tipo-titulos); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
@@ -289,7 +290,7 @@
 /* Pasos sobre blanco (seguridad): la página no encadena dos azules. */
 .detail-page .detail-section--white .step { border-top-color: var(--border); }
 .detail-page .detail-section--white .step + .step { border-left-color: var(--border); }
-.detail-page .detail-section--white .step::before { color: var(--amber-700); }
+.detail-page .detail-section--white .step::before { color: var(--amber-800); }
 .detail-page .detail-section--white .step h3 { color: var(--navy-700); }
 .detail-page .detail-section--white .step p { color: var(--text-soft); }
 
