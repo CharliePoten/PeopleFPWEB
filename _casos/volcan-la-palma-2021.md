@@ -3,6 +3,7 @@ titulo: Volcán de La Palma: 85 días de erupción y meses de ceniza que limpiar
 titulo_seo: Volcán de La Palma: voluntariado y ceniza
 descripcion: La erupción de La Palma de 2021 duró 85 días y dejó meses de limpieza. Qué hicieron los voluntarios, qué riesgos hubo y cómo coordinar una emergencia larga.
 publicado: 2026-10-22
+actualizado: 2026-11-03
 orden: 3
 suceso: Erupción volcánica · La Palma · septiembre a diciembre de 2021
 etiqueta: Erupción volcánica
@@ -41,14 +42,14 @@ Cuando cualquiera puede ponerse a ayudar sin indicaciones, es fácil que alguien
 
 1. **El ayuntamiento publica misiones por turnos** («retirada de ceniza en azoteas transitables, martes de 9:00 a 13:00, 8 plazas») con los requisitos de cada una: mascarilla FFP2, gafas y mayoría de edad.
 2. **Las tareas de riesgo,** como los tejados con pendiente, se quedan en manos de los servicios de emergencia y no se publican como misión abierta.
-3. **Los vecinos que no pueden limpiar piden ayuda** desde la app, con su grado de urgencia. Les ve el voluntariado de la zona, y la dirección exacta solo la recibe la persona que aceptan.
+3. **Con la emergencia declarada, los vecinos que no pueden limpiar piden ayuda** desde la app, con su grado de urgencia. La petición la ve el voluntariado de la zona, y la dirección exacta solo la recibe la persona que aceptan.
 4. **Las entidades que llegan de fuera,** como la de Galdakao, coordinan a su gente en la misma plataforma que el ayuntamiento, así cada uno sabe qué calles cubre el otro.
 5. **Seis meses de voluntariado quedan acreditados.** Cada turno se ficha y la entidad valida las horas: quien ha dado medio año de su tiempo puede demostrarlo.
 
 ## Qué puedes hacer hoy
 
-- **Si quieres ayudar en emergencias largas,** indica en tu perfil tu disponibilidad y qué sabes hacer. Las misiones por turnos encajan con quien solo puede unas horas a la semana.
-- **Si coordinas una entidad en una zona de riesgo,** prepara antes las tareas tipo y sus requisitos de seguridad.
+- **Si quieres ayudar en emergencias largas,** indica en tu perfil qué sabes hacer y qué avisos quieres recibir. Las misiones por turnos encajan con quien solo puede unas horas a la semana.
+- **Si coordinas una entidad en una zona de riesgo,** dala de alta antes de que haga falta. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia.
 
 ## Fuentes
 

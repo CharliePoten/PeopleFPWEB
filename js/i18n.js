@@ -158,6 +158,7 @@ window.I18N = {
     'contact.errConsent': 'Necesitamos tu consentimiento para poder responderte.',
 
     'footer.tagline': 'Tu ayuda. Su esperanza. Nosotros unimos.',
+    'footer.linkedin': 'Síguenos en LinkedIn',
     'footer.platform': 'Plataforma',
     'footer.project': 'Proyecto',
     'footer.legal': 'Legal',
@@ -434,6 +435,7 @@ window.I18N = {
     'contact.errConsent': 'Wir brauchen deine Einwilligung, um dir antworten zu können.',
 
     'footer.tagline': 'Deine Hilfe. Ihre Hoffnung. Wir verbinden.',
+    'footer.linkedin': 'Folge uns auf LinkedIn',
     'footer.platform': 'Plattform',
     'footer.project': 'Projekt',
     'footer.legal': 'Rechtliches',

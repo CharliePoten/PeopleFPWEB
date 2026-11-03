@@ -81,7 +81,7 @@ PAGINAS = [
     ('ayuda.html', '/ayuda.html',
      'Preguntas frecuentes sobre el voluntariado',
      'Cómo funciona PeopleForPeople: darse de alta, apuntarse a una misión, acreditar horas, '
-     'pedir ayuda a tus vecinos y coordinar el voluntariado de una entidad.',
+     'pedir ayuda en una emergencia y coordinar el voluntariado de una entidad.',
      'Preguntas frecuentes', None),
     ('contacto.html', '/contacto.html',
      'Contacto',
@@ -155,6 +155,7 @@ ORGANIZACION = {
     'alternateName': 'People for People',
     'url': DOMINIO + '/',
     'logo': LOGO,
+    'sameAs': ['https://www.linkedin.com/company/146906872/'],
     'email': 'contacto@peopleforpeople.es',
     'address': {
         '@type': 'PostalAddress',

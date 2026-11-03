@@ -3,6 +3,7 @@ titulo: DANA de Valencia: sobraban manos, faltaba quien las coordinara
 titulo_seo: Voluntariado en la DANA de Valencia
 descripcion: Qué pasó con los miles de voluntarios que acudieron tras la DANA de Valencia de 2024, qué falló al organizarlos y cómo se podría coordinar mejor.
 publicado: 2026-10-22
+actualizado: 2026-11-03
 orden: 1
 suceso: Inundación · Valencia · octubre y noviembre de 2024
 etiqueta: Inundación
@@ -51,17 +52,17 @@ No faltó gente. Faltaron cuatro cosas que no dependen de la buena voluntad:
 PeopleForPeople nació después de aquellos días, precisamente por lo que se vio en ellos. Así funcionaría hoy una respuesta como esa:
 
 1. **El ayuntamiento o la entidad verificada lanza la operación** desde un escenario preparado de inundación, con las tareas ya definidas: retirada de barro, reparto de agua, traslado de material.
-2. **Cada misión dice dónde, cuándo y cuántas personas hacen falta.** Cuando se cubren las plazas, deja de aparecer. Así no se acumulan doscientas personas en una calle mientras la de al lado espera.
-3. **El aviso llega a quien está cerca y sabe hacer lo que se necesita,** por ejemplo transporte con vehículo propio o conocimientos sanitarios.
+2. **Cada misión dice dónde, cuándo y cuántas personas hacen falta.** Cuando se cubren las plazas, ya no admite a nadie más. Así no se acumulan doscientas personas en una calle mientras la de al lado espera.
+3. **El aviso llega a quien vive cerca,** y quien coordina puede buscar e invitar a quien sabe hacer lo que falta, por ejemplo transporte con vehículo propio o conocimientos sanitarios.
 4. **Quien coordina marca en la app quién ha llegado.** Sabe en todo momento con cuántas personas cuenta, y las horas de cada voluntario quedan registradas y validadas para su certificado.
-5. **Los vecinos afectados pueden pedir ayuda directamente:** describen lo que necesitan, marcan el punto en el mapa y eligen la urgencia. Su dirección exacta solo la recibe la persona que aceptan.
+5. **Con la emergencia declarada en la provincia, los vecinos afectados pueden pedir ayuda directamente:** describen lo que necesitan, marcan el punto en el mapa y eligen la urgencia. Su dirección exacta solo la recibe la persona que aceptan.
 
 Nada de esto sustituye a los servicios de emergencia. Sirve para que la ayuda voluntaria, que llega siempre y en enormes cantidades, se pueda aprovechar.
 
 ## Qué puedes hacer hoy
 
-- **Si quieres ayudar:** crea tu cuenta, indica qué sabes hacer y en qué zona estás. Cuando haya una misión que encaje, te llegará el aviso.
-- **Si trabajas en un ayuntamiento o en una ONG:** la próxima emergencia se coordina mejor si el escenario está preparado antes. Escríbenos y te enseñamos cómo.
+- **Si quieres ayudar:** crea tu cuenta, indica qué sabes hacer y hasta dónde puedes moverte. Cuando se publique una misión cerca, te llegará el aviso.
+- **Si trabajas en un ayuntamiento o en una ONG:** la próxima emergencia se coordina mejor si la entidad ya está dada de alta y verificada. Escríbenos y te enseñamos cómo.
 
 ## Fuentes
 

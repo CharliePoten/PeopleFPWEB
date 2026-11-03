@@ -3,6 +3,7 @@ titulo: Filomena: cuando Madrid se quedó bajo la nieve y los todoterrenos lleva
 titulo_seo: Filomena y los voluntarios 4x4 de Madrid
 descripcion: En enero de 2021 la nevada de Filomena paralizó Madrid y voluntarios con todoterrenos llevaron a sanitarios y pacientes. Qué funcionó y qué faltó.
 publicado: 2026-10-22
+actualizado: 2026-11-03
 orden: 2
 suceso: Temporal de nieve · Madrid · enero de 2021
 etiqueta: Temporal de nieve
@@ -40,16 +41,16 @@ La ayuda llegó, pero con problemas que se repiten en cada emergencia:
 
 ## Cómo podría organizarse con PeopleForPeople
 
-1. **Una entidad verificada publica la misión,** por ejemplo un ayuntamiento o una agrupación de voluntarios: «Traslado de personal sanitario al hospital, turno de mañana». Pide la habilidad *transporte con vehículo propio*.
-2. **El aviso llega solo a quien tiene esa habilidad y está cerca.** No hace falta buscar en grupos de mensajería.
+1. **Una entidad verificada lanza una operación,** por ejemplo un ayuntamiento o una agrupación de voluntarios: «Traslados al hospital, turno de mañana». La tarea de traslado pide la habilidad *transporte con vehículo propio*.
+2. **El aviso llega a los voluntarios que viven cerca.** Además, quien coordina puede buscar a quienes tienen esa habilidad e invitarlos directamente, sin pasar por grupos de mensajería.
 3. **Cada traslado tiene sus plazas y su responsable.** Quien coordina ve qué viajes están cubiertos y cuáles no, en vez de enterarse por mensajes sueltos.
 4. **El voluntario actúa en nombre de una entidad verificada** y lo puede enseñar en la app. No elimina los malentendidos, pero sí deja claro quién le ha pedido ese viaje.
 5. **Las horas quedan registradas** y validadas por la entidad, que puede reconocerlas con un certificado.
 
 ## Qué puedes hacer hoy
 
-- **Si tienes un todoterreno o sabes conducir en condiciones difíciles,** márcalo en tu perfil. Es justo lo que se busca cuando las carreteras se cierran.
-- **Si coordinas Protección Civil, una ONG o un servicio municipal,** prepara antes el escenario de temporal de nieve: con las tareas definidas, lanzarlo cuesta un minuto.
+- **Si tienes un todoterreno,** márcalo en tu perfil («Tengo vehículo propio») y añade la habilidad *transporte con vehículo propio*. Es justo lo que busca quien coordina cuando las carreteras se cierran.
+- **Si coordinas Protección Civil, una ONG o un servicio municipal,** da de alta la entidad antes de la próxima nevada. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia: con la entidad verificada, lanzar una operación cuesta un minuto.
 
 ## Fuentes
 

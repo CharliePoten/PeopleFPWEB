@@ -650,6 +650,8 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-raised); }
 .footer h2 { color: #fff; font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: var(--s-md); }
 .footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-sm); font-size: 0.94rem; }
 .footer__brand p { font-size: 0.94rem; max-width: 30ch; }
+.footer__social a { display: inline-flex; align-items: center; gap: 0.5em; }
+.footer__social svg { width: 1.1em; height: 1.1em; fill: currentColor; flex: none; }
 .footer__bottom {
   margin-top: var(--s-2xl); padding-top: var(--s-lg);
   border-top: 1px solid rgba(255,255,255,0.14);

@@ -3,6 +3,7 @@ titulo: Personas mayores que no pueden salir de casa: lo que enseñaron las rede
 titulo_seo: Ayuda a personas mayores: redes vecinales
 descripcion: Durante el confinamiento de 2020, miles de vecinos de Madrid llevaron compras y medicinas a quien no podía salir. Qué aprendimos y cómo organizarlo hoy.
 publicado: 2026-10-22
+actualizado: 2026-11-03
 orden: 4
 suceso: Confinamiento · Madrid · primavera de 2020
 etiqueta: Personas mayores
@@ -35,17 +36,17 @@ Las redes funcionaron gracias al esfuerzo de mucha gente, y por eso mismo depend
 
 ## Cómo podría organizarse con PeopleForPeople
 
-1. **Pedir ayuda cuesta un minuto.** Si la persona mayor no usa el móvil, puede pedirla un familiar o un vecino desde su cuenta: describe lo que se necesita («compra semanal», «recoger una receta en la farmacia»), marca la zona y elige la urgencia.
+1. **Si hay una emergencia declarada en la provincia, pedir ayuda cuesta un minuto.** Si la persona mayor no usa el móvil, puede pedirla por ella un vecino o un familiar de la misma provincia, desde su propia cuenta: describe lo que se necesita («compra semanal», «recoger una receta en la farmacia»), marca el sitio en el mapa y elige la urgencia.
 2. **La petición la ve el voluntariado de esa zona.** Quien se ofrece solo ve una zona aproximada, de un kilómetro. **La dirección exacta solo la recibe la persona que se acepta.**
 3. **Nadie escribe por privado sin permiso.** Para hablar hace falta haber aceptado la ayuda, o aceptar antes la solicitud de contacto.
-4. **Una asociación vecinal o una ONG verificada puede convertirlo en misiones fijas:** acompañamiento semanal, reparto los martes o llamadas a quien vive solo. Coordina a su gente desde el panel y ve qué peticiones siguen sin cubrir.
+4. **Una asociación vecinal o una ONG verificada puede organizarlo, haya emergencia o no,** con el escenario de apoyo vecinal: acompañamiento a citas médicas, compra semanal a domicilio o visitas de compañía. Coordina a su gente desde el panel y ve qué tareas siguen sin cubrir.
 5. **Si nadie responde, se sabe.** Quien pide puede cerrar la petición indicando que no llegó ayuda, y eso enseña dónde falta gente.
 
 ## Qué puedes hacer hoy
 
-- **Si tienes un rato a la semana,** apúntate y elige tu barrio. Subir una compra o acompañar a alguien al médico son misiones de una hora.
-- **Si tienes un familiar mayor que vive solo,** enséñale cómo pedir ayuda, o pídela tú por él cuando haga falta.
-- **Si formas parte de una asociación vecinal,** el panel de coordinación os deja ver en un sitio quién ayuda, a quién y cuándo.
+- **Si tienes un rato a la semana,** apúntate y di hasta dónde puedes moverte. Subir una compra o acompañar a alguien al médico son misiones de una hora.
+- **Si tienes un familiar mayor que vive solo,** enséñale a pedir ayuda desde la app por si se declara una emergencia en su provincia. Si vivís en la misma, también puedes pedirla tú por él.
+- **Si formas parte de una asociación vecinal,** el panel de coordinación os deja ver en un sitio quién ayuda, en qué y cuándo.
 
 ## Fuentes
 
