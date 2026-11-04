@@ -3,8 +3,8 @@
      URL que su canonical. Las de /cuenta/ no van: llevan noindex. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://peopleforpeople.es/</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/voluntarios/</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/ongs/</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://peopleforpeople.es/voluntarios/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/ongs/</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://peopleforpeople.es/comunidades/</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/proteccion-civil/</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/empresas/</loc><lastmod>2026-11-04</lastmod></url>
@@ -12,7 +12,7 @@
   <url><loc>https://peopleforpeople.es/contacto.html</loc><lastmod>2026-11-03</lastmod></url>
   <url><loc>https://peopleforpeople.es/plataforma/centro-de-coordinacion.html</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/plataforma/app-voluntariado.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/plataforma/informes-y-certificados.html</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://peopleforpeople.es/plataforma/informes-y-certificados.html</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://peopleforpeople.es/plataforma/seguridad-y-verificacion.html</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/calculadora.html</loc><lastmod>2026-11-03</lastmod></url>
   <url><loc>https://peopleforpeople.es/documentos.html</loc><lastmod>2026-11-03</lastmod></url>
@@ -25,17 +25,20 @@
   <url><loc>https://peopleforpeople.es/casos/filomena-madrid-2021.html</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/casos/personas-mayores-redes-vecinales-2020.html</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://peopleforpeople.es/casos/volcan-la-palma-2021.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/acompanamiento-personas-mayores-soledad.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/acuerdo-incorporacion-voluntariado.html</loc></url>
-  <url><loc>https://peopleforpeople.es/actualidad/horas-voluntariado-subvenciones.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/incendios-forestales-voluntarios.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/ley-45-2015-obligaciones-entidades.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/ola-de-calor-voluntarios.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/recogida-reparto-alimentos-voluntarios.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/seguro-voluntariado-que-cubre.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/voluntariado-corporativo-empresas.html</loc></url>
-  <url><loc>https://peopleforpeople.es/actualidad/voluntariado-menores-de-edad.html</loc></url>
-  <url><loc>https://peopleforpeople.es/actualidad/voluntarios-espontaneos-emergencias.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://peopleforpeople.es/actualidad/whatsapp-excel-o-plataforma-voluntarios.html</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/acompanamiento-personas-mayores-soledad.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/acuerdo-incorporacion-voluntariado.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/certificado-voluntariado.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/horas-voluntariado-subvenciones.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/incendios-forestales-voluntarios.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/ley-45-2015-obligaciones-entidades.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/ola-de-calor-voluntarios.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/programa-voluntariado.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/recogida-reparto-alimentos-voluntarios.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/seguro-voluntariado-que-cubre.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/voluntariado-corporativo-empresas.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/voluntariado-menores-de-edad.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/voluntario-o-trabajador.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/voluntarios-espontaneos-emergencias.html</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://peopleforpeople.es/actualidad/whatsapp-excel-o-plataforma-voluntarios.html</loc><lastmod>2026-11-05</lastmod></url>
 </urlset>
