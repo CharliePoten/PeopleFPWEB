@@ -84,7 +84,7 @@ Nada de esto se improvisa bien el día de la emergencia, así que conviene dejar
 
 **Supervisión y partes.** Cada responsable informa al centro de coordinación de lo que se ha hecho, lo que falta y las incidencias. Una reunión breve al empezar y otra al acabar el día sirven para repartir el trabajo del siguiente.
 
-**Comunicación ordenada.** Un teléfono y un correo, como mínimo. Si se crea un grupo de mensajería, mejor solo con los responsables de equipo: con cientos de personas en el mismo canal, los avisos se pierden. Y una norma clara sobre fotos y periodistas: para hacer fotos se pide permiso al responsable, y a los periodistas se les remite a quien lleve la prensa del ayuntamiento.
+**Comunicación ordenada.** Un teléfono y un correo, como mínimo. Si se crea un grupo de mensajería, mejor solo con los responsables de equipo: con cientos de personas en el mismo canal, los avisos se pierden (lo comparamos en [WhatsApp, Excel o una plataforma](whatsapp-excel-o-plataforma-voluntarios.html)). Y una norma clara sobre fotos y periodistas: para hacer fotos se pide permiso al responsable, y a los periodistas se les remite a quien lleve la prensa del ayuntamiento.
 
 ## Después: agradecer, acreditar y aprender
 
@@ -95,7 +95,7 @@ Nada de esto se improvisa bien el día de la emergencia, así que conviene dejar
 
 ## Cómo encaja PeopleForPeople
 
-**En PeopleForPeople**, el servicio municipal de Protección Civil o la agrupación, una vez verificados, lanzan la operación desde uno de siete escenarios preparados (inundación, incendio forestal, evacuación, ola de calor, búsqueda de una persona, punto de reparto y apoyo vecinal), con las tareas, las habilidades y las plazas ya definidas. El aviso llega a los voluntarios que tienen la zona dentro de su radio. Cada tarea dice cuántas personas necesita y, cuando se cubren las plazas, ya no admite a nadie más: es la misma idea del cupo diario que acabó funcionando en Valencia. Quien coordina marca en la app quién ha llegado a cada punto, las horas se calculan solas y la entidad las valida; son la base del certificado.
+**En PeopleForPeople**, el servicio municipal de Protección Civil o la agrupación, una vez verificados, lanzan la operación desde uno de siete escenarios preparados (inundación, [incendio forestal](incendios-forestales-voluntarios.html), evacuación, [ola de calor](ola-de-calor-voluntarios.html), búsqueda de una persona, punto de reparto y apoyo vecinal), con las tareas, las habilidades y las plazas ya definidas. El aviso llega a los voluntarios que tienen la zona dentro de su radio. Cada tarea dice cuántas personas necesita y, cuando se cubren las plazas, ya no admite a nadie más: es la misma idea del cupo diario que acabó funcionando en Valencia. Quien coordina marca en la app quién ha llegado a cada punto, las horas se calculan solas y la entidad las valida; son la base del certificado.
 
 Lo que no hace: no sustituye al plan de emergencias ni a los servicios de emergencia, y no asegura a nadie, porque el seguro lo contrata cada entidad. Tampoco tendrá cuenta todo el que se presente, así que el punto de registro presencial sigue haciendo falta. Lo explicamos con detalle en la página para [Protección Civil](../proteccion-civil/).
 
@@ -109,7 +109,7 @@ Lo que no hace: no sustituye al plan de emergencias ni a los servicios de emerge
 | Durante | Llamamiento con la necesidad calculada y toda la información | La autoridad que dirige la emergencia |
 | Durante | Registro, explicación, equipo y chaleco | Punto de recepción |
 | Durante | Equipos con responsable, turnos y partes diarios | Responsables de equipo |
-| Después | Agradecimiento, certificado y evaluación | Ayuntamiento o entidad |
+| Después | Dar las gracias, certificar y evaluar | Ayuntamiento o entidad |
 
 *Esta guía resume la normativa y las buenas prácticas para orientarse; no sustituye al plan de emergencias de cada municipio ni al asesoramiento jurídico. La regulación del voluntariado, y en especial la de protección civil, cambia de una comunidad autónoma a otra.*
 
