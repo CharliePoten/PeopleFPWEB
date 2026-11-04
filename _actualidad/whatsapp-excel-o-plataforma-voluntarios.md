@@ -38,7 +38,7 @@ Aun así, si sois una entidad de voluntariado, la ley os pide lo mismo con cualq
 
 **Tiene un tope.** WhatsApp amplió en 2022 el máximo a 1.024 participantes por grupo. En una gran emergencia hay que abrir varios y repetir cada aviso en todos.
 
-**No deja registro.** Del grupo no sale una lista de quién fue, cuándo ni cuántas horas, que es lo que hace falta para el certificado o para justificar una subvención.
+**No deja registro.** Del grupo no sale una lista de quién fue, cuándo ni cuántas horas, que es lo que hace falta para el certificado o para [justificar una subvención](horas-voluntariado-subvenciones.html).
 
 ## Dónde se queda corto Excel
 

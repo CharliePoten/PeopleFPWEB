@@ -29,7 +29,7 @@ No lo paga la persona voluntaria, y no lo sustituye ninguna plataforma. Si algui
 
 **1. Accidentes y enfermedad.** La póliza tiene que cubrir los riesgos de accidente y de enfermedad derivados directamente de la actividad voluntaria, y ser adecuada a las características y circunstancias de esa actividad (artículo 14.2.c).
 
-**2. La responsabilidad civil, cuando lo exija la normativa del sector.** Si una persona voluntaria causa un daño a otra durante la actividad, responde frente a ella la entidad, conforme al Código Civil. La entidad puede cubrirlo con un seguro de responsabilidad civil u otra garantía financiera, que es obligatorio cuando lo exige la normativa sectorial (artículo 14.3).
+**2. La responsabilidad civil, cuando lo exija la normativa del sector.** Si una persona voluntaria causa un daño a otra durante la actividad, responde frente a ella la entidad, según el Código Civil y el resto de normas aplicables. La entidad puede cubrir ese riesgo con un seguro de responsabilidad civil u otra garantía financiera, que es obligatorio cuando lo exige la normativa sectorial (artículo 14.3).
 
 Que no sea obligatorio no quiere decir que no haga falta: la entidad responde de esos daños igual, tenga seguro o no.
 
@@ -74,7 +74,7 @@ Para eso ayuda tener anotado quién participó, en qué actividad y cuándo. La 
 
 ## Cómo encaja PeopleForPeople
 
-**PeopleForPeople no contrata seguros ni asegura a nadie**: cada entidad asegura a sus voluntarios, y darse de alta en la plataforma no cubre a nadie. Lo dice también el [acuerdo de voluntariado](../acuerdo-voluntariado.html) que aceptan las personas voluntarias.
+**PeopleForPeople no contrata seguros ni asegura a nadie**: cada entidad asegura a sus voluntarios, y darse de alta en la plataforma no cubre a nadie. Lo dice también el [acuerdo de voluntariado](../acuerdo-voluntariado.html) de la plataforma.
 
 Lo que sí aporta es el registro: quién se apuntó a cada misión, quién llegó y cuántas horas validó la entidad. Si hay un accidente, ayuda a saber quién estaba y en qué tarea. Lo explicamos en [informes y certificados](../plataforma/informes-y-certificados.html).
 

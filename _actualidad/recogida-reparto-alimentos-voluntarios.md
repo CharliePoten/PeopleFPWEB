@@ -54,7 +54,7 @@ Lo que ha pasado su fecha de caducidad no se entrega. Qué se hace con lo que ha
 
 ## Cómo organizar a los voluntarios
 
-**En una campaña de recogida.** En la Gran Recogida, la tarea de las personas voluntarias es informar a los clientes de la tienda y animarles a colaborar. Lo que se dona en caja se convierte en un saldo en la cadena de supermercados, que el banco de alimentos usa durante el año según lo que le falte; algunas tiendas aceptan también alimentos no perecederos. Ayudan los turnos cerrados de antemano, una persona responsable en cada tienda que sepa a quién llamar y un mensaje común para todos, sin presionar a nadie: se informa y se agradece.
+**En una campaña de recogida.** En la Gran Recogida, la tarea de las personas voluntarias es informar a los clientes de la tienda y animarlos a colaborar. Lo que se dona en caja se convierte en un saldo en la cadena de supermercados, que el banco de alimentos usa durante el año según lo que le falte; algunas tiendas aceptan también alimentos no perecederos. Ayudan los turnos cerrados de antemano, una persona responsable en cada tienda que sepa a quién llamar y un mensaje común para todos, sin presionar a nadie: se informa y se agradece.
 
 **En el almacén.** Descargar lo que llega, clasificarlo, revisar fechas y envases, colocarlo y anotar las entradas. Conviene que en cada turno haya alguien con experiencia que resuelva las dudas, y que las cajas pesadas se muevan con carros o entre dos.
 

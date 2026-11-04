@@ -42,7 +42,7 @@ Según el artículo 14.2.c, la entidad tiene que «suscribir una póliza de segu
 
 El seguro de responsabilidad civil frente a terceros solo es obligatorio cuando lo exige la normativa del sector (artículo 14.3).
 
-Esto lo contrata cada entidad: **ninguna plataforma lo sustituye**, tampoco PeopleForPeople.
+Esto lo contrata cada entidad: **ninguna plataforma lo sustituye**, tampoco PeopleForPeople. Qué tiene que cubrir y qué revisar antes de firmar la póliza lo explicamos en la [guía sobre el seguro de voluntariado](seguro-voluntariado-que-cubre.html).
 
 ## 3. Un certificado de lo que se ha hecho
 
@@ -55,7 +55,7 @@ La persona voluntaria puede pedir que se acredite su participación. Según el a
 
 El artículo 14.2.k lo recoge también como obligación de la entidad. Y el 24.2 abre la puerta a que las competencias adquiridas se reconozcan como experiencia, conforme a la normativa general.
 
-**En PeopleForPeople**, quien coordina ficha sobre el terreno la llegada de cada persona, y la entidad valida las horas; si las ajusta, tiene que decir por qué. Esas horas validadas forman el historial de cada voluntario y son la base del [certificado que expide la entidad](../plataforma/informes-y-certificados.html).
+**En PeopleForPeople**, quien coordina ficha sobre el terreno la llegada de cada persona, y la entidad valida las horas; si las ajusta, tiene que decir por qué. Esas horas validadas forman el historial de cada voluntario y son la base del [certificado que expide la entidad](../plataforma/informes-y-certificados.html). Cómo cuentan en una subvención lo explicamos en la [guía sobre las horas de voluntariado y las subvenciones](horas-voluntariado-subvenciones.html).
 
 ## 4. Requisitos para trabajar con menores
 
