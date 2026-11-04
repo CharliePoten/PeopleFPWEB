@@ -120,8 +120,8 @@ PAGINAS = [
      'Recursos y documentos', None),
     ('acuerdo-voluntariado.html', '/acuerdo-voluntariado.html',
      'Acuerdo de voluntariado (Ley 45/2015)',
-     'Acuerdo de incorporación al voluntariado de PeopleForPeople, conforme a la Ley 45/2015: '
-     'derechos y deberes, seguro, protección de datos y duración.',
+     'Lo que aceptan las personas voluntarias de PeopleForPeople: quién es quién, derechos y '
+     'deberes según la Ley 45/2015, seguro, horas, certificado y datos.',
      'Acuerdo de voluntariado', None),
     ('privacidad.html', '/privacidad.html',
      'Política de privacidad',

@@ -381,8 +381,8 @@ def seguridad():
               'Fähigkeiten, die eine Qualifikation erfordern, werden mit einem Dokument belegt, das das Team prüft, bevor sie als bestätigt gelten.')
         + '</article><article class="benefit-card reveal"><span class="benefit-card__number">06</span>'
         + txt('h3', 'pl.s.h6t', 'Constancia del acuerdo', 'Nachweis der Vereinbarung')
-        + txt('p', 'trust.ley', 'Al darte de alta como voluntario aceptas el acuerdo de incorporación de la Ley 45/2015, y queda constancia de qué versión aceptaste y cuándo.',
-              'Bei der Anmeldung als Freiwillige:r akzeptierst du die Vereinbarung nach dem Gesetz 45/2015, und es wird festgehalten, welche Version du wann akzeptiert hast.')
+        + txt('p', 'trust.ley', 'Al darte de alta como voluntario aceptas el acuerdo de voluntariado, con tus derechos y deberes según la Ley 45/2015, y queda constancia de qué versión aceptaste y cuándo.',
+              'Wer sich als Freiwillige:r anmeldet, akzeptiert die Freiwilligenvereinbarung mit den Rechten und Pflichten nach dem spanischen Freiwilligengesetz 45/2015 – mit Nachweis, welche Fassung wann akzeptiert wurde.')
         + '</article></div><p class="pag-enlaces reveal">'
         + '<a class="text-link" href="../privacidad.html" data-i18n="trust.privacy">Política de privacidad →</a> '
         + '<a class="text-link" href="../acuerdo-voluntariado.html" data-i18n="trust.agreement">Acuerdo de voluntariado →</a></p></div></section>',

@@ -34,7 +34,7 @@ Ese acuerdo tiene un contenido mínimo (artículo 12.2). Entre otras cosas, debe
 - la formación necesaria;
 - la duración del compromiso y las causas de desvinculación.
 
-**En PeopleForPeople**, quien se da de alta como voluntario acepta el [acuerdo de incorporación](../acuerdo-voluntariado.html) de la plataforma, y queda constancia de qué versión aceptó y cuándo.
+**En PeopleForPeople**, quien se da de alta como voluntario acepta el [acuerdo de voluntariado](../acuerdo-voluntariado.html) de la plataforma, con sus derechos y deberes según esta ley, y queda constancia de qué versión aceptó y cuándo. Ese texto no sustituye al acuerdo de incorporación que cada entidad tiene que formalizar con sus voluntarios.
 
 ## 2. Un seguro para quien ayuda
 
@@ -65,12 +65,12 @@ Es un trámite que la entidad tiene que pedir **antes** de que la persona empiec
 
 ## En resumen
 
-| Obligación | Artículo | Quién se encarga |
-|---|---|---|
-| Acuerdo de incorporación por escrito | 12 | La entidad (en PeopleForPeople, con constancia de la versión aceptada) |
-| Seguro de accidentes y enfermedad | 14.2.c | La entidad |
-| Certificado de participación | 24.1 y 14.2.k | La entidad, con las horas validadas como base |
-| Certificado negativo para trabajar con menores | 8.4 | La entidad, antes de empezar |
+| Obligación | Quién se encarga |
+|---|---|
+| Acuerdo de incorporación por escrito (art. 12) | La entidad |
+| Seguro de accidentes y enfermedad (art. 14.2.c) | La entidad |
+| Certificado de participación (arts. 24.1 y 14.2.k) | La entidad, con las horas validadas como base |
+| Certificado negativo para trabajar con menores (art. 8.4) | La entidad, antes de empezar |
 
 *Este artículo resume la ley para orientarse; no sustituye al asesoramiento jurídico. Ante una duda concreta, la referencia es siempre el texto del BOE.*
 

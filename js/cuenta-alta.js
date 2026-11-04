@@ -16,11 +16,11 @@
   var $ = UI.$;
   var $$ = UI.$$;
 
-  /* Versión del acuerdo de incorporación. Tiene que ir a la par con
+  /* Versión del acuerdo de voluntariado. Tiene que ir a la par con
      `AGREEMENT_VERSION` de `src/lib/data/profiles.ts`: es lo que deja
      constancia de QUÉ texto acepto cada persona, y si las dos plataformas
      guardan versiones distintas el registro deja de valer como prueba. */
-  var VERSION_ACUERDO = '2026-08-1';
+  var VERSION_ACUERDO = '2026-11-1';
 
   var DISTANCIAS = [10000, 25000, 50000, 100000];
 
@@ -593,8 +593,11 @@
     $('#vehiculo').checked = !!perfil.has_vehicle;
     /* El acuerdo ya aceptado se enseña marcado: obligar a volver a marcarlo
        para cambiar un teléfono haría pensar que se está aceptando otra vez
-       algo que ya se aceptó. */
-    $('#acuerdo').checked = !!perfil.agreement_accepted_at;
+       algo que ya se aceptó. Pero solo si es ESTA versión: si el texto ha
+       cambiado desde entonces, guardar estamparía la versión nueva sin que
+       nadie la haya marcado. */
+    $('#acuerdo').checked = !!perfil.agreement_accepted_at &&
+      perfil.agreement_version === VERSION_ACUERDO;
     casillaUbi.checked = !!perfil.location_consent_at;
     if (perfil.location_consent_at) estadoUbi.textContent = UI.T('c.perfil.ubiGuardada');
 

@@ -536,7 +536,7 @@
     'c.vol.saberAyuda': 'Marca lo que te veas capaz de hacer. No hace falta saber de todo.',
     'c.vol.ubicacion': 'Usar mi ubicación para avisarme de lo que pasa cerca',
     'c.vol.acuerdo1': 'He leído y acepto el',
-    'c.vol.acuerdo2': 'acuerdo de incorporación al programa de voluntariado',
+    'c.vol.acuerdo2': 'acuerdo de voluntariado',
     'c.vol.acuerdo3': ', conforme a la Ley 45/2015.',
     'c.vol.btn': 'Guardar y terminar',
     'c.vol.modoEmergencia': 'Solo emergencias',
@@ -549,7 +549,7 @@
     'c.vol.errTel': 'Escribe un teléfono de contacto válido.',
     'c.vol.errCiudad': 'Dinos en qué ciudad estás.',
     'c.vol.errProvincia': 'Dinos la provincia.',
-    'c.vol.errAcuerdo': 'Hay que aceptar el acuerdo de incorporación para continuar.',
+    'c.vol.errAcuerdo': 'Hay que aceptar el acuerdo de voluntariado para continuar.',
 
     /* --- Alta de entidad --- */
     'c.org.t': 'Dar de alta tu organización',
@@ -1214,7 +1214,7 @@
     'c.vol.saberAyuda': 'Markiere, was du dir zutraust. Du musst nicht alles können.',
     'c.vol.ubicacion': 'Meinen Standort nutzen, um mich über Einsätze in der Nähe zu informieren',
     'c.vol.acuerdo1': 'Ich habe die',
-    'c.vol.acuerdo2': 'Vereinbarung zur Aufnahme ins Freiwilligenprogramm',
+    'c.vol.acuerdo2': 'Freiwilligenvereinbarung',
     'c.vol.acuerdo3': ' gelesen und akzeptiere sie, gemäß dem Gesetz 45/2015.',
     'c.vol.btn': 'Speichern und fertig',
     'c.vol.modoEmergencia': 'Nur Notfälle',
