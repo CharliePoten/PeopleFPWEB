@@ -34,7 +34,7 @@ Ese acuerdo tiene un contenido mínimo (artículo 12.2). Entre otras cosas, debe
 - la formación necesaria;
 - la duración del compromiso y las causas de desvinculación.
 
-**En PeopleForPeople**, quien se da de alta como voluntario acepta el [acuerdo de voluntariado](../acuerdo-voluntariado.html) de la plataforma, con sus derechos y deberes según esta ley, y queda constancia de qué versión aceptó y cuándo. Ese texto no sustituye al acuerdo de incorporación que cada entidad tiene que formalizar con sus voluntarios.
+**En PeopleForPeople**, quien se da de alta como voluntario acepta el [acuerdo de voluntariado](../acuerdo-voluntariado.html) de la plataforma, con sus derechos y deberes según esta ley, y queda constancia de qué versión aceptó y cuándo. Ese texto no sustituye al acuerdo de incorporación que cada entidad tiene que formalizar con sus voluntarios. Qué tiene que incluir, punto por punto, lo explicamos en la [guía sobre el acuerdo de incorporación](acuerdo-incorporacion-voluntariado.html).
 
 ## 2. Un seguro para quien ayuda
 
@@ -61,7 +61,7 @@ El artículo 14.2.k lo recoge también como obligación de la entidad. Y el 24.2
 
 Cuando un programa supone un contacto habitual con menores, el artículo 8.4 exige que las personas voluntarias no hayan sido condenadas por delitos contra la libertad e indemnidad sexual, ni por trata o explotación de menores. Se acredita con un certificado negativo del registro correspondiente.
 
-Es un trámite que la entidad tiene que pedir **antes** de que la persona empiece, no después.
+Es un trámite que la entidad tiene que pedir **antes** de que la persona empiece, no después. Qué cuenta como contacto habitual, cómo se pide el certificado y qué exige la ley cuando la persona voluntaria es menor lo explicamos en la [guía sobre voluntariado y menores](voluntariado-menores-de-edad.html).
 
 ## En resumen
 
