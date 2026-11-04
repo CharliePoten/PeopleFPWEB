@@ -11,6 +11,7 @@ español y en alemán. El script escribe
     plataforma/seguridad-y-verificacion.html
     proteccion-civil/index.html
     calculadora.html
+    404.html                  la de «no existe»: sin SEO y con todo desde la raíz
     js/paginas-i18n.js        los textos de todas ellas, en los dos idiomas
 
 con la cabecera y el pie de `documentos.html` y el SEO de `seo.py` (título,
@@ -30,6 +31,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import cabecera  # noqa: E402
 import seo  # noqa: E402
 
 RAIZ = seo.RAIZ
@@ -94,6 +96,17 @@ def ventana(src, url, alt_clave, lazy=False):
 def boton(href, clave, es, de, primario=True):
     k, v = t(clave, es, de)
     return '<a class="btn %s" href="%s" data-i18n="%s">%s</a>' % ('btn--primary' if primario else 'btn--ghost', href, k, v)
+
+
+def enlace(href, clave, es, de, extra=''):
+    """Un enlace con su frase («… →»), para debajo de un bloque."""
+    k, v = t(clave, es, de)
+    return '<a class="text-link" href="%s"%s data-i18n="%s">%s</a>' % (href, extra, k, v)
+
+
+def enlaces(*piezas):
+    """Los enlaces de debajo de un bloque, en una línea que se parte sola."""
+    return '<p class="pag-enlaces reveal">' + ' '.join(piezas) + '</p>'
 
 
 def encabezado(eyebrow, titulo, entrada=None):
@@ -196,6 +209,7 @@ def centro():
         llamada(('pl.c.ctaT', 'Prueba el centro de coordinación con una misión real.', 'Teste die Koordinationszentrale mit einem echten Einsatz.'),
                 ('pl.c.ctaP', 'Las dos primeras publicaciones son gratis. Comprobamos tu entidad antes de abrirte el panel.',
                  'Die ersten zwei Veröffentlichungen sind kostenlos. Wir prüfen deine Organisation, bevor wir das Dashboard freischalten.'), alta),
+        mas_plataforma('plataforma/centro-de-coordinacion.html'),
     ]
 
 
@@ -242,6 +256,7 @@ def app():
         llamada(('pl.a.ctaT', 'Empieza a ayudar cerca de ti.', 'Fang an, in deiner Nähe zu helfen.'),
                 ('app.storeAccount', 'Mientras llega a las tiendas, crea tu cuenta en la web: es la misma con la que entrarás en la app.',
                  'Bis sie in den Stores ist, erstelle dein Konto im Web: Es ist dasselbe, mit dem du dich in der App anmeldest.'), cuenta),
+        mas_plataforma('plataforma/app-voluntariado.html'),
     ]
 
 
@@ -270,7 +285,10 @@ def informes():
             (('pl.i.q4t', 'La base del certificado', 'Die Grundlage der Bescheinigung'),
              ('pl.i.q4b', 'La Ley 45/2015 da a cada voluntario derecho a un certificado con la fecha de incorporación, la duración, las tareas y el lugar (art. 24.1). Lo expide y firma la entidad, sobre las horas validadas.',
               'Das spanische Freiwilligengesetz (Ley 45/2015, Art. 24.1) gibt jeder freiwilligen Person das Recht auf eine Bescheinigung mit Eintrittsdatum, Dauer, Aufgaben und Ort. Sie wird von der Organisation auf Basis der bestätigten Stunden ausgestellt.')),
-        ], fondo=''),
+        ], fondo='',
+           pie=enlaces(enlace('../actualidad/ley-45-2015-obligaciones-entidades.html', 'pl.i.ley',
+                              'Lo que la Ley 45/2015 exige a una entidad de voluntariado →',
+                              'Was das spanische Freiwilligengesetz von Organisationen verlangt (auf Spanisch) →'))),
         con_imagen(('pl.i.vEy', 'Validar', 'Bestätigen'),
                    ('pl.i.vT', 'Ninguna hora cuenta sin que alguien la mire.', 'Keine Stunde zählt, ohne dass jemand sie geprüft hat.'),
                    ('pl.i.vP', 'Las horas llegan de la app con el fichaje de cada persona. Se validan una a una o en tanda; si alguien las ajusta, tiene que decir por qué, y la persona voluntaria lo lee en su historial.',
@@ -288,6 +306,7 @@ def informes():
                 ('pl.i.ctaP', 'La calculadora estima personas, horas y el valor del tiempo donado, con supuestos que puedes cambiar.',
                  'Der Rechner schätzt Personen, Stunden und den Wert der gespendeten Zeit – mit Annahmen, die du ändern kannst.'),
                 boton(pre + 'calculadora.html', 'pl.i.calcAbrir', 'Abrir la calculadora', 'Rechner öffnen')),
+        mas_plataforma('plataforma/informes-y-certificados.html'),
     ]
 
 
@@ -370,6 +389,7 @@ def seguridad():
         llamada(('pl.s.ctaT', 'Da de alta tu entidad.', 'Melde deine Organisation an.'),
                 ('pl.s.ctaP', 'Solo te pedimos los datos que necesitamos para comprobar que existe.',
                  'Wir fragen nur die Daten ab, die wir brauchen, um zu prüfen, dass es sie gibt.'), alta),
+        mas_plataforma('plataforma/seguridad-y-verificacion.html'),
     ]
 
 
@@ -384,10 +404,6 @@ def proteccion_civil():
                       'Solicitar una presentación', 'Präsentation anfragen')
     cents = [b['cents'] for b in seo.tarifas()['municipality']['bandas']]
     minimo, maximo, anual = seo.euros(min(cents)), seo.euros(max(cents)), seo.euros(max(cents) * 12)
-
-    def enlace(href, clave, es, de, extra=''):
-        k, v = t(clave, es, de)
-        return '<a class="text-link" href="%s"%s data-i18n="%s">%s</a>' % (href, extra, k, v)
 
     return [
         cabecera_azul(pre, ('pc.eyebrow', 'Gestión de voluntarios de Protección Civil', 'Freiwilligenmanagement für den Zivilschutz'),
@@ -420,7 +436,11 @@ def proteccion_civil():
              ('pc.op6b', 'La app enseña lo último que guardó y lo actualiza cuando vuelve la conexión: las misiones se consultan sin datos. Publicar o apuntarse sí necesita conexión.',
               'Die App zeigt den zuletzt gespeicherten Stand und aktualisiert ihn, sobald die Verbindung zurück ist: Einsätze lassen sich ohne Daten ansehen. Veröffentlichen oder sich anmelden braucht eine Verbindung.')),
         ], entrada=('pc.opP', 'Sin hojas de cálculo ni grupos de mensajería: quién va, a qué punto y quién ha llegado.',
-                    'Ohne Tabellen und Messenger-Gruppen: wer kommt, wohin und wer angekommen ist.')),
+                    'Ohne Tabellen und Messenger-Gruppen: wer kommt, wohin und wer angekommen ist.'),
+           pie=enlaces(enlace('../plataforma/centro-de-coordinacion.html', 'pc.centro', 'Así funciona el centro de coordinación →',
+                              'So funktioniert das Koordinationszentrum →'),
+                       enlace('../plataforma/app-voluntariado.html', 'pc.app', 'La app que usan los voluntarios →',
+                              'Die App für die Freiwilligen →'))),
         con_imagen(('pc.agEy', 'Vuestra agrupación', 'Eure Gruppe'),
                    ('pc.agT', 'Los papeles de cada voluntario, a la vista.', 'Die Unterlagen jeder Person im Blick.'),
                    ('pc.agP', 'Los miembros de la agrupación piden entrar en vuestra entidad y los aceptáis desde el panel. Ahí veis qué sabe hacer cada uno, cuántas horas lleva y cómo tiene los papeles: el panel avisa de quién tiene el seguro o una acreditación caducada, o a punto de caducar. Las habilidades que exigen titulación, como conducir un camión o manejar maquinaria pesada, se acreditan con un documento que revisa nuestro equipo.',
@@ -439,11 +459,12 @@ def proteccion_civil():
               'Der Standort der Freiwilligen dient nur zur Entfernungsberechnung: Die Karte zeigt, wie viele Menschen in einem Gebiet verfügbar sind, nie wer oder wo.')),
         ], entrada=('pc.espP', 'En una gran emergencia aparece mucha gente dispuesta a ayudar que no pertenece a ninguna agrupación. Con una cuenta en PeopleForPeople, recibe el aviso de lo que publicáis cerca y se apunta a una tarea concreta, en un sitio y a una hora.',
                     'Bei einer großen Notlage wollen viele Menschen helfen, die zu keiner Gruppe gehören. Mit einem Konto bei PeopleForPeople bekommen sie die Meldung zu dem, was ihr in der Nähe veröffentlicht, und melden sich für eine konkrete Aufgabe an – an einem Ort, zu einer Uhrzeit.'),
-           pie='<p class="pag-enlaces reveal">'
-               + enlace('../casos/dana-valencia-2024.html', 'pc.casoDana', 'Voluntariado en la DANA de Valencia →',
-                        'Freiwillige bei der DANA in Valencia (auf Spanisch) →') + ' '
-               + enlace('../casos/filomena-madrid-2021.html', 'pc.casoFilomena', 'Filomena y los voluntarios 4x4 de Madrid →',
-                        'Filomena und die 4x4-Freiwilligen in Madrid (auf Spanisch) →') + '</p>'),
+           pie=enlaces(enlace('../plataforma/seguridad-y-verificacion.html', 'pc.verif', 'Cómo verificamos a cada entidad →',
+                              'Wie wir jede Organisation prüfen →'),
+                       enlace('../casos/dana-valencia-2024.html', 'pc.casoDana', 'Voluntariado en la DANA de Valencia →',
+                              'Freiwillige bei der DANA in Valencia (auf Spanisch) →'),
+                       enlace('../casos/filomena-madrid-2021.html', 'pc.casoFilomena', 'Filomena y los voluntarios 4x4 de Madrid →',
+                              'Filomena und die 4x4-Freiwilligen in Madrid (auf Spanisch) →'))),
         pasos(('pl.pasoEy', 'Paso a paso', 'Schritt für Schritt'),
               ('pc.pT', 'Del aviso a la memoria.', 'Von der Meldung bis zum Bericht.'), [
             (('pc.p1t', 'Publicáis', 'Ihr veröffentlicht'),
@@ -467,11 +488,10 @@ def proteccion_civil():
              ('pc.pr3b', 'Un año de la tarifa más alta son %s sin IVA, por debajo de los 15.000 € del contrato menor de servicios (art. 118 de la Ley 9/2017 de Contratos del Sector Público).' % anual,
               'Ein Jahr im höchsten Tarif kostet %s ohne MwSt. – unter der Grenze von 15.000 €, bis zu der spanische Kommunen Dienstleistungen als Kleinauftrag vergeben können (Art. 118 Ley 9/2017).' % anual)),
         ], fondo='', ident='precios',
-           pie='<p class="pag-enlaces reveal">'
-               + enlace('../comunidades/#precios', 'pc.tarifas', 'Las tarifas de ayuntamientos, tramo a tramo →',
-                        'Die Tarife für Kommunen im Einzelnen →') + ' '
-               + enlace('../descargas/peopleforpeople-ayuntamientos.pdf', 'pc.dossier', 'Dossier para ayuntamientos (PDF) →',
-                        'Dossier für Kommunen (PDF, auf Spanisch) →', extra=' download') + '</p>'),
+           pie=enlaces(enlace('../comunidades/#precios', 'pc.tarifas', 'Las tarifas de ayuntamientos, tramo a tramo →',
+                              'Die Tarife für Kommunen im Einzelnen →'),
+                       enlace('../descargas/peopleforpeople-ayuntamientos.pdf', 'pc.dossier', 'Dossier para ayuntamientos (PDF) →',
+                              'Dossier für Kommunen (PDF, auf Spanisch) →', extra=' download'))),
         llamada(('pc.ctaT', '¿Lo vemos con vuestra agrupación?', 'Schauen wir es uns mit eurer Gruppe an?'),
                 ('pc.ctaP', 'En 20 minutos os enseñamos el panel y la app, y resolvemos las dudas de contratación y de datos.',
                  'In 20 Minuten zeigen wir euch das Dashboard und die App und klären Fragen zu Beauftragung und Datenschutz.'),
@@ -632,6 +652,27 @@ def ayuda():
     ]
 
 
+def no_encontrada():
+    """404.html, la página de «no existe». Los destinos son los del menú, con
+    sus mismas claves y textos (cabecera.py)."""
+    menu = {k: (v, d) for k, v, d, _ in cabecera.MENU}
+    for *_, sub in cabecera.MENU:
+        menu.update({k: (v, d) for k, v, d in sub})
+    destinos = ''.join('<a class="pag-otra" href="%s" data-i18n="%s">%s</a>' % (menu[k][1], k, menu[k][0])
+                       for k in ('nav.whoVol', 'nav.whoNgo', 'nav.whoMuni', 'nav.whoPc', 'nav.whoCorp',
+                                 'nav.cases', 'nav.support', 'nav.contact'))
+    return [
+        cabecera_azul('', ('nf.eyebrow', 'Error 404', 'Fehler 404'),
+                      ('nf.title', 'No encontramos esta página.', 'Diese Seite gibt es hier nicht.'),
+                      ('nf.lead', 'Puede que el enlace esté mal escrito o que la página haya cambiado de dirección.',
+                       'Vielleicht ist der Link falsch geschrieben, oder die Seite hat eine neue Adresse.'),
+                      [boton('./', 'nf.inicio', 'Ir a la portada', 'Zur Startseite')]),
+        '  <section class="detail-section detail-section--white"><div class="container pag-otras">'
+        + txt('span', 'nf.mas', 'O ve directamente a', 'Oder direkt zu', clase='eyebrow')
+        + '<div class="pag-otras__lista">' + destinos + '</div></div></section>',
+    ]
+
+
 # Lo que cada página carga de más
 PAGINAS_DEF = [
     ('ayuda.html', ayuda, []),
@@ -686,6 +727,21 @@ def construir():
         texto = cab + '\n' + cuerpo + '\n' + pie
         _, ruta, titulo, descripcion, miga, producto = tabla[archivo]
         salida[archivo] = seo.aplicar_texto(texto, archivo, ruta, titulo, descripcion, miga, producto, catalogo)
+    # La 404. GitHub Pages la sirve en cualquier dirección que no exista, a
+    # cualquier profundidad (/plataforma/lo-que-sea): por eso todo va desde la
+    # raíz (/css/…) y no relativo. No es una página que buscar: `noindex`, sin
+    # canonical ni datos estructurados, y fuera del sitemap (no está en
+    # seo.PAGINAS). cabecera.py no la toca: sus menús salen de aquí.
+    cab, pie, _ = plantilla('404.html')
+    pie = pie.replace('<script src="js/detail-i18n.js"></script>',
+                      '<script src="js/detail-i18n.js"></script><script src="js/paginas-i18n.js"></script>', 1)
+    assert 'paginas-i18n.js' in pie
+    texto = cab + '\n' + '\n'.join(no_encontrada()) + '\n' + pie
+    texto = re.sub(r'<title>[^<]*</title>', '<title>Página no encontrada | %s</title>' % seo.MARCA, texto, count=1)
+    texto = re.sub(r'<meta name="description" content="[^"]*" />', '<meta name="robots" content="noindex" />', texto, count=1)
+    texto = seo.VIEJOS_JSONLD.sub('', seo.VIEJO_BLOQUE.sub('', texto))
+    assert 'noindex' in texto and 'canonical' not in texto
+    salida['404.html'] = ATRIBUTO_RELATIVO.sub(r'\1/\2', texto)
     # Las claves que ya están en otros diccionarios no se repiten aquí.
     with open(os.path.join(RAIZ, 'js', 'i18n.js'), encoding='utf-8') as fh:
         existentes = fh.read()

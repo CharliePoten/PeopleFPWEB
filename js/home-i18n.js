@@ -181,6 +181,7 @@
     'trust.ley': 'Al darte de alta como voluntario aceptas el acuerdo de incorporación de la Ley 45/2015, y queda constancia de qué versión aceptaste y cuándo.',
     'trust.agreement': 'Acuerdo de voluntariado →',
     'trust.privacy': 'Política de privacidad →',
+    'trust.more': 'Más sobre seguridad y verificación →',
 
     'contact.title': 'Hagamos que la ayuda llegue más lejos.',
     'contact.lead': 'Cuéntanos si quieres participar como voluntario o incorporar PeopleForPeople a tu organización.',
@@ -370,6 +371,7 @@
     'trust.ley': 'Wer sich als Freiwillige:r anmeldet, akzeptiert die Beitrittsvereinbarung nach dem spanischen Freiwilligengesetz 45/2015 – mit Nachweis, welche Fassung wann akzeptiert wurde.',
     'trust.agreement': 'Freiwilligenvereinbarung →',
     'trust.privacy': 'Datenschutzerklärung →',
+    'trust.more': 'Mehr zu Sicherheit und Prüfung →',
 
     'contact.title': 'Gemeinsam bringen wir Hilfe weiter.',
     'contact.lead': 'Schreib uns, wenn du freiwillig mitmachen oder PeopleForPeople in deiner Organisation einsetzen möchtest.',

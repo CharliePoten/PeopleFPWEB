@@ -31,7 +31,7 @@ Ese acuerdo tiene un contenido mínimo (artículo 12.2). Entre otras cosas, debe
 - la formación necesaria;
 - la duración del compromiso y las causas de desvinculación.
 
-**En PeopleForPeople**, quien se da de alta como voluntario acepta el acuerdo de incorporación de la plataforma, y queda constancia de qué versión aceptó y cuándo.
+**En PeopleForPeople**, quien se da de alta como voluntario acepta el [acuerdo de incorporación](../acuerdo-voluntariado.html) de la plataforma, y queda constancia de qué versión aceptó y cuándo.
 
 ## 2. Un seguro para quien ayuda
 
@@ -52,7 +52,7 @@ La persona voluntaria puede pedir que se acredite su participación. Según el a
 
 El artículo 14.2.k lo recoge también como obligación de la entidad. Y el 24.2 abre la puerta a que las competencias adquiridas se reconozcan como experiencia, conforme a la normativa general.
 
-**En PeopleForPeople**, quien coordina ficha sobre el terreno la llegada de cada persona, y la entidad valida las horas; si las ajusta, tiene que decir por qué. Esas horas validadas forman el historial de cada voluntario y son la base del certificado que expide la entidad.
+**En PeopleForPeople**, quien coordina ficha sobre el terreno la llegada de cada persona, y la entidad valida las horas; si las ajusta, tiene que decir por qué. Esas horas validadas forman el historial de cada voluntario y son la base del [certificado que expide la entidad](../plataforma/informes-y-certificados.html).
 
 ## 4. Requisitos para trabajar con menores
 

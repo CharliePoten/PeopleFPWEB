@@ -51,7 +51,7 @@ No faltó gente. Faltaron cuatro cosas que no dependen de la buena voluntad:
 
 PeopleForPeople nació después de aquellos días, precisamente por lo que se vio en ellos. Así funcionaría hoy una respuesta como esa:
 
-1. **El ayuntamiento o la entidad verificada lanza la operación** desde un escenario preparado de inundación, con las tareas ya definidas: retirada de barro, reparto de agua, traslado de material.
+1. **El ayuntamiento o la entidad verificada lanza la operación** desde [un escenario preparado de inundación](../proteccion-civil/), con las tareas ya definidas: retirada de barro, reparto de agua, traslado de material.
 2. **Cada misión dice dónde, cuándo y cuántas personas hacen falta.** Cuando se cubren las plazas, ya no admite a nadie más. Así no se acumulan doscientas personas en una calle mientras la de al lado espera.
 3. **El aviso llega a quien vive cerca,** y quien coordina puede buscar e invitar a quien sabe hacer lo que falta, por ejemplo transporte con vehículo propio o conocimientos sanitarios.
 4. **Quien coordina marca en la app quién ha llegado.** Sabe en todo momento con cuántas personas cuenta, y las horas de cada voluntario quedan registradas y validadas para su certificado.
@@ -61,8 +61,8 @@ Nada de esto sustituye a los servicios de emergencia. Sirve para que la ayuda vo
 
 ## Qué puedes hacer hoy
 
-- **Si quieres ayudar:** crea tu cuenta, indica qué sabes hacer y hasta dónde puedes moverte. Cuando se publique una misión cerca, te llegará el aviso.
-- **Si trabajas en un ayuntamiento o en una ONG:** la próxima emergencia se coordina mejor si la entidad ya está dada de alta y verificada. Escríbenos y te enseñamos cómo.
+- **Si quieres ayudar:** crea tu cuenta en la [app de voluntariado](../plataforma/app-voluntariado.html), indica qué sabes hacer y hasta dónde puedes moverte. Cuando se publique una misión cerca, te llegará el aviso.
+- **Si trabajas en [un ayuntamiento](../comunidades/) o en [una ONG](../ongs/):** la próxima emergencia se coordina mejor si la entidad ya está dada de alta y verificada. Escríbenos y te enseñamos cómo.
 
 ## Fuentes
 

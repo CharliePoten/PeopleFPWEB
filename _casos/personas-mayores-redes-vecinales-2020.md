@@ -44,9 +44,9 @@ Las redes funcionaron gracias al esfuerzo de mucha gente, y por eso mismo depend
 
 ## Qué puedes hacer hoy
 
-- **Si tienes un rato a la semana,** apúntate y di hasta dónde puedes moverte. Subir una compra o acompañar a alguien al médico son misiones de una hora.
-- **Si tienes un familiar mayor que vive solo,** enséñale a pedir ayuda desde la app por si se declara una emergencia en su provincia. Si vivís en la misma, también puedes pedirla tú por él.
-- **Si formas parte de una asociación vecinal,** el panel de coordinación os deja ver en un sitio quién ayuda, en qué y cuándo.
+- **Si tienes un rato a la semana,** [apúntate](../voluntarios/) y di hasta dónde puedes moverte. Subir una compra o acompañar a alguien al médico son misiones de una hora.
+- **Si tienes un familiar mayor que vive solo,** enséñale a [pedir ayuda desde la app](../ayuda.html#necesita-ayuda) por si se declara una emergencia en su provincia. Si vivís en la misma, también puedes pedirla tú por él.
+- **Si formas parte de una asociación vecinal,** el [panel de coordinación](../plataforma/centro-de-coordinacion.html) os deja ver en un sitio quién ayuda, en qué y cuándo.
 
 ## Fuentes
 

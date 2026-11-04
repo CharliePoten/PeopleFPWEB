@@ -101,7 +101,11 @@ DEMO = re.compile(r'<a class="btn btn--primary btn--small header__demo"[^>]*>[^<
 
 def paginas():
     for f in sorted(glob.glob(os.path.join(RAIZ, '*.html')) + glob.glob(os.path.join(RAIZ, '*', '*.html'))):
-        yield os.path.relpath(f, RAIZ).replace('\\', '/')
+        archivo = os.path.relpath(f, RAIZ).replace('\\', '/')
+        # 404.html la escribe paginas.py con los enlaces desde la raíz (se
+        # sirve en cualquier dirección): con los de aquí, relativos, fallarían.
+        if archivo != '404.html':
+            yield archivo
 
 
 def main():

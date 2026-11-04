@@ -43,14 +43,14 @@ La ayuda llegó, pero con problemas que se repiten en cada emergencia:
 
 1. **Una entidad verificada lanza una operación,** por ejemplo un ayuntamiento o una agrupación de voluntarios: «Traslados al hospital, turno de mañana». La tarea de traslado pide la habilidad *transporte con vehículo propio*.
 2. **El aviso llega a los voluntarios que viven cerca.** Además, quien coordina puede buscar a quienes tienen esa habilidad e invitarlos directamente, sin pasar por grupos de mensajería.
-3. **Cada traslado tiene sus plazas y su responsable.** Quien coordina ve qué viajes están cubiertos y cuáles no, en vez de enterarse por mensajes sueltos.
+3. **Cada traslado tiene sus plazas y su responsable.** Quien coordina ve en el [centro de coordinación](../plataforma/centro-de-coordinacion.html) qué viajes están cubiertos y cuáles no, en vez de enterarse por mensajes sueltos.
 4. **El voluntario actúa en nombre de una entidad verificada** y lo puede enseñar en la app. No elimina los malentendidos, pero sí deja claro quién le ha pedido ese viaje.
 5. **Las horas quedan registradas** y validadas por la entidad, que puede reconocerlas con un certificado.
 
 ## Qué puedes hacer hoy
 
 - **Si tienes un todoterreno,** márcalo en tu perfil («Tengo vehículo propio») y añade la habilidad *transporte con vehículo propio*. Es justo lo que busca quien coordina cuando las carreteras se cierran.
-- **Si coordinas Protección Civil, una ONG o un servicio municipal,** da de alta la entidad antes de la próxima nevada. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia: con la entidad verificada, lanzar una operación cuesta un minuto.
+- **Si coordinas [Protección Civil](../proteccion-civil/), [una ONG](../ongs/) o [un servicio municipal](../comunidades/),** da de alta la entidad antes de la próxima nevada. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia: con la entidad verificada, lanzar una operación cuesta un minuto.
 
 ## Fuentes
 

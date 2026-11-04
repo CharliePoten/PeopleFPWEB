@@ -44,12 +44,12 @@ Cuando cualquiera puede ponerse a ayudar sin indicaciones, es fácil que alguien
 2. **Las tareas de riesgo,** como los tejados con pendiente, se quedan en manos de los servicios de emergencia y no se publican como misión abierta.
 3. **Con la emergencia declarada, los vecinos que no pueden limpiar piden ayuda** desde la app, con su grado de urgencia. La petición la ve el voluntariado de la zona, y la dirección exacta solo la recibe la persona que aceptan.
 4. **Las entidades que llegan de fuera,** como la de Galdakao, coordinan a su gente en la misma plataforma que el ayuntamiento, así cada uno sabe qué calles cubre el otro.
-5. **Seis meses de voluntariado quedan acreditados.** Cada turno se ficha y la entidad valida las horas: quien ha dado medio año de su tiempo puede demostrarlo.
+5. **Seis meses de voluntariado quedan acreditados.** Cada turno se ficha y la entidad valida las horas: quien ha dado medio año de su tiempo puede [demostrarlo con un certificado](../plataforma/informes-y-certificados.html).
 
 ## Qué puedes hacer hoy
 
-- **Si quieres ayudar en emergencias largas,** indica en tu perfil qué sabes hacer y qué avisos quieres recibir. Las misiones por turnos encajan con quien solo puede unas horas a la semana.
-- **Si coordinas una entidad en una zona de riesgo,** dala de alta antes de que haga falta. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia.
+- **Si quieres ayudar en emergencias largas,** indica en tu perfil qué sabes hacer y [qué avisos quieres recibir](../plataforma/app-voluntariado.html). Las misiones por turnos encajan con quien solo puede unas horas a la semana.
+- **Si coordinas una entidad en una zona de riesgo,** [dala de alta](../plataforma/seguridad-y-verificacion.html) antes de que haga falta. Comprobamos a mano que existe y quién la representa, y es mejor no dejarlo para el día de la emergencia.
 
 ## Fuentes
 

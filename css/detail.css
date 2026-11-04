@@ -119,6 +119,7 @@
 .detail-page .cta-panel .btn--ghost:hover { color: #fff; background: rgba(255,255,255,.1); }
 /* Debajo de una rejilla de tarjetas: un enlace con su frase, o una descarga. */
 .detail-page .detail-nota { margin: 28px 0 0; }
+.detail-page .detail-nota:has(.text-link + .text-link) { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .detail-page .descarga { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 32px; }
 .detail-page .descarga p { margin: 0; color: var(--text-soft); font-size: .92rem; }
 .detail-page .document-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
