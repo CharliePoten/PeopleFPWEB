@@ -34,7 +34,7 @@ Lo que sí puede ser un gasto, si las bases lo admiten, es lo que el voluntariad
 
 ## Dónde sí cuentan las horas
 
-**En la solicitud.** En la convocatoria estatal del 0,7 %, uno de los criterios de valoración es el impacto en el empleo y en el voluntariado, con un máximo de 10 puntos, y dentro de él se valora la participación de personal voluntario a lo largo del desarrollo del programa (artículo 15.1.h del Real Decreto 821/2021). Las mismas bases valoran que el programa tenga un sistema de evaluación con indicadores específicos y medibles (artículo 15.1.b). Y la convocatoria de 2026 pide a las entidades que vayan a contar con voluntarios una declaración responsable de que cumplen las obligaciones de la Ley 45/2015, de Voluntariado.
+**En la solicitud.** En la convocatoria estatal del 0,7 %, uno de los criterios de valoración es el impacto en el empleo y en el voluntariado, con un máximo de 10 puntos, y dentro de él se valora la participación de personal voluntario a lo largo del desarrollo del programa (artículo 15.1.h del Real Decreto 821/2021). Las mismas bases valoran que el programa tenga un sistema de evaluación con indicadores específicos y medibles (artículo 15.1.b). Y la convocatoria de 2026 pide a las entidades que vayan a contar con voluntarios una declaración responsable de que cumplen las obligaciones de la Ley 45/2015, de Voluntariado. Qué tiene que incluir el programa lo explicamos en la [guía sobre el programa de voluntariado](programa-voluntariado.html).
 
 **En la memoria de actuación.** Es donde se cuenta qué se ha hecho y con qué resultados (artículo 72.1 del reglamento), y donde las horas de voluntariado demuestran la actividad: cuántas personas participaron, cuántas horas, en qué tareas y en qué fechas.
 

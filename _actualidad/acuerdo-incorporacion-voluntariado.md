@@ -35,7 +35,7 @@ El artículo 12.2 fija el contenido mínimo. Estos son los ocho puntos, con lo q
 
 **3. Si participan trabajadores o socios de la entidad.** Cuando corresponda, cómo intervienen en las actividades de voluntariado las personas asalariadas o socias de la propia entidad. Quien trabaja en la entidad puede ser también voluntario en ella, en las condiciones que fije su acuerdo y fuera de su jornada laboral, salvo las medidas que permite el artículo 20.2 (artículo 9).
 
-**4. Los gastos que se reembolsan.** Qué gastos se devuelven y cómo se justifican: por ejemplo, el transporte o la comida en una jornada larga. La entidad tiene que reembolsarlos en las condiciones del acuerdo (artículos 10.1.f y 14.2.d). Fuera de esos gastos, no puede haber contraprestación económica ni material (artículo 3.1.c).
+**4. Los gastos que se reembolsan.** Qué gastos se devuelven y cómo se justifican: por ejemplo, el transporte o la comida en una jornada larga. La entidad tiene que reembolsarlos en las condiciones del acuerdo (artículos 10.1.f y 14.2.d). Fuera de esos gastos, no puede haber contraprestación económica ni material (artículo 3.1.c). Dónde está la línea entre reembolsar gastos y pagar lo explicamos en la [guía sobre voluntario o trabajador](voluntario-o-trabajador.html).
 
 **5. La formación.** La que hace falta para las funciones asignadas y, si corresponde, el itinerario para obtenerla. Corre a cargo de la entidad (artículo 10.1.b).
 
@@ -49,7 +49,7 @@ El artículo 12.2 fija el contenido mínimo. Estos son los ocho puntos, con lo q
 
 Por escrito y en dos ejemplares, uno para cada parte (artículo 12.3). Cuando proceda, se adjunta el certificado negativo de delitos sexuales o la declaración responsable de no tener ciertos antecedentes, que explicamos más abajo.
 
-La entidad anota el alta en su registro (artículo 14.2.l). Cuando la persona lo pida, y en todo caso al terminar, le expide un certificado con la fecha de incorporación, la duración, las tareas y el lugar de su voluntariado (artículo 24.1).
+La entidad anota el alta en su registro (artículo 14.2.l). Cuando la persona lo pida, y en todo caso al terminar, le expide un certificado con la fecha de incorporación, la duración, las tareas y el lugar de su voluntariado (artículo 24.1). Qué más conviene que diga y para qué sirve lo explicamos en la [guía sobre el certificado de voluntariado](certificado-voluntariado.html).
 
 ## Si hay menores
 

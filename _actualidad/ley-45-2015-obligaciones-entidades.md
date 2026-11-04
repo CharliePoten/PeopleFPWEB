@@ -53,7 +53,7 @@ La persona voluntaria puede pedir que se acredite su participación. Según el a
 - la descripción de las tareas o funciones;
 - el lugar donde se realizaron.
 
-El artículo 14.2.k lo recoge también como obligación de la entidad. Y el 24.2 abre la puerta a que las competencias adquiridas se reconozcan como experiencia, conforme a la normativa general.
+El artículo 14.2.k lo recoge también como obligación de la entidad. Y el 24.2 abre la puerta a que las competencias adquiridas se reconozcan como experiencia, conforme a la normativa general. Qué tiene que incluir el certificado, cómo se pide y para qué sirve lo explicamos en la [guía sobre el certificado de voluntariado](certificado-voluntariado.html).
 
 **En PeopleForPeople**, quien coordina ficha sobre el terreno la llegada de cada persona, y la entidad valida las horas; si las ajusta, tiene que decir por qué. Esas horas validadas forman el historial de cada voluntario y son la base del [certificado que expide la entidad](../plataforma/informes-y-certificados.html). Cómo cuentan en una subvención lo explicamos en la [guía sobre las horas de voluntariado y las subvenciones](horas-voluntariado-subvenciones.html).
 
