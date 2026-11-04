@@ -31,7 +31,7 @@ Otros países lo dan por hecho desde hace años. En 2015, el comité de gestión
 
 ## Qué dice la ley
 
-Hay tres cosas que conviene tener claras.
+Hay cuatro cosas que conviene tener claras.
 
 **1. Fuera de una entidad, la ley estatal no lo considera voluntariado.** La [Ley 45/2015](ley-45-2015-obligaciones-entidades.html) excluye las actividades «aisladas o esporádicas, periódicas o no, prestadas al margen de entidades de voluntariado» (artículo 3.3). En cambio, una acción concreta y puntual sí es voluntariado si se hace a través de una entidad (artículo 3.4). Mientras nadie lo incorpore a una, al voluntario espontáneo no le alcanzan las garantías de esa ley: ni el acuerdo de incorporación, ni el seguro que se exige a las entidades, ni el certificado.
 
@@ -44,6 +44,10 @@ Ojo: la Ley 45/2015 es la ley estatal. Se aplica a los programas de ámbito esta
 En el municipio, la autoridad es el alcalde, que en caso de catástrofe adopta personalmente las medidas necesarias y da cuenta inmediata al Pleno (artículo 21.1.m de la Ley de Bases del Régimen Local). La protección civil es competencia municipal, y obligatoria en los municipios de más de 20.000 habitantes (artículos 25.2.f y 26.1.c). Si se activa un plan de ámbito superior, como el autonómico, la dirección pasa a quien ese plan designe.
 
 Aparte está el deber de colaboración: en una emergencia, las autoridades de protección civil pueden exigir prestaciones personales a cualquier persona mayor de edad, sin indemnización (artículo 7 bis de la Ley 17/2015). Eso ya no es voluntariado, sino una obligación.
+
+**4. Desde 2026, los planes tienen que preverlo.** En abril de 2026 se aprobaron tres directrices básicas de planificación de protección civil: la de inundaciones, la de [incendios forestales](incendios-forestales-voluntarios.html) y la de fenómenos meteorológicos adversos, que incluye las [olas de calor](ola-de-calor-voluntarios.html). Las tres piden lo mismo: que el plan especial de cada riesgo tenga previsto cómo coordinar y, en su caso, incorporar a un número posiblemente elevado de ciudadanos que se ofrezcan a colaborar de manera espontánea. Todos los planes de protección civil tienen cuatro años para adaptarse a ellas.
+
+En cada comunidad autónoma, el plan especial decide además qué municipios tienen que tener su propio plan de actuación local. Pero a quien se presenta a ayudar suele recibirlo el ayuntamiento, así que conviene que su plan lo recoja aunque nadie se lo exija.
 
 En la práctica, la forma de contar con los voluntarios espontáneos es incorporarlos a una estructura, la del ayuntamiento o la de una entidad, bajo la autoridad que dirige la emergencia y dentro del plan activado. Registrados, asegurados y con instrucciones.
 
@@ -103,12 +107,12 @@ Lo que no hace: no sustituye al plan de emergencias ni a los servicios de emerge
 
 | Cuándo | Qué | Quién |
 |---|---|---|
-| Antes | Responsable y equipo de gestión | Alcaldía; la agrupación de Protección Civil, si la hay |
-| Antes | Seguro que cubra a los voluntarios ocasionales | Ayuntamiento, con su aseguradora |
+| Antes | Quién lo dirige y con qué equipo | Alcaldía; la agrupación de Protección Civil, si la hay |
+| Antes | Seguro que cubra a los voluntarios ocasionales | Ayuntamiento y su aseguradora |
 | Antes | Formulario de registro, hoja informativa y lista de tareas | Protección civil municipal |
-| Durante | Llamamiento con la necesidad calculada y toda la información | La autoridad que dirige la emergencia |
+| Durante | Llamar a la gente que hace falta, con toda la información | La autoridad que dirige la emergencia |
 | Durante | Registro, explicación, equipo y chaleco | Punto de recepción |
-| Durante | Equipos con responsable, turnos y partes diarios | Responsables de equipo |
+| Durante | Equipos, turnos y partes diarios | Responsables de equipo |
 | Después | Dar las gracias, certificar y evaluar | Ayuntamiento o entidad |
 
 *Esta guía resume la normativa y las buenas prácticas para orientarse; no sustituye al plan de emergencias de cada municipio ni al asesoramiento jurídico. La regulación del voluntariado, y en especial la de protección civil, cambia de una comunidad autónoma a otra.*
@@ -118,6 +122,9 @@ Lo que no hace: no sustituye al plan de emergencias ni a los servicios de emerge
 - [Ley 17/2015, de 9 de julio, del Sistema Nacional de Protección Civil (texto consolidado)](https://www.boe.es/buscar/act.php?id=BOE-A-2015-7730) — Boletín Oficial del Estado.
 - [Ley 45/2015, de 14 de octubre, de Voluntariado (texto consolidado)](https://www.boe.es/buscar/act.php?id=BOE-A-2015-11072) — Boletín Oficial del Estado.
 - [Ley 7/1985, de 2 de abril, Reguladora de las Bases del Régimen Local (texto consolidado)](https://www.boe.es/buscar/act.php?id=BOE-A-1985-5392) — Boletín Oficial del Estado.
+- [Directriz Básica de Planificación de Protección Civil ante el riesgo de inundaciones](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-9160) — Resolución de 23 de abril de 2026, de la Subsecretaría. Boletín Oficial del Estado n.º 102, 27 de abril de 2026.
+- [Directriz Básica de Planificación de Protección Civil ante el riesgo de incendios forestales](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-9159) — Resolución de 23 de abril de 2026, de la Subsecretaría. Boletín Oficial del Estado n.º 102, 27 de abril de 2026.
+- [Directriz Básica de Planificación de Protección Civil ante el riesgo de fenómenos meteorológicos adversos](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-9158) — Resolución de 23 de abril de 2026, de la Subsecretaría. Boletín Oficial del Estado n.º 102, 27 de abril de 2026.
 - [Guia de gestió del voluntariat ocasional en emergències](https://dsp.interior.gencat.cat/handle/20.500.14007/2760) — Direcció General de Protecció Civil, Generalitat de Catalunya. Guies Municipals Protecció Civil, n.º 10; 2.ª edición, abril de 2024.
 - [Communities Responding to Disasters: Planning for Spontaneous Volunteers Handbook](https://knowledge.aidr.org.au/resources/handbook-communities-responding-to-disasters-planning-for-spontaneous-volunteers/) — Australian Institute for Disaster Resilience, 2017.
 - [«Los hospitales funcionan gracias a los 4x4 de los particulares»](https://www.elsaltodiario.com/sanidad/4x4-hospitales-funcionan-todoterrenos-particulares-traslados-filomena) — El Salto, 11 de enero de 2021.

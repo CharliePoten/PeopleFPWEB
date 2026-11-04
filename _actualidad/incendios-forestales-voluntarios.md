@@ -63,7 +63,7 @@ Y cuando el incendio se da por controlado, el trabajo sigue: los evacuados vuelv
 | Antes | Plan local que prevea cómo incorporar a los voluntarios | Ayuntamiento, si el plan autonómico lo exige |
 | Antes | Lista de tareas lejos del fuego y de lo que no se hace | Protección civil municipal |
 | Antes | Lugares previstos para el albergue y el punto de registro | Ayuntamiento |
-| Antes | Seguro que cubra a los voluntarios ocasionales | Ayuntamiento, con su aseguradora |
+| Antes | Seguro que cubra a los voluntarios ocasionales | Ayuntamiento y su aseguradora |
 | Durante | Registro, tarea concreta, responsable y turno | Punto de registro |
 | Durante | Maquinaria de los vecinos, solo a través de la dirección de extinción | Director técnico de extinción |
 | Después | Dar las gracias, certificar y evaluar | Ayuntamiento o entidad |
