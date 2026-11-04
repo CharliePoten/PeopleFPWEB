@@ -62,7 +62,7 @@ Nada de esto sustituye a los servicios de emergencia. Sirve para que la ayuda vo
 ## Qué puedes hacer hoy
 
 - **Si quieres ayudar:** crea tu cuenta en la [app de voluntariado](../plataforma/app-voluntariado.html), indica qué sabes hacer y hasta dónde puedes moverte. Cuando se publique una misión cerca, te llegará el aviso.
-- **Si trabajas en [un ayuntamiento](../comunidades/) o en [una ONG](../ongs/):** la próxima emergencia se coordina mejor si la entidad ya está dada de alta y verificada. Escríbenos y te enseñamos cómo.
+- **Si trabajas en [un ayuntamiento](../comunidades/) o en [una ONG](../ongs/):** la próxima emergencia se coordina mejor si la entidad ya está dada de alta y verificada. Escríbenos y te enseñamos cómo. Lo que conviene dejar preparado lo resumimos en la [guía para organizar a los voluntarios espontáneos](../actualidad/voluntarios-espontaneos-emergencias.html).
 
 ## Fuentes
 
