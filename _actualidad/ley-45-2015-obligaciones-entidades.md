@@ -3,6 +3,7 @@ titulo: Ley 45/2015 del Voluntariado: lo que una entidad tiene que cumplir
 titulo_seo: Ley 45/2015: obligaciones de las entidades
 descripcion: Acuerdo de incorporación, seguro, certificado y requisitos para trabajar con menores: lo que la Ley 45/2015 exige a una entidad de voluntariado.
 publicado: 2026-10-22
+actualizado: 2026-11-04
 orden: 1
 suceso: Legislación · España
 etiqueta: Análisis
@@ -16,6 +17,8 @@ resumen: Cuatro obligaciones que toda entidad de voluntariado debería tener cla
 ---
 
 La **Ley 45/2015, de 14 de octubre, de Voluntariado** regula en España la relación entre las personas voluntarias y las entidades con las que colaboran. Es una ley corta, pero tiene consecuencias muy prácticas para cualquier ONG, ayuntamiento o empresa que organice voluntariado.
+
+Es la ley estatal: se aplica a los programas de voluntariado de ámbito estatal o que pasan de una comunidad autónoma, y a los de materias que son competencia del Estado (artículo 2). Para los programas de un solo territorio rige la ley de voluntariado de cada comunidad autónoma, así que conviene consultarla también.
 
 Estas son cuatro obligaciones que conviene tener claras, con el artículo donde se recogen.
 

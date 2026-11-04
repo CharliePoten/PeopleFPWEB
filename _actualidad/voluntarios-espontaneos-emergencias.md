@@ -33,7 +33,9 @@ Otros países lo dan por hecho desde hace años. En 2015, el comité de gestión
 
 Hay tres cosas que conviene tener claras.
 
-**1. Fuera de una entidad, la ley no lo considera voluntariado.** La [Ley 45/2015](ley-45-2015-obligaciones-entidades.html) excluye las actividades «aisladas o esporádicas, periódicas o no, prestadas al margen de entidades de voluntariado» (artículo 3.3). En cambio, una acción concreta y puntual sí es voluntariado si se hace a través de una entidad (artículo 3.4). Mientras nadie lo incorpore a una, al voluntario espontáneo no le alcanzan las garantías de esa ley: ni el acuerdo de incorporación, ni el seguro que se exige a las entidades, ni el certificado.
+**1. Fuera de una entidad, la ley estatal no lo considera voluntariado.** La [Ley 45/2015](ley-45-2015-obligaciones-entidades.html) excluye las actividades «aisladas o esporádicas, periódicas o no, prestadas al margen de entidades de voluntariado» (artículo 3.3). En cambio, una acción concreta y puntual sí es voluntariado si se hace a través de una entidad (artículo 3.4). Mientras nadie lo incorpore a una, al voluntario espontáneo no le alcanzan las garantías de esa ley: ni el acuerdo de incorporación, ni el seguro que se exige a las entidades, ni el certificado.
+
+Ojo: la Ley 45/2015 es la ley estatal. Se aplica a los programas de ámbito estatal o que pasan de una comunidad autónoma (artículo 2); para los de un solo territorio rige la ley de voluntariado de cada comunidad, que conviene consultar.
 
 **2. El voluntariado de protección civil tiene su propia regulación.** La Ley 45/2015 lo remite a su normativa específica y solo se le aplica de forma supletoria (disposición adicional primera). Esa normativa está, sobre todo, en las comunidades autónomas, que regulan las agrupaciones de su territorio, y alguna ha publicado pautas para el voluntariado ocasional. Las más completas que hemos encontrado son las de la *Guia de gestió del voluntariat ocasional en emergències*, de Protección Civil de la Generalitat de Cataluña (2024), que incluye modelos de hoja informativa, de formulario de registro y de certificado de colaboración.
 
@@ -87,7 +89,7 @@ Nada de esto se improvisa bien el día de la emergencia, así que conviene dejar
 ## Después: agradecer, acreditar y aprender
 
 - **Agradecer y contar el resultado.** Qué se consiguió gracias a ellos. Ayuda a que vuelvan la próxima vez.
-- **Acreditar.** Un certificado de colaboración con las fechas, las tareas y el lugar. Si la persona estaba incorporada a una entidad de voluntariado, la entidad tiene que expedírselo cuando lo pida y, en todo caso, al terminar (artículo 24.1 de la Ley 45/2015).
+- **Acreditar.** Un certificado de colaboración con las fechas, las tareas y el lugar. Si la persona estaba incorporada a una entidad de voluntariado, la Ley 45/2015 obliga a la entidad a expedírselo cuando lo pida y, en todo caso, al terminar (artículo 24.1).
 - **Evaluar.** Preguntar a los voluntarios y a los responsables qué falló y qué mejorarían, y llevarlo al plan.
 - **Invitar a quedarse.** Quien ha ayudado en una emergencia es un buen candidato para la agrupación de Protección Civil o para una entidad de voluntariado. La próxima vez llegará formado, asegurado y localizable.
 
@@ -109,7 +111,7 @@ Lo que no hace: no sustituye al plan de emergencias ni a los servicios de emerge
 | Durante | Equipos con responsable, turnos y partes diarios | Responsables de equipo |
 | Después | Agradecimiento, certificado y evaluación | Ayuntamiento o entidad |
 
-*Esta guía resume la normativa y las buenas prácticas para orientarse; no sustituye al plan de emergencias de cada municipio ni al asesoramiento jurídico. La regulación del voluntariado de protección civil cambia de una comunidad autónoma a otra.*
+*Esta guía resume la normativa y las buenas prácticas para orientarse; no sustituye al plan de emergencias de cada municipio ni al asesoramiento jurídico. La regulación del voluntariado, y en especial la de protección civil, cambia de una comunidad autónoma a otra.*
 
 ## Fuentes
 
