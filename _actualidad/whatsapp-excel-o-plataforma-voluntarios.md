@@ -9,7 +9,7 @@ etiqueta: Comparativa
 imagen: whatsapp-excel-plataforma
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: WhatsApp, Excel o una plataforma para coordinar voluntarios
+imagen_alt: Los iconos de WhatsApp, Excel y la app de PeopleForPeople
 imagen_pie: Comparativa para ONG, ayuntamientos y agrupaciones de voluntarios.
 credito:
 resumen: Casi todas las entidades empiezan con un grupo de WhatsApp y una hoja de cálculo, y muchas veces basta. Cuándo se quedan cortos, qué riesgos tienen y qué aporta una plataforma.

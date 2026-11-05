@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: incendios-forestales
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntarios en un incendio forestal: qué pueden hacer y qué no
+imagen_alt: Tierra seca y agrietada; al fondo, dos personas caminan
 imagen_pie: Guía para ayuntamientos y agrupaciones de voluntarios de Protección Civil.
-credito:
+credito: [crédito pendiente]
 resumen: Cuando el fuego se acerca a un pueblo, los vecinos quieren ayudar, y lejos de las llamas hay mucho que hacer. Qué dice la norma, qué pasó en León en 2025 y cómo organizar la base, el albergue, los traslados y los animales.
 ---
 

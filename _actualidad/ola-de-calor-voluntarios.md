@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: ola-de-calor
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntarios en una ola de calor: llamadas, agua y acompañamiento
+imagen_alt: Un joven señala algo a una mujer mayor con bastón y los dos se ríen
 imagen_pie: Guía para ayuntamientos, servicios sociales y entidades de voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: El calor mata sobre todo a personas mayores, y muchas viven solas. Qué piden los planes, qué se hace ya en Barcelona y en Francia, y cómo organizar las llamadas, el reparto de agua y el acompañamiento.
 ---
 

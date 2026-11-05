@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: acompanamiento-mayores
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntariado de acompañamiento a personas mayores que viven solas
+imagen_alt: Foto en blanco y negro de dos mujeres mayores abrazadas; una sonríe a la cámara
 imagen_pie: Guía para ONG, servicios sociales y entidades de voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: Una de cada cinco personas en España se siente sola sin quererlo, y entre quienes viven solos la proporción se duplica. Cómo organizar un programa de acompañamiento a personas mayores: quién propone a quién, cómo formar a los voluntarios, qué límites poner y cómo hacer el seguimiento.
 ---
 

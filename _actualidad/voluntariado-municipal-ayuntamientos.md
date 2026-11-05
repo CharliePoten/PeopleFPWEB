@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: voluntariado-municipal-ayuntamientos
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: ¿Puede un ayuntamiento tener sus propios voluntarios?
+imagen_alt: Tres profesionales caminan y conversan a la salida de un edificio de oficinas
 imagen_pie: Guía para ayuntamientos y servicios municipales de Protección Civil.
-credito:
+credito: [crédito pendiente]
 resumen: Depende de la comunidad autónoma. En Madrid, un ayuntamiento que ejecuta proyectos de voluntariado cuenta como organización de voluntariado; en Andalucía, la ley reserva ese papel a entidades privadas. La agrupación de Protección Civil tiene su propia regulación, y el voluntariado nunca puede sustituir a un servicio público.
 ---
 

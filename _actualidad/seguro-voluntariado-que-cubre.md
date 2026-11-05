@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: seguro-voluntariado
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Seguro de voluntariado: qué tiene que cubrir
+imagen_alt: Dos voluntarias con guantes de trabajo y palas sonríen a la cámara
 imagen_pie: Guía para ONG, ayuntamientos y entidades de voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: Toda entidad de voluntariado tiene que asegurar a sus voluntarios, pero la ley estatal no fija cuantías ni coberturas concretas. Qué exige la Ley 45/2015, qué añade alguna ley autonómica, qué preguntar antes de contratar y qué hacer si hay un accidente.
 ---
 

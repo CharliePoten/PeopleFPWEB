@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: acuerdo-incorporacion
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Acuerdo de incorporación al voluntariado: qué tiene que incluir
+imagen_alt: Dos personas revisan juntas la pantalla de un portátil en una oficina
 imagen_pie: Guía para ONG, asociaciones y entidades de voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: Toda persona voluntaria tiene que firmar un acuerdo de incorporación con su entidad. No hay un modelo oficial, pero la Ley 45/2015 fija lo que tiene que incluir. Los ocho puntos obligatorios, cómo se firma, qué cambia cuando hay menores y qué conviene añadir.
 ---
 

@@ -10,9 +10,9 @@ etiqueta: Análisis
 imagen: ley-45-2015
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Ley 45/2015 del Voluntariado
+imagen_alt: Muchas manos pintadas de rojo forman un corazón
 imagen_pie: Ley 45/2015, de 14 de octubre, de Voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: Cuatro obligaciones que toda entidad de voluntariado debería tener claras, con el artículo exacto de la ley: el acuerdo por escrito, el seguro, el certificado y los menores.
 ---
 

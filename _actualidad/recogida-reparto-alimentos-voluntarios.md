@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: recogida-alimentos
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntarios en la recogida y el reparto de alimentos
+imagen_alt: Dos voluntarias con mascarilla y guantes preparan bolsas de comida bajo una carpa
 imagen_pie: Guía para ONG, bancos de alimentos y entidades de reparto.
-credito:
+credito: [crédito pendiente]
 resumen: Desde abril de 2026, las empresas de la cadena alimentaria que no son pequeñas tienen que promover acuerdos para donar lo que les sobra. Qué cambia para las entidades que reparten alimentos, qué les exige la ley y cómo organizar a los voluntarios en la recogida, la clasificación y el reparto.
 ---
 

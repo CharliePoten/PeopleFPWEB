@@ -9,7 +9,7 @@ etiqueta: Guía
 imagen: certificado-voluntariado
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Certificado de voluntariado: qué tiene que incluir y cómo pedirlo
+imagen_alt: Ejemplo de certificado de voluntariado de una asociación, con las misiones, las fechas y las horas validadas
 imagen_pie: Guía para personas voluntarias y entidades de voluntariado.
 credito:
 resumen: Toda persona voluntaria tiene derecho a un certificado de su voluntariado, y lo expide la entidad. Qué tiene que incluir según la Ley 45/2015, cómo pedirlo, cómo prepararlo y para qué sirve: acreditar competencias profesionales y, según la universidad, obtener créditos.

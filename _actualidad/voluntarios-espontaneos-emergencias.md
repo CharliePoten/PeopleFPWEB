@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: voluntarios-espontaneos
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntarios espontáneos: cómo organizarlos en una emergencia
+imagen_alt: Dos hombres con mascarilla cargan cajas de cartón en un reparto
 imagen_pie: Guía para ayuntamientos y agrupaciones de voluntarios de Protección Civil.
-credito:
+credito: [crédito pendiente]
 resumen: En una gran emergencia siempre llega más gente a ayudar de la que se puede organizar. Qué dice la ley y qué dejar preparado antes, durante y después, con lo que se aprendió en la DANA de Valencia.
 ---
 

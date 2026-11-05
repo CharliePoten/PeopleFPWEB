@@ -9,9 +9,9 @@ etiqueta: Guía
 imagen: voluntariado-corporativo
 imagen_ancho: 1200
 imagen_alto: 675
-imagen_alt: Voluntariado corporativo: cómo organizarlo con una ONG
+imagen_alt: Un grupo con camisetas iguales junta las manos en el centro
 imagen_pie: Guía para empresas y entidades de voluntariado.
-credito:
+credito: [crédito pendiente]
 resumen: Una empresa puede promover el voluntariado de su plantilla, pero no es una entidad de voluntariado. Qué dice la Ley 45/2015, qué papel tiene la ONG, qué pasa con el horario laboral y el seguro, y qué conviene medir para la memoria de sostenibilidad.
 ---
 
