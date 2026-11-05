@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Tres personas trabajan en una mesa con portátiles y un cuaderno; en una pantalla, un calendario
 imagen_pie: Guía para ONG, asociaciones y entidades de voluntariado.
-credito: [crédito pendiente]
+credito: Windows / Unsplash
 resumen: Una entidad de voluntariado actúa a través de programas, y la Ley 45/2015 fija lo que cada uno tiene que incluir. Los diez puntos, cómo concretarlos, qué piden las subvenciones estatales del 0,7 % y qué añaden algunas leyes autonómicas.
 ---
 

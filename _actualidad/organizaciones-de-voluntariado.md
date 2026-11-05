@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Varias personas con jerséis de colores juntan las manos en el centro
 imagen_pie: Guía para personas que quieren hacer voluntariado.
-credito: [crédito pendiente]
+credito: Hannah Busing / Unsplash
 resumen: Antes de apuntarte, comprueba que la organización está inscrita, qué te tiene que dar según la Ley 45/2015 y si la tarea encaja con tu tiempo. Qué mirar, qué preguntar y qué señales indican que algo no va bien.
 ---
 

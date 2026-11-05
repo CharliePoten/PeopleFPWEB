@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Una cuidadora se inclina hacia una mujer mayor en silla de ruedas que colorea un dibujo; a su lado, un hombre mayor
 imagen_pie: Guía para ONG, asociaciones y entidades de voluntariado.
-credito: [crédito pendiente]
+credito: Age Cymru / Unsplash
 resumen: El voluntariado es libre y sin contraprestación; el trabajo se presta a cambio de una retribución y bajo la dirección de otro. Qué dice la ley, qué gastos se pueden reembolsar, las señales de que un voluntariado se parece a un empleo y qué pasa si lo es.
 ---
 

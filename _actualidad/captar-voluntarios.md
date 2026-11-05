@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Una voluntaria sonríe en un bosque mientras otras personas recogen basura en bolsas
 imagen_pie: Guía para ONG y entidades de voluntariado.
-credito: [crédito pendiente]
+credito: Vitaly Gariev / Unsplash
 resumen: El 19 % de quienes no hacen voluntariado dice que probablemente o seguro lo hará el año que viene. Qué los frena, según el barómetro de 2025 de la Plataforma del Voluntariado de España, y qué puede hacer una entidad: formatos cortos, ofertas claras y respuesta rápida.
 ---
 

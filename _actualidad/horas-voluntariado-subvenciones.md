@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Manos con guantes clasifican latas y fruta en una mesa larga
 imagen_pie: Guía para ONG y entidades de voluntariado que reciben subvenciones.
-credito: [crédito pendiente]
+credito: Joel Muniz / Unsplash
 resumen: Una hora de voluntariado no tiene factura, así que no entra en la cuenta justificativa como gasto, salvo que las bases lo prevean. Pero cuenta en la solicitud, en la memoria de actuación y en el seguimiento. Qué piden las normas y cómo documentar las horas para que se sostengan.
 ---
 

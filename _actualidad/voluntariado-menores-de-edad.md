@@ -11,7 +11,7 @@ imagen_ancho: 1200
 imagen_alto: 675
 imagen_alt: Un niño con gorra sonríe durante una actividad al aire libre con otros niños
 imagen_pie: Guía para ONG, asociaciones y entidades de voluntariado.
-credito: [crédito pendiente]
+credito: Mugabi Owen / Unsplash
 resumen: Hay dos situaciones distintas: que la persona voluntaria sea menor de edad, y que el voluntariado suponga un contacto habitual con menores. Qué pide la Ley 45/2015 en cada caso, qué añade la ley de protección de la infancia y cómo se pide el certificado de delitos sexuales.
 ---
 
