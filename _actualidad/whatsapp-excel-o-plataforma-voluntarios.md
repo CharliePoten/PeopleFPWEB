@@ -9,6 +9,7 @@ etiqueta: Comparativa
 imagen: whatsapp-excel-plataforma
 imagen_ancho: 1200
 imagen_alto: 675
+foto_en_cabecera: no
 imagen_alt: Los iconos de WhatsApp, Excel y la app de PeopleForPeople
 imagen_pie: Comparativa para ONG, ayuntamientos y agrupaciones de voluntarios.
 credito:

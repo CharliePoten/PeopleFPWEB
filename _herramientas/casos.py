@@ -75,6 +75,9 @@ COLECCIONES = [
         # La cabecera de la lista: la foto con el último artículo encima,
         # como un rótulo (ver «Cabeceras con arte» en css/detail.css).
         'cabecera': ('arte', 'paginas/actualidad.webp', 1400, 788, '60% 50%'),
+        # En cada artículo, la foto va de fondo en la cabecera (en vez de
+        # debajo del título): ver foto_de_cabecera().
+        'foto_en_cabecera': True,
     },
 ]
 C = COLECCIONES[0]
@@ -227,7 +230,41 @@ CTA = (
 )
 
 
+def pie_de_foto(c):
+    # Sin `credito` es una imagen propia (una ilustración): sin «Foto:».
+    return e(c['imagen_pie']) + (' · Foto: ' + e(c['credito']) if c.get('credito') else '')
+
+
+def foto_de_cabecera(c):
+    """La foto del artículo, de fondo en la cabecera (Actualidad). Es una
+    <img> de verdad, con su texto alternativo, y no un fondo de CSS: sigue
+    siendo la foto del artículo para quien no ve y para los buscadores. Si
+    hay versiones más grandes, `<imagen>-<ancho>.webp`, van en el srcset
+    para las pantallas anchas. Opcionales en el .md:
+      · `imagen_foco`: el object-position de la foto, si el centro no vale;
+      · `foto_en_cabecera: no`: la imagen se queda debajo del título, como
+        en los casos. Para las que no son fotos (la comparativa, el
+        certificado de ejemplo): un motivo nítido detrás de un título largo
+        se pisa con el texto, y el certificado es contenido que se lee.
+    El pie y el crédito, abajo a la derecha (casos.css)."""
+    base = c['imagen']
+    carpeta = ruta('imagenes', C['imagenes'])
+    patron = re.compile(re.escape(base) + r'-(\d+)\.webp')
+    grandes = sorted((int(m.group(1)), n) for n in os.listdir(carpeta) for m in [patron.fullmatch(n)] if m)
+    srcset = ''
+    if grandes:
+        srcset = ' srcset="%s" sizes="100vw"' % ', '.join(
+            ['../imagenes/%s/%s.webp %sw' % (C['imagenes'], base, c['imagen_ancho'])]
+            + ['../imagenes/%s/%s %dw' % (C['imagenes'], n, w) for w, n in grandes])
+    foco = ' style="--foco: %s"' % e(c['imagen_foco']) if c.get('imagen_foco') else ''
+    return ('<figure class="detail-hero__fondo"%s><img src="../imagenes/%s/%s.webp"%s width="%s" height="%s" '
+            'alt="%s" fetchpriority="high" /><figcaption class="caso__credito">%s</figcaption></figure>'
+            % (foco, C['imagenes'], base, srcset, c['imagen_ancho'], c['imagen_alto'], e(c['imagen_alt']),
+               pie_de_foto(c)))
+
+
 def pagina_caso(c, todos, estilos, cabecera, pie):
+    arriba = C.get('foto_en_cabecera') and c.get('foto_en_cabecera') != 'no'
     url = '%s/%s/%s.html' % (DOMINIO, C['carpeta'], c['slug'])
     imagen = '%s/imagenes/%s/%s-compartir.jpg' % (DOMINIO, C['imagenes'], c['imagen'])
     minutos = max(1, math.ceil(c['palabras'] / 200))
@@ -254,19 +291,20 @@ def pagina_caso(c, todos, estilos, cabecera, pie):
         estilos,
         '</head>',
         '<body class="home detail-page caso">' + cabecera + '<main id="main">',
-        '  <section class="detail-hero"><div class="container reveal caso__cabeza">'
+        '  <section class="detail-hero%s"><div class="container reveal caso__cabeza">'
         '<a class="breadcrumb" href="./" data-i18n="%s">%s</a>'
         '<span class="eyebrow">%s</span><h1>%s</h1><p class="detail-hero__lead">%s</p>'
         '<p class="caso__meta">Publicado el <time datetime="%s">%s</time> · %s · %d min de lectura</p>'
-        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div></section>'
-        % (C['volver_clave'], C['volver'], e(c['etiqueta']), e(c['titulo']), e(c['resumen']), c['publicado'],
-           fecha_larga(c['publicado']), e(c['suceso']), minutos),
+        '<p class="caso__idioma" data-i18n="cases.soloEs"></p></div>%s</section>'
+        % (' detail-hero--fondo caso__hero-foto' if arriba else '', C['volver_clave'], C['volver'],
+           e(c['etiqueta']), e(c['titulo']), e(c['resumen']), c['publicado'], fecha_larga(c['publicado']),
+           e(c['suceso']), minutos, foto_de_cabecera(c) if arriba else ''),
         '  <div class="container caso__marco">',
+    ] + ([] if arriba else [
         '    <figure class="caso__foto"><img src="../imagenes/%s/%s.webp" width="%s" height="%s" alt="%s" />'
         '<figcaption>%s</figcaption></figure>'
-        % (C['imagenes'], c['imagen'], c['imagen_ancho'], c['imagen_alto'], e(c['imagen_alt']),
-           # Sin `credito` es una imagen propia (una ilustración): sin «Foto:».
-           e(c['imagen_pie']) + (' · Foto: ' + e(c['credito']) if c.get('credito') else '')),
+        % (C['imagenes'], c['imagen'], c['imagen_ancho'], c['imagen_alto'], e(c['imagen_alt']), pie_de_foto(c)),
+    ]) + [
         '    <article class="caso__texto">',
         cuerpo_html(c['cuerpo_md']),
         '    </article>',

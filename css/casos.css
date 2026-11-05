@@ -12,6 +12,19 @@
 .caso__meta { margin: 18px 0 0; color: rgba(255, 255, 255, .72); font-size: .9rem; }
 .caso .detail-hero h1 { max-width: 24ch; text-wrap: balance; }
 
+/* Actualidad: la foto del artículo, de fondo en la cabecera (casos.py,
+   `foto_en_cabecera`). Se ve, pero el azul tapa más donde va el texto: a la
+   izquierda en pantallas anchas, en todo el ancho en el móvil. Los textos
+   pequeños de la cabecera suben de opacidad para leerse igual sobre las
+   zonas claras de cualquier foto, y el pie va en una pastilla azul. */
+.detail-page .detail-hero--fondo.caso__hero-foto .detail-hero__fondo::after { background: linear-gradient(90deg, rgba(0, 22, 54, .9) 0%, rgba(0, 26, 62, .84) 46%, rgba(0, 30, 71, .6) 72%, rgba(0, 37, 87, .34) 100%); }
+.detail-page .caso__hero-foto .breadcrumb { color: rgba(255, 255, 255, .84); }
+.detail-page .caso__hero-foto .detail-hero__lead { color: rgba(255, 255, 255, .9); }
+.caso__hero-foto .caso__meta { color: rgba(255, 255, 255, .86); }
+.caso__credito { position: absolute; right: 14px; bottom: 10px; z-index: 1; max-width: calc(100% - 28px); margin: 0; padding: 3px 10px; border-radius: 12px; background: rgba(0, 22, 54, .72); color: rgba(255, 255, 255, .9); font-size: .72rem; line-height: 1.45; }
+@media (max-width: 899px) {
+  .detail-page .detail-hero--fondo.caso__hero-foto .detail-hero__fondo::after { background: linear-gradient(180deg, rgba(0, 22, 54, .7) 0%, rgba(0, 22, 54, .84) 28%, rgba(0, 26, 62, .84) 82%, rgba(0, 30, 71, .72) 100%); }
+}
 .caso__marco { max-width: 820px; padding-top: 48px; padding-bottom: 72px; }
 
 .caso__foto { margin: 0 0 40px; }

@@ -9,6 +9,7 @@ etiqueta: Guía
 imagen: certificado-voluntariado
 imagen_ancho: 1200
 imagen_alto: 675
+foto_en_cabecera: no
 imagen_alt: Ejemplo de certificado de voluntariado de una asociación, con las misiones, las fechas y las horas validadas
 imagen_pie: Guía para personas voluntarias y entidades de voluntariado.
 credito:
