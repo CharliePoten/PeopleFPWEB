@@ -95,7 +95,7 @@ Nada de esto se improvisa bien el día de la emergencia, así que conviene dejar
 - **Agradecer y contar el resultado.** Qué se consiguió gracias a ellos. Ayuda a que vuelvan la próxima vez.
 - **Acreditar.** Un certificado de colaboración con las fechas, las tareas y el lugar. Si la persona estaba incorporada a una entidad de voluntariado, la Ley 45/2015 obliga a la entidad a expedírselo cuando lo pida y, en todo caso, al terminar (artículo 24.1).
 - **Evaluar.** Preguntar a los voluntarios y a los responsables qué falló y qué mejorarían, y llevarlo al plan.
-- **Invitar a quedarse.** Quien ha ayudado en una emergencia es un buen candidato para la agrupación de Protección Civil o para una entidad de voluntariado. La próxima vez llegará formado, asegurado y localizable.
+- **Invitar a quedarse.** Quien ha ayudado en una emergencia es un buen candidato para la agrupación de Protección Civil o para una entidad de voluntariado. La próxima vez llegará formado, asegurado y localizable. Cómo funciona una agrupación municipal lo explicamos en la [guía sobre el voluntariado municipal](voluntariado-municipal-ayuntamientos.html).
 
 ## Cómo encaja PeopleForPeople
 

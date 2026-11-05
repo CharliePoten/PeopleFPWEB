@@ -33,7 +33,7 @@ El programa es el documento que dice qué se va a hacer, con quién, dónde, dur
 
 **6. La duración prevista.** La fecha de inicio y la de fin. Si el programa es permanente, conviene fijar al menos cuándo se revisa.
 
-**7. Cuántos voluntarios, con qué perfil y con qué formación.** El número necesario, el perfil adecuado para cada cometido y la cualificación o formación exigible. Si la actividad supone un contacto habitual con menores, el perfil incluye el certificado negativo de delitos sexuales (artículo 8.4), como contamos en la [guía sobre voluntariado y menores](voluntariado-menores-de-edad.html).
+**7. Cuántos voluntarios, con qué perfil y con qué formación.** El número necesario, el perfil adecuado para cada cometido y la cualificación o formación exigible. Si la actividad supone un contacto habitual con menores, el perfil incluye el certificado negativo de delitos sexuales (artículo 8.4), como contamos en la [guía sobre voluntariado y menores](voluntariado-menores-de-edad.html). Cómo encontrarlos lo explicamos en la [guía sobre cómo captar voluntarios](captar-voluntarios.html).
 
 **8. A quién se dirige.** Los criterios para determinar, en su caso, el perfil de las personas destinatarias. Sin discriminar por nacionalidad, origen racial o étnico, religión, convicciones ideológicas o sindicales, enfermedad, discapacidad, edad, sexo, identidad u orientación sexual ni ninguna otra condición o circunstancia personal o social (artículo 15.2).
 
